@@ -5,7 +5,6 @@ from PIL import Image
 
 def process_image(output_dir, image_path, output_path ,output_name):
     command = f'python {output_dir}/img2c.py -i {image_path} -o {output_path} --name {output_name}'
-
     try:
         result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         print(result.stdout)
@@ -34,8 +33,9 @@ header_content_end = f"""
 """
 
 def main(argv):
+    thisPyDirPath = os.path.dirname(os.path.abspath(__file__))
     if not argv:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
+        current_dir = thisPyDirPath
     else:
         current_dir = argv[0]
     if current_dir[-1] == '\\' or current_dir[-1] == '/':
@@ -52,7 +52,7 @@ def main(argv):
             output_name = f'_{filename.replace(".", "_")}_'
             text_file_name=filename.replace(".", "_")
             print('    ',filename,' -> ',text_file_name)
-            process_image(current_dir, image_path, output_path, output_name)
+            process_image(thisPyDirPath, image_path, output_path, output_name)
             with Image.open(image_path) as img:
                 imgW, imgH = img.size
                 header_content += f"""
