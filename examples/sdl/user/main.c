@@ -9,12 +9,9 @@
 #include "xLog.h"
 //#include "xBtnAction.h"
 #if __DISP0_CFG_DISABLE_DEFAULT_SCENE__
-#if USE_DEMO > 0
 #include LD_DEMO_GUI_INCLUDE
 #endif
-#endif
 #include "freeRtosHeap4.h"
-
 #include "ldGui.h"
 
 #if defined(__clang__)
@@ -83,12 +80,7 @@ int main (void)
 
     disp_adapter0_init();
 #if __DISP0_CFG_DISABLE_DEFAULT_SCENE__
-#if USE_DEMO == 0
-    //user gui page init
-
-#else
     ldGuiInit(LD_DEMO_GUI_FUNC);
-#endif
 #endif
 
     SDL_CreateThread(app_2d_main_thread, "arm-2d thread", NULL);

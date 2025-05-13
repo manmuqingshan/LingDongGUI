@@ -98,6 +98,21 @@ extern "C" {
 #define USE_DEMO                                  (0)
 #endif
 
+#if USE_DEMO == 0
+#undef LD_CFG_COLOR_DEPTH
+#define LD_CFG_COLOR_DEPTH                        (16)
+#undef LD_CFG_SCEEN_WIDTH
+#define LD_CFG_SCEEN_WIDTH                        (320)
+#undef LD_CFG_SCEEN_HEIGHT
+#define LD_CFG_SCEEN_HEIGHT                       (240)
+#undef LD_CFG_PFB_WIDTH
+#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH/4)
+#undef LD_CFG_PFB_HEIGHT
+#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
+#define LD_DEMO_GUI_INCLUDE                       "stdint.h"
+#define LD_DEMO_GUI_FUNC                          NULL
+#endif
+
 #if USE_DEMO == 1
 #undef LD_CFG_COLOR_DEPTH
 #define LD_CFG_COLOR_DEPTH                        (16)

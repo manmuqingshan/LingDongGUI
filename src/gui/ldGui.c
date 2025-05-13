@@ -381,6 +381,10 @@ void before_scene_switching_handler(void *pTarget,arm_2d_scene_player_t *ptPlaye
 
 void ldGuiInit(ldPageFuncGroup_t *ptFuncGroup)
 {
+    if(ptFuncGroup==NULL)
+    {
+        return;
+    }
     ptSysGuiFuncGroup[0]=ptFuncGroup;
     ptSysGuiFuncGroup[1]=ptFuncGroup;
 #if USE_SCENE_SWITCHING == 1
