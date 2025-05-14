@@ -4,9 +4,21 @@ import sys
 from PIL import Image
 
 def process_image(output_dir, image_path, output_path ,output_name):
-    command = f'python {output_dir}/img2c.py -i {image_path} -o {output_path} --name {output_name}'
+    command = [
+        sys.executable,
+        os.path.join(output_dir, 'img2c.py'),
+        '-i', image_path,
+        '-o', output_path,
+        '--name', output_name
+    ]
     try:
-        result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(
+            command,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
         print(result.stdout)
         if result.stderr:
             print(f"Error: {result.stderr}")

@@ -100,7 +100,7 @@ def generate_font_data_for_each_config(fontYaml, output_dir):
         
         thisPyPath = os.path.dirname(os.path.abspath(__file__))
         command_args = [
-            'python', f"{thisPyPath}/ttf2c.py", '-i', ttf_path, '-t', font_txt_path, '-o', output_c,
+            sys.executable, f"{thisPyPath}/ttf2c.py", '-i', ttf_path, '-t', font_txt_path, '-o', output_c,
             '-p', str(pixel_size), '-n', f'{base_font_name}_{pixel_size}'
         ]
         if font_bit_width is not None:
