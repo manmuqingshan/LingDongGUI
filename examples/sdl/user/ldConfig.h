@@ -99,18 +99,27 @@ extern "C" {
 #endif
 
 #if USE_DEMO == 0
-#undef LD_CFG_COLOR_DEPTH
+#ifndef LD_CFG_COLOR_DEPTH
 #define LD_CFG_COLOR_DEPTH                        (16)
-#undef LD_CFG_SCEEN_WIDTH
+#endif
+#ifndef LD_CFG_SCEEN_WIDTH
 #define LD_CFG_SCEEN_WIDTH                        (320)
-#undef LD_CFG_SCEEN_HEIGHT
+#endif
+#ifndef LD_CFG_SCEEN_HEIGHT
 #define LD_CFG_SCEEN_HEIGHT                       (240)
-#undef LD_CFG_PFB_WIDTH
+#endif
+#ifndef LD_CFG_PFB_WIDTH
 #define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH/4)
-#undef LD_CFG_PFB_HEIGHT
+#endif
+#ifndef LD_CFG_PFB_HEIGHT
 #define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
+#endif
+#ifndef LD_DEMO_GUI_INCLUDE
 #define LD_DEMO_GUI_INCLUDE                       "stdint.h"
-#define LD_DEMO_GUI_FUNC                          NULL
+#endif
+#ifndef LD_DEMO_GUI_FUNC
+#define LD_DEMO_GUI_FUNC                          (*(void*)0)
+#endif
 #endif
 
 #if USE_DEMO == 1
@@ -125,7 +134,7 @@ extern "C" {
 #undef LD_CFG_PFB_HEIGHT
 #define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
 #define LD_DEMO_GUI_INCLUDE                       "uiStartup.h"
-#define LD_DEMO_GUI_FUNC                          (ldPageFuncGroup_t *)&uiStartupFunc
+#define LD_DEMO_GUI_FUNC                          uiStartupFunc
 #endif
 
 #if USE_DEMO == 2
@@ -140,7 +149,7 @@ extern "C" {
 #undef LD_CFG_PFB_HEIGHT
 #define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
 #define LD_DEMO_GUI_INCLUDE                       "uiWidget.h"
-#define LD_DEMO_GUI_FUNC                          (ldPageFuncGroup_t *)&uiWidgetFunc
+#define LD_DEMO_GUI_FUNC                          uiWidgetFunc
 #endif
 
 #if USE_DEMO == 3
@@ -155,7 +164,7 @@ extern "C" {
 #undef LD_CFG_PFB_HEIGHT
 #define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
 #define LD_DEMO_GUI_INCLUDE                       "uiLogo.h"
-#define LD_DEMO_GUI_FUNC                          (ldPageFuncGroup_t *)&uiLogoFunc
+#define LD_DEMO_GUI_FUNC                          uiLogoFunc
 #endif
 
 // <<< end of configuration section >>>

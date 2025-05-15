@@ -80,7 +80,7 @@ int main (void)
 
     disp_adapter0_init();
 #if __DISP0_CFG_DISABLE_DEFAULT_SCENE__
-    ldGuiInit(LD_DEMO_GUI_FUNC);
+    ldGuiInit((ldPageFuncGroup_t *)&LD_DEMO_GUI_FUNC);
 #endif
 
     SDL_CreateThread(app_2d_main_thread, "arm-2d thread", NULL);
