@@ -197,7 +197,8 @@ void ldButton_show(ld_scene_t *ptScene, ldButton_t *ptWidget, const arm_2d_tile_
             {
                 break;
             }
-            if(ptWidget->isTransparent)
+
+            if(!ptWidget->isTransparent)
             {
                 if ((ptWidget->ptReleaseImgTile == NULL) &&
                         (ptWidget->ptReleaseMaskTile == NULL) &&
