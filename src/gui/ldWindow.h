@@ -44,7 +44,8 @@ extern "C" {
 #define ldWindow_on_load                ldImage_on_load
 #define ldWindow_on_frame_start         ldImage_on_frame_start
 #define ldWindow_show                   ldImage_show
-#define ldWindowSetBgColor              ldImageSetBgColor
+#define ldWindowSetColor                ldImageSetBgColor
+#define ldWindowSetImage                ldImageSetImage
 
 #define ldWindowSetHidden               ldBaseSetHidden
 #define ldWindowMove                    ldBaseMove
