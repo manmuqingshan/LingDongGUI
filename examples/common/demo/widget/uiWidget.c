@@ -86,7 +86,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
     ldButtonSetImage(obj,IMAGE_KEYRELEASE_PNG,IMAGE_KEYRELEASE_PNG_Mask,IMAGE_KEYPRESS_PNG,IMAGE_KEYPRESS_PNG_Mask);
 
     win=ldWindowInit(3, 0, 200, 95, 20, 20);
-    ldWindowSetBgColor(win,GLCD_COLOR_GREEN);
+    ldWindowSetColor(win,GLCD_COLOR_GREEN);
 
 //    connect(2,SIGNAL_RELEASE,slotPageJump);
 
@@ -116,7 +116,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
     ldProgressBarSetImage(obj,IMAGE_PROGRESSBARBG_BMP,IMAGE_PROGRESSBARFG_BMP);
 
     obj=ldTextInit(9,0,300,10,150,200,FONT_ARIAL_12,true);
-    ldTextSetBgImage(obj,IMAGE_LETTER_PAPER_BMP);
+    ldTextSetBgImage(obj,IMAGE_LETTER_PAPER_BMP,NULL);
     ldTextSetText(obj,"123\n12333");
 
     obj=ldSliderInit(10,0,50,300,317,(IMAGE_INDICATOR_PNG)->tRegion.tSize.iHeight);
@@ -199,7 +199,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
 
 
     win=ldWindowInit(23, 0, 850, 450, 100, 100);
-    ldWindowSetBgColor(win,GLCD_COLOR_GREEN);
+    ldWindowSetColor(win,GLCD_COLOR_GREEN);
 
     obj=ldButtonInit(24, 23, 8,3,30,30);
     ldBase_t* pr=ldBaseGetParent(obj);

@@ -39,7 +39,7 @@ void uiMainInit(ld_scene_t* ptScene)
     void *obj,*win;
 
     obj=ldWindowInit(0, 0, 0, 0, LD_CFG_SCEEN_WIDTH, LD_CFG_SCEEN_HEIGHT);
-    ldWindowSetBgColor(obj,GLCD_COLOR_BLACK);
+    ldWindowSetColor(obj,GLCD_COLOR_BLACK);
 
     obj=ldButtonInit(ID_BTN_PRINT,ID_BG,27,67,124,158);
     ldButtonSetRoundCorner(obj,true);
