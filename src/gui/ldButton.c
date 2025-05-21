@@ -453,6 +453,16 @@ bool ldButtonActionIsPressById(uint16_t nameId,ld_scene_t *ptScene)
     return ptWidget->isPressed;
 }
 
+void ldButtonSetPress(ldButton_t *ptWidget,bool isPress)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->isPressed=isPress;
+}
+
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif

@@ -70,7 +70,6 @@ struct ldButton_t
     ldColor selectColor;
     bool isTransparent : 1;
     bool isCheckable : 1;
-    bool isChecked : 1;
     bool isPressed : 1;
     bool isSelected : 1;
     bool isCorner : 1;
@@ -93,6 +92,7 @@ void ldButtonSetText(ldButton_t* ptWidget,uint8_t *pStr);
 void ldButtonSetTextColor(ldButton_t* ptWidget,ldColor charColor);
 void ldButtonSetCheckable(ldButton_t *ptWidget,bool isCheckable);
 void ldButtonSetKeyValue(ldButton_t *ptWidget,uint32_t value);
+void ldButtonSetPress(ldButton_t *ptWidget,bool isPress);
 
 #define ldButtonInit(nameId,parentNameId,x,y,width,height) \
         ldButton_init(ptScene,NULL,nameId,parentNameId,x,y,width,height)
