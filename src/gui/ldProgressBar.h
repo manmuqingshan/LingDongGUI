@@ -61,6 +61,7 @@ struct ldProgressBar_t
     arm_2d_tile_t *ptFrameImgTile;
     uint8_t bgOffset;
     uint8_t fgOffset;
+    uint8_t frameColorSize;
     int64_t timer;
     bool isHorizontal:1;
 };
@@ -77,7 +78,8 @@ void ldProgressBarSetPercent(ldProgressBar_t *ptWidget,float percent);
 void ldProgressBarSetImage(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptBgImgTile,arm_2d_tile_t *ptFgImgTile);
 //void ldProgressBarSetFgImage(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptFgImgTile);
 void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFrameImgTile);
-void ldProgressBarSetColor(ldProgressBar_t *ptWidget,ldColor bgColor,ldColor fgColor,ldColor frameColor);
+void ldProgressBarSetColor(ldProgressBar_t *ptWidget, ldColor bgColor, ldColor fgColor);
+void ldProgressBarSetFrameColor(ldProgressBar_t *ptWidget, ldColor frameColor, uint8_t frameColorSize);
 void ldProgressBarSetHorizontal(ldProgressBar_t *ptWidget,bool isHorizontal);
 
 #define ldProgressBarInit(nameId,parentNameId,x,y,width,height) \

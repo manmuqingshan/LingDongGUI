@@ -85,6 +85,7 @@ ldProgressBar_t* ldProgressBar_init( ld_scene_t *ptScene,ldProgressBar_t *ptWidg
     ptWidget->bgColor=GLCD_COLOR_WHITE;
     ptWidget->fgColor=__RGB(0x94, 0xd2, 0x52);
     ptWidget->frameColor=__RGB(0xa5, 0xc6, 0xef);
+    ptWidget->frameColorSize=0;
     ptWidget->isHorizontal=true;
     ptWidget->timer=0;
 
@@ -132,12 +133,12 @@ static void _progressBarColorShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
     {
         arm_2d_region_t tBarRegion = {
             .tLocation = {
-                .iX = 1,
-                .iY = 1,
+                .iX = 0,
+                .iY = 0,
             },
             .tSize = {
-                .iWidth=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth-2,
-                .iHeight=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight-2,
+                .iWidth=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth,
+                .iHeight=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight,
             },
         };
 
@@ -154,7 +155,10 @@ static void _progressBarColorShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
         ldBaseColor( ptTarget,&tBarRegion,ptWidget->fgColor,ptWidget->use_as__ldBase_t.opacity);
     }
 
-    arm_2d_draw_box(ptTarget,NULL,1,ptWidget->frameColor,ptWidget->use_as__ldBase_t.opacity);
+    if(ptWidget->frameColorSize)
+    {
+        arm_2d_draw_box(ptTarget,NULL,ptWidget->frameColorSize,ptWidget->frameColor,ptWidget->use_as__ldBase_t.opacity);
+    }
 }
 
 static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTarget,bool bIsNewFrame)
@@ -397,7 +401,7 @@ void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFram
     ptWidget->ptFrameImgTile=ptFrameImgTile;
 }
 
-void ldProgressBarSetColor(ldProgressBar_t *ptWidget,ldColor bgColor,ldColor fgColor,ldColor frameColor)
+void ldProgressBarSetColor(ldProgressBar_t *ptWidget, ldColor bgColor, ldColor fgColor)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -410,7 +414,18 @@ void ldProgressBarSetColor(ldProgressBar_t *ptWidget,ldColor bgColor,ldColor fgC
     ptWidget->ptFrameImgTile=NULL;
     ptWidget->bgColor=bgColor;
     ptWidget->fgColor=fgColor;
+}
+
+void ldProgressBarSetFrameColor(ldProgressBar_t *ptWidget, ldColor frameColor, uint8_t frameColorSize)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->frameColor=frameColor;
+    ptWidget->frameColorSize=frameColorSize;
 }
 
 void ldProgressBarSetHorizontal(ldProgressBar_t *ptWidget,bool isHorizontal)
