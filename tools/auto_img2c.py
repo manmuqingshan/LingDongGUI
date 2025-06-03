@@ -109,16 +109,16 @@ extern const arm_2d_tile_t c_tile_{text_file_name}_CCCN888;
             if has_alpha:
                 header_parts.append(f"""
 extern const arm_2d_tile_t c_tile_{text_file_name}_A1Mask;
-#define IMAGE_{text_file_name.upper()}_A1Mask   (arm_2d_tile_t*)&c_tile_{text_file_name}_A1Mask
+#define IMAGE_{text_file_name.upper()}_A1_MASK   (arm_2d_tile_t*)&c_tile_{text_file_name}_A1Mask
 extern const arm_2d_tile_t c_tile_{text_file_name}_A2Mask;
-#define IMAGE_{text_file_name.upper()}_A2Mask   (arm_2d_tile_t*)&c_tile_{text_file_name}_A2Mask
+#define IMAGE_{text_file_name.upper()}_A2_MASK   (arm_2d_tile_t*)&c_tile_{text_file_name}_A2Mask
 extern const arm_2d_tile_t c_tile_{text_file_name}_A4Mask;
-#define IMAGE_{text_file_name.upper()}_A4Mask   (arm_2d_tile_t*)&c_tile_{text_file_name}_A4Mask
+#define IMAGE_{text_file_name.upper()}_A4_MASK   (arm_2d_tile_t*)&c_tile_{text_file_name}_A4Mask
 extern const arm_2d_tile_t c_tile_{text_file_name}_Mask;
-#define IMAGE_{text_file_name.upper()}_Mask     (arm_2d_tile_t*)&c_tile_{text_file_name}_Mask""")
+#define IMAGE_{text_file_name.upper()}_MASK     (arm_2d_tile_t*)&c_tile_{text_file_name}_Mask""")
             else:
                 header_parts.append(f"""
-#define IMAGE_{text_file_name.upper()}_Mask     NULL""")
+#define IMAGE_{text_file_name.upper()}_MASK     NULL""")
             os.remove(image_path)
             header_parts.append("\n")
 
