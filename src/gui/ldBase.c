@@ -323,6 +323,18 @@ void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_t
     }
 }
 
+void ldBaseImageFill(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
+{
+    if(ptMaskTile==NULL)
+    {
+        arm_2d_tile_fill_only(ptImgTile,ptTile,ptRegion);
+    }
+    else
+    {
+        arm_2d_tile_fill_with_src_mask_only(ptImgTile,ptMaskTile,ptTile,ptRegion);
+    }
+}
+
 void ldBaseLabel(arm_2d_tile_t *ptTile,arm_2d_region_t *ptRegion,uint8_t *pStr,arm_2d_font_t *ptFont,arm_2d_align_t tAlign,ldColor textColor,uint8_t opacity)
 {
     arm_lcd_text_set_target_framebuffer(ptTile);

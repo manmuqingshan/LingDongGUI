@@ -186,7 +186,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
             };
             arm_2d_tile_t tileInnerSlot;
             arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-            arm_2d_tile_fill_only(ptWidget->ptBgImgTile,&tileInnerSlot,&tInnerRegion);
+            ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile);
         }while(0);
     }
     else
@@ -203,7 +203,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
             };
             arm_2d_tile_t tileInnerSlot;
             arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-            arm_2d_tile_fill_only(ptWidget->ptBgImgTile,&tileInnerSlot,&tInnerRegion);
+            ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile);
         }while(0);
     }
 
@@ -227,7 +227,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
 
                 arm_2d_tile_t tileInnerSlot;
                 arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-                arm_2d_tile_fill_only(ptWidget->ptFgImgTile,&tileInnerSlot,&tInnerRegion);
+                ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptFgImgTile,ptWidget->ptFgMaskTile);
             }while(0);
         }
         else
@@ -248,7 +248,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
 
                 arm_2d_tile_t tileInnerSlot;
                 arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-                arm_2d_tile_fill_only(ptWidget->ptFgImgTile,&tileInnerSlot,&tInnerRegion);
+                ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptFgImgTile,ptWidget->ptFgMaskTile);
             }while(0);
         }
     }
@@ -259,8 +259,8 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
         ldBaseImage(ptTarget,
                     NULL,
                     ptWidget->ptFrameImgTile,
-                    NULL,
-                    0,
+                    ptWidget->ptFrameMaskTile,
+                    ptWidget->frameColor,
                     ptWidget->use_as__ldBase_t.opacity);
     }
 
@@ -378,7 +378,7 @@ void ldProgressBarSetPercent(ldProgressBar_t *ptWidget,float percent)
     }
 }
 
-void ldProgressBarSetImage(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptBgImgTile,arm_2d_tile_t *ptFgImgTile)
+void ldProgressBarSetImage(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptBgImgTile,arm_2d_tile_t *ptBgMaskTile,arm_2d_tile_t *ptFgImgTile,arm_2d_tile_t *ptFgMaskTile)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -387,10 +387,12 @@ void ldProgressBarSetImage(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptBgImgTile,
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ptBgImgTile=ptBgImgTile;
+    ptWidget->ptBgMaskTile=ptBgMaskTile;
     ptWidget->ptFgImgTile=ptFgImgTile;
+    ptWidget->ptFgMaskTile=ptFgMaskTile;
 }
 
-void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFrameImgTile)
+void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFrameImgTile, arm_2d_tile_t *ptFrameMaskTile)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -399,6 +401,7 @@ void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFram
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ptFrameImgTile=ptFrameImgTile;
+    ptWidget->ptFrameMaskTile=ptFrameMaskTile;
 }
 
 void ldProgressBarSetColor(ldProgressBar_t *ptWidget, ldColor bgColor, ldColor fgColor)

@@ -57,8 +57,11 @@ struct ldProgressBar_t
     ldColor fgColor;
     ldColor frameColor;
     arm_2d_tile_t *ptBgImgTile;
+    arm_2d_tile_t *ptBgMaskTile;
     arm_2d_tile_t *ptFgImgTile;
+    arm_2d_tile_t *ptFgMaskTile;
     arm_2d_tile_t *ptFrameImgTile;
+    arm_2d_tile_t *ptFrameMaskTile;
     uint8_t bgOffset;
     uint8_t fgOffset;
     uint8_t frameColorSize;
@@ -75,9 +78,8 @@ void ldProgressBar_on_frame_start( ldProgressBar_t *ptWidget);
 void ldProgressBar_show(ld_scene_t *pScene, ldProgressBar_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldProgressBarSetPercent(ldProgressBar_t *ptWidget,float percent);
-void ldProgressBarSetImage(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptBgImgTile,arm_2d_tile_t *ptFgImgTile);
-//void ldProgressBarSetFgImage(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptFgImgTile);
-void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFrameImgTile);
+void ldProgressBarSetImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptBgImgTile, arm_2d_tile_t *ptBgMaskTile, arm_2d_tile_t *ptFgImgTile, arm_2d_tile_t *ptFgMaskTile);
+void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFrameImgTile, arm_2d_tile_t *ptFrameMaskTile);
 void ldProgressBarSetColor(ldProgressBar_t *ptWidget, ldColor bgColor, ldColor fgColor);
 void ldProgressBarSetFrameColor(ldProgressBar_t *ptWidget, ldColor frameColor, uint8_t frameColorSize);
 void ldProgressBarSetHorizontal(ldProgressBar_t *ptWidget,bool isHorizontal);
