@@ -323,4 +323,5 @@ void xBtnDestroy(void)
 #endif
         btnInfo = next;
     }
+    xBtnLink=NULL;
 }
