@@ -238,20 +238,10 @@ void ldGuiFrameStart(ld_scene_t *ptScene)
     {
         arm_ctrl_enum(ptScene->ptNodeRoot, ptItem, PREORDER_TRAVERSAL)
         {
-            if(((ldBase_t*)ptItem)->deleteLaterCount>0)
-            {
-                ((ldBase_t*)ptItem)->deleteLaterCount--;
-                if(((ldBase_t*)ptItem)->deleteLaterCount==0)
-                {
-                    ((ldBase_t*)ptItem)->ptGuiFunc->depose(ptItem);
-                }
-            }
-#ifdef FRAME_START
             if(((ldBase_t*)ptItem)->ptGuiFunc->frameStart!=NULL)
             {
                 ((ldBase_t*)ptItem)->ptGuiFunc->frameStart(ptScene);
             }
-#endif
         }
     }
 
@@ -259,6 +249,14 @@ void ldGuiFrameStart(ld_scene_t *ptScene)
     {
         xBtnTick(SYS_TICK_CYCLE_MS,ptScene);
         cursorBlinkCount++;
+    }
+
+    if(ptScene->ldGuiFuncGroup!=NULL)
+    {
+        if(ptScene->ldGuiFuncGroup->loop)
+        {
+            ptScene->ldGuiFuncGroup->loop(ptScene);
+        }
     }
 }
 
@@ -276,18 +274,7 @@ void ldGuiLoad(ld_scene_t *ptScene)
     }
 }
 
-void ldGuiLogicLoop(ld_scene_t *ptScene)
-{
-    if(ptScene->ldGuiFuncGroup!=NULL)
-    {
-        if(ptScene->ldGuiFuncGroup->loop)
-        {
-            ptScene->ldGuiFuncGroup->loop(ptScene);
-        }
-    }
-}
-
-void ldGuiQuit(ld_scene_t *ptScene)
+void ldGuiDespose(ld_scene_t *ptScene)
 {
     if(ptScene->ldGuiFuncGroup!=NULL)
     {
@@ -313,6 +300,17 @@ void ldGuiQuit(ld_scene_t *ptScene)
 
 void ldGuiFrameComplete(ld_scene_t *ptScene)
 {
+    if(ptScene->ptNodeRoot!=NULL)
+    {
+        arm_ctrl_enum(ptScene->ptNodeRoot, ptItem, PREORDER_TRAVERSAL)
+        {
+            if(((ldBase_t*)ptItem)->ptGuiFunc->frameComplete!=NULL)
+            {
+                ((ldBase_t*)ptItem)->ptGuiFunc->frameComplete(ptScene);
+            }
+        }
+    }
+
 #if USE_SCENE_SWITCHING == 1
     if(isGuiSwthcnScene)
     {
@@ -322,7 +320,7 @@ void ldGuiFrameComplete(ld_scene_t *ptScene)
 #else
     if(ptSysGuiFuncGroup[0]!=ptSysGuiFuncGroup[1])
     {
-        ldGuiQuit(ptScene);
+        ldGuiDespose(ptScene);
         ptSysGuiFuncGroup[0]=ptSysGuiFuncGroup[1];
         ptScene->ldGuiFuncGroup=ptSysGuiFuncGroup[0];
         arm_2d_scene_player_update_scene_background(ptScene->use_as__arm_2d_scene_t.ptPlayer);

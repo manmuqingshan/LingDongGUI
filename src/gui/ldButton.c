@@ -45,9 +45,6 @@
 const ldBaseWidgetFunc_t ldButtonFunc = {
     .depose = (ldDeposeFunc_t)ldButton_depose,
     .load = (ldLoadFunc_t)ldButton_on_load,
-#ifdef FRAME_START
-    .frameStart = (ldFrameStartFunc_t)ldButton_on_frame_start,
-#endif
     .show = (ldShowFunc_t)ldButton_show,
 };
 

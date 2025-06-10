@@ -46,9 +46,8 @@
 const ldBaseWidgetFunc_t ldTextFunc = {
     .depose = (ldDeposeFunc_t)ldText_depose,
     .load = (ldLoadFunc_t)ldText_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldText_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldText_on_frame_complete,
     .show = (ldShowFunc_t)ldText_show,
 };
 
@@ -189,10 +188,16 @@ void ldText_on_load( ldText_t *ptWidget)
     
 }
 
-void ldText_on_frame_start( ldText_t *ptWidget)
+void ldText_on_frame_start(ldText_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldText_on_frame_complete(ldText_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+
 }
 
 void ldText_show(ld_scene_t *ptScene, ldText_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

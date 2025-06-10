@@ -50,9 +50,6 @@
 const ldBaseWidgetFunc_t ldIconSliderFunc = {
     .depose = (ldDeposeFunc_t)ldIconSlider_depose,
     .load = (ldLoadFunc_t)ldIconSlider_on_load,
-#ifdef FRAME_START
-    .frameStart = (ldFrameStartFunc_t)ldIconSlider_on_frame_start,
-#endif
     .show = (ldShowFunc_t)ldIconSlider_show,
 };
 

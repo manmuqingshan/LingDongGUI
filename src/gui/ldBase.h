@@ -116,17 +116,15 @@ typedef struct ldPageFuncGroup_t ldPageFuncGroup_t;
 
 typedef void (*ldDeposeFunc_t)(void *);
 typedef void (*ldShowFunc_t)(ld_scene_t*,void *,void *,bool);
-#ifdef FRAME_START
 typedef void (*ldFrameStartFunc_t)(void *);
-#endif
+typedef void (*ldFrameCompleteFunc_t)(void *);
 typedef void (*ldLoadFunc_t)(void *);
 
 typedef struct {
     ldDeposeFunc_t depose;
     ldLoadFunc_t load;
-#ifdef FRAME_START
     ldFrameStartFunc_t frameStart;
-#endif
+    ldFrameCompleteFunc_t frameComplete;
     ldShowFunc_t show;
 }ldBaseWidgetFunc_t;
 

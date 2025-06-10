@@ -73,6 +73,7 @@ ldText_t* ldText_init(ld_scene_t *ptScene, ldText_t *ptWidget, uint16_t nameId, 
 void ldText_depose( ldText_t *ptWidget);
 void ldText_on_load( ldText_t *ptWidget);
 void ldText_on_frame_start( ldText_t *ptWidget);
+void ldText_on_frame_complete(ldText_t *ptWidget);
 void ldText_show(ld_scene_t *pScene, ldText_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldTextSetTransparent(ldText_t* ptWidget,bool isTransparent);

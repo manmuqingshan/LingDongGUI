@@ -58,6 +58,7 @@ ldTemplate_t* ldTemplate_init(ld_scene_t *ptScene, ldTemplate_t *ptWidget, uint1
 void ldTemplate_depose( ldTemplate_t *ptWidget);
 void ldTemplate_on_load( ldTemplate_t *ptWidget);
 void ldTemplate_on_frame_start( ldTemplate_t *ptWidget);
+void ldTemplate_on_frame_complete(ldTemplate_t *ptWidget);
 void ldTemplate_show(ld_scene_t *pScene, ldTemplate_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 #define ldTemplateInit(nameId,parentNameId,x,y,width,height) \

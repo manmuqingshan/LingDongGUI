@@ -46,9 +46,6 @@
 const ldBaseWidgetFunc_t ldProgressBarFunc = {
     .depose = (ldDeposeFunc_t)ldProgressBar_depose,
     .load = (ldLoadFunc_t)ldProgressBar_on_load,
-#ifdef FRAME_START
-    .frameStart = (ldFrameStartFunc_t)ldProgressBar_on_frame_start,
-#endif
     .show = (ldShowFunc_t)ldProgressBar_show,
 };
 

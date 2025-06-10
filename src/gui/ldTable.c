@@ -47,9 +47,6 @@
 const ldBaseWidgetFunc_t ldTableFunc = {
     .depose = (ldDeposeFunc_t)ldTable_depose,
     .load = (ldLoadFunc_t)ldTable_on_load,
-#ifdef FRAME_START
-    .frameStart = (ldFrameStartFunc_t)ldTable_on_frame_start,
-#endif
     .show = (ldShowFunc_t)ldTable_show,
 };
 

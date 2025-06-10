@@ -46,9 +46,6 @@
 const ldBaseWidgetFunc_t ldSliderFunc = {
     .depose = (ldDeposeFunc_t)ldSlider_depose,
     .load = (ldLoadFunc_t)ldSlider_on_load,
-#ifdef FRAME_START
-    .frameStart = (ldFrameStartFunc_t)ldSlider_on_frame_start,
-#endif
     .show = (ldShowFunc_t)ldSlider_show,
 };
 

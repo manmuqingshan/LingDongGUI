@@ -49,9 +49,6 @@
 const ldBaseWidgetFunc_t ldScrollSelecterFunc = {
     .depose = (ldDeposeFunc_t)ldScrollSelecter_depose,
     .load = (ldLoadFunc_t)ldScrollSelecter_on_load,
-#ifdef FRAME_START
-    .frameStart = (ldFrameStartFunc_t)ldScrollSelecter_on_frame_start,
-#endif
     .show = (ldShowFunc_t)ldScrollSelecter_show,
 };
 
