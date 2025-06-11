@@ -47,6 +47,8 @@
 const ldBaseWidgetFunc_t ldTableFunc = {
     .depose = (ldDeposeFunc_t)ldTable_depose,
     .load = (ldLoadFunc_t)ldTable_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldTable_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldTable_on_frame_complete,
     .show = (ldShowFunc_t)ldTable_show,
 };
 
@@ -531,7 +533,7 @@ ldTable_t* ldTable_init( ld_scene_t *ptScene,ldTable_t *ptWidget, uint16_t nameI
     return ptWidget;
 }
 
-void ldTable_depose( ldTable_t *ptWidget)
+void ldTable_depose(ld_scene_t *ptScene, ldTable_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -561,16 +563,21 @@ void ldTable_depose( ldTable_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldTable_on_load( ldTable_t *ptWidget)
+void ldTable_on_load(ld_scene_t *ptScene, ldTable_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldTable_on_frame_start( ldTable_t *ptWidget)
+void ldTable_on_frame_start(ld_scene_t *ptScene, ldTable_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldTable_on_frame_complete(ld_scene_t *ptScene, ldTable_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldTable_show(ld_scene_t *ptScene, ldTable_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

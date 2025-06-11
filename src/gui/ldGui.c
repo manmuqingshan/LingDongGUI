@@ -240,7 +240,7 @@ void ldGuiFrameStart(ld_scene_t *ptScene)
         {
             if(((ldBase_t*)ptItem)->ptGuiFunc->frameStart!=NULL)
             {
-                ((ldBase_t*)ptItem)->ptGuiFunc->frameStart(ptScene);
+                ((ldBase_t*)ptItem)->ptGuiFunc->frameStart(ptScene,ptItem);
             }
         }
     }
@@ -268,7 +268,7 @@ void ldGuiLoad(ld_scene_t *ptScene)
         {
             if(((ldBase_t*)ptItem)->ptGuiFunc->load!=NULL)
             {
-                ((ldBase_t*)ptItem)->ptGuiFunc->load(ptScene);
+                ((ldBase_t*)ptItem)->ptGuiFunc->load(ptScene,ptItem);
             }
         }
     }
@@ -290,7 +290,7 @@ void ldGuiDespose(ld_scene_t *ptScene)
         {
             if(((ldBase_t *)ptItem))
             {
-                ((ldBase_t *)ptItem)->ptGuiFunc->depose(ptItem);
+                ((ldBase_t *)ptItem)->ptGuiFunc->depose(ptScene,ptItem);
             }
         }
     }
@@ -306,7 +306,7 @@ void ldGuiFrameComplete(ld_scene_t *ptScene)
         {
             if(((ldBase_t*)ptItem)->ptGuiFunc->frameComplete!=NULL)
             {
-                ((ldBase_t*)ptItem)->ptGuiFunc->frameComplete(ptScene);
+                ((ldBase_t*)ptItem)->ptGuiFunc->frameComplete(ptScene,ptItem);
             }
         }
     }

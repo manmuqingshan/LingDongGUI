@@ -46,9 +46,6 @@ typedef struct ldImage_t ldImage_t;
 
 struct ldImage_t {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     ldColor bgColor;
     ldColor fgColor;
     arm_2d_tile_t* ptImgTile;
@@ -57,10 +54,11 @@ struct ldImage_t {
 };
 
 ldImage_t* ldImage_init(ld_scene_t *ptScene, ldImage_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_tile_t* ptImgTile, arm_2d_tile_t* ptMaskTile, bool isWindow);
-void ldImage_depose( ldImage_t *ptWidget);
-void ldImage_on_load( ldImage_t *ptWidget);
-void ldImage_on_frame_start( ldImage_t *ptWidget);
-void ldImage_show( ld_scene_t *ptScene,ldImage_t *ptWidget,const arm_2d_tile_t *ptTile,bool bIsNewFrame);
+void ldImage_depose(ld_scene_t *ptScene, ldImage_t *ptWidget);
+void ldImage_on_load(ld_scene_t *ptScene, ldImage_t *ptWidget);
+void ldImage_on_frame_start(ld_scene_t *ptScene, ldImage_t *ptWidget);
+void ldImage_on_frame_complete(ld_scene_t *ptScene, ldImage_t *ptWidget);
+void ldImage_show(ld_scene_t *ptScene,ldImage_t *ptWidget,const arm_2d_tile_t *ptTile,bool bIsNewFrame);
 
 void ldImageSetBgColor(ldImage_t *ptWidget,ldColor bgColor);
 void ldImageSetImage(ldImage_t *ptWidget, arm_2d_tile_t* ptImgTile, arm_2d_tile_t* ptMaskTile);

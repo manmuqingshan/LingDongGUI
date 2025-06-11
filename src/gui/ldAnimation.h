@@ -57,9 +57,10 @@ struct ldAnimation_t
 };
 
 ldAnimation_t* ldAnimation_init(ld_scene_t *ptScene, ldAnimation_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_tile_t *ptImgTile, uint16_t periodMs);
-void ldAnimation_depose( ldAnimation_t *ptWidget);
-void ldAnimation_on_load( ldAnimation_t *ptWidget);
-void ldAnimation_on_frame_start( ldAnimation_t *ptWidget);
+void ldAnimation_depose(ld_scene_t *ptScene, ldAnimation_t *ptWidget);
+void ldAnimation_on_load(ld_scene_t *ptScene, ldAnimation_t *ptWidget);
+void ldAnimation_on_frame_start(ld_scene_t *ptScene, ldAnimation_t *ptWidget);
+void ldAnimation_on_frame_complete(ld_scene_t *ptScene, ldAnimation_t *ptWidget);
 void ldAnimation_show(ld_scene_t *pScene, ldAnimation_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 #define ldAnimationInit(nameId,parentNameId,x,y,width,height,ptImgTile,periodMs) \

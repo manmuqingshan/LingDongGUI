@@ -46,6 +46,8 @@
 const ldBaseWidgetFunc_t ldImageFunc={
     .depose=(ldDeposeFunc_t)ldImage_depose,
     .load = (ldLoadFunc_t)ldImage_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldImage_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldImage_on_frame_complete,
     .show=(ldShowFunc_t)ldImage_show,
 };
 
@@ -111,7 +113,7 @@ ldImage_t* ldImage_init( ld_scene_t *ptScene,ldImage_t *ptWidget,uint16_t nameId
     return ptWidget;
 }
 
-void ldImage_depose( ldImage_t *ptWidget)
+void ldImage_depose(ld_scene_t *ptScene, ldImage_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -154,7 +156,7 @@ void ldImage_depose( ldImage_t *ptWidget)
         {
             arm_ctrl_enum(ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.ptChildList, ptItem, PREORDER_TRAVERSAL)
             {
-                ((ldBase_t *)ptItem)->ptGuiFunc->depose(ptItem);
+                ((ldBase_t *)ptItem)->ptGuiFunc->depose(ptScene,ptItem);
             }
         }
     }
@@ -164,16 +166,22 @@ void ldImage_depose( ldImage_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldImage_on_load( ldImage_t *ptWidget)
+void ldImage_on_load(ld_scene_t *ptScene, ldImage_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldImage_on_frame_start( ldImage_t *ptWidget)
+void ldImage_on_frame_start(ld_scene_t *ptScene, ldImage_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldImage_on_frame_complete(ld_scene_t *ptScene, ldImage_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+
 }
 
 void ldImage_show( ld_scene_t *ptScene,ldImage_t *ptWidget,const arm_2d_tile_t *ptTile,bool bIsNewFrame)

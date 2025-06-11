@@ -25,6 +25,7 @@ extern "C" {
 
 #include "arm_2d.h"
 #include "arm_2d_helper_control.h"
+#include "arm_2d_example_controls.h"
 #include "xLog.h"
 #include "xBtnAction.h"
 #include "ldMem.h"
@@ -114,11 +115,11 @@ typedef void (*ldPageFunc_t)(ld_scene_t*);
 typedef void (*ldDrawFunc_t)(ld_scene_t *,arm_2d_tile_t *,bool);
 typedef struct ldPageFuncGroup_t ldPageFuncGroup_t;
 
-typedef void (*ldDeposeFunc_t)(void *);
-typedef void (*ldShowFunc_t)(ld_scene_t*,void *,void *,bool);
-typedef void (*ldFrameStartFunc_t)(void *);
-typedef void (*ldFrameCompleteFunc_t)(void *);
-typedef void (*ldLoadFunc_t)(void *);
+typedef void (*ldLoadFunc_t)(ld_scene_t *ptScene, void *ptWidget);
+typedef void (*ldDeposeFunc_t)(ld_scene_t *ptScene, void *ptWidget);
+typedef void (*ldFrameStartFunc_t)(ld_scene_t *ptScene, void *ptWidget);
+typedef void (*ldFrameCompleteFunc_t)(ld_scene_t *ptScene, void *ptWidget);
+typedef void (*ldShowFunc_t)(ld_scene_t *ptScene, void *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 typedef struct {
     ldDeposeFunc_t depose;

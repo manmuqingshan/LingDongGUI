@@ -48,6 +48,8 @@
 const ldBaseWidgetFunc_t ldGaugeFunc = {
     .depose = (ldDeposeFunc_t)ldGauge_depose,
     .load = (ldLoadFunc_t)ldGauge_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldGauge_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldGauge_on_frame_complete,
     .show = (ldShowFunc_t)ldGauge_show,
 };
 
@@ -101,7 +103,7 @@ ldGauge_t* ldGauge_init( ld_scene_t *ptScene,ldGauge_t *ptWidget, uint16_t nameI
     return ptWidget;
 }
 
-void ldGauge_depose( ldGauge_t *ptWidget)
+void ldGauge_depose(ld_scene_t *pScene, ldGauge_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -121,16 +123,21 @@ void ldGauge_depose( ldGauge_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldGauge_on_load( ldGauge_t *ptWidget)
+void ldGauge_on_load(ld_scene_t *pScene, ldGauge_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldGauge_on_frame_start( ldGauge_t *ptWidget)
+void ldGauge_on_frame_start(ld_scene_t *pScene, ldGauge_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldGauge_on_frame_complete(ld_scene_t *pScene, ldGauge_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldGauge_show(ld_scene_t *ptScene, ldGauge_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

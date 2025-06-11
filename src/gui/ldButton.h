@@ -76,9 +76,10 @@ struct ldButton_t
 };
 
 ldButton_t *ldButton_init(ld_scene_t *ptScene, ldButton_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height);
-void ldButton_depose(ldButton_t *ptWidget);
-void ldButton_on_load(ldButton_t *ptWidget);
-void ldButton_on_frame_start(ldButton_t *ptWidget);
+void ldButton_depose(ld_scene_t *ptScene, ldButton_t *ptWidget);
+void ldButton_on_load(ld_scene_t *ptScene, ldButton_t *ptWidget);
+void ldButton_on_frame_start(ld_scene_t *ptScene, ldButton_t *ptWidget);
+void ldButton_on_frame_complete(ld_scene_t *ptScene, ldButton_t *ptWidget);
 void ldButton_show(ld_scene_t *ptScene, ldButton_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldButtonSetColor(ldButton_t* ptWidget, ldColor releaseColor, ldColor pressColor);

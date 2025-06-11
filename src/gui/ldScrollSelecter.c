@@ -49,6 +49,8 @@
 const ldBaseWidgetFunc_t ldScrollSelecterFunc = {
     .depose = (ldDeposeFunc_t)ldScrollSelecter_depose,
     .load = (ldLoadFunc_t)ldScrollSelecter_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldScrollSelecter_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldScrollSelecter_on_frame_complete,
     .show = (ldShowFunc_t)ldScrollSelecter_show,
 };
 
@@ -195,7 +197,7 @@ ldScrollSelecter_t* ldScrollSelecter_init( ld_scene_t *ptScene,ldScrollSelecter_
     return ptWidget;
 }
 
-void ldScrollSelecter_depose( ldScrollSelecter_t *ptWidget)
+void ldScrollSelecter_depose(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -215,16 +217,21 @@ void ldScrollSelecter_depose( ldScrollSelecter_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldScrollSelecter_on_load( ldScrollSelecter_t *ptWidget)
+void ldScrollSelecter_on_load(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldScrollSelecter_on_frame_start( ldScrollSelecter_t *ptWidget)
+void ldScrollSelecter_on_frame_start(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldScrollSelecter_on_frame_complete(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldScrollSelecter_show(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

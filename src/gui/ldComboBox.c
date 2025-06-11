@@ -77,6 +77,8 @@ const arm_2d_tile_t c_tile_dropDownV_Mask = {
 const ldBaseWidgetFunc_t ldComboBoxFunc = {
     .depose = (ldDeposeFunc_t)ldComboBox_depose,
     .load = (ldLoadFunc_t)ldComboBox_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldComboBox_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldComboBox_on_frame_complete,
     .show = (ldShowFunc_t)ldComboBox_show,
 };
 
@@ -161,7 +163,7 @@ static bool slotComboBoxProcess(ld_scene_t *ptScene,ldMsg_t msg)
     return false;
 }
 
-ldComboBox_t* ldComboBox_init( ld_scene_t *ptScene,ldComboBox_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont)
+ldComboBox_t* ldComboBox_init(ld_scene_t *ptScene,ldComboBox_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont)
 {
     assert(NULL != ptScene);
     ldBase_t *ptParent;
@@ -205,7 +207,7 @@ ldComboBox_t* ldComboBox_init( ld_scene_t *ptScene,ldComboBox_t *ptWidget, uint1
     return ptWidget;
 }
 
-void ldComboBox_depose( ldComboBox_t *ptWidget)
+void ldComboBox_depose(ld_scene_t *ptScene, ldComboBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -225,13 +227,19 @@ void ldComboBox_depose( ldComboBox_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldComboBox_on_load( ldComboBox_t *ptWidget)
+void ldComboBox_on_load(ld_scene_t *ptScene, ldComboBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldComboBox_on_frame_start( ldComboBox_t *ptWidget)
+void ldComboBox_on_frame_start(ld_scene_t *ptScene, ldComboBox_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    
+}
+
+void ldComboBox_on_frame_complete(ld_scene_t *ptScene, ldComboBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     

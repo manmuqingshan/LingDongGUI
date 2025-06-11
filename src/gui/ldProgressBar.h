@@ -49,9 +49,6 @@ typedef struct ldProgressBar_t ldProgressBar_t;
 struct ldProgressBar_t
 {
     implement(ldBase_t);
-//ARM_PRIVATE(
-//    ld_scene_t *ptScene;
-//)
     uint16_t permille;
     ldColor bgColor;
     ldColor fgColor;
@@ -72,9 +69,10 @@ struct ldProgressBar_t
 #define PROGRESS_BAR_SPEED              10
 
 ldProgressBar_t* ldProgressBar_init(ld_scene_t *ptScene, ldProgressBar_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height);
-void ldProgressBar_depose( ldProgressBar_t *ptWidget);
-void ldProgressBar_on_load( ldProgressBar_t *ptWidget);
-void ldProgressBar_on_frame_start( ldProgressBar_t *ptWidget);
+void ldProgressBar_depose(ld_scene_t *ptScene, ldProgressBar_t *ptWidget);
+void ldProgressBar_on_load(ld_scene_t *ptScene, ldProgressBar_t *ptWidget);
+void ldProgressBar_on_frame_start(ld_scene_t *ptScene, ldProgressBar_t *ptWidget);
+void ldProgressBar_on_frame_complete(ld_scene_t *ptScene, ldProgressBar_t *ptWidget);
 void ldProgressBar_show(ld_scene_t *pScene, ldProgressBar_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldProgressBarSetPercent(ldProgressBar_t *ptWidget,float percent);

@@ -45,6 +45,8 @@
 const ldBaseWidgetFunc_t ldLabelFunc = {
     .depose = (ldDeposeFunc_t)ldLabel_depose,
     .load = (ldLoadFunc_t)ldLabel_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldLabel_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldLabel_on_frame_complete,
     .show = (ldShowFunc_t)ldLabel_show,
 };
 
@@ -91,7 +93,7 @@ ldLabel_t* ldLabel_init( ld_scene_t *ptScene,ldLabel_t *ptWidget,uint16_t nameId
     return ptWidget;
 }
 
-void ldLabel_depose( ldLabel_t *ptWidget)
+void ldLabel_depose(ld_scene_t *ptScene, ldLabel_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -111,13 +113,19 @@ void ldLabel_depose( ldLabel_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldLabel_on_load( ldLabel_t *ptWidget)
+void ldLabel_on_load(ld_scene_t *ptScene, ldLabel_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldLabel_on_frame_start( ldLabel_t *ptWidget)
+void ldLabel_on_frame_start(ld_scene_t *ptScene, ldLabel_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    
+}
+
+void ldLabel_on_frame_complete(ld_scene_t *ptScene, ldLabel_t *ptWidget)
 {
     assert(NULL != ptWidget);
     

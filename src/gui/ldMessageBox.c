@@ -48,6 +48,8 @@
 const ldBaseWidgetFunc_t ldMessageBoxFunc = {
     .depose = (ldDeposeFunc_t)ldMessageBox_depose,
     .load = (ldLoadFunc_t)ldMessageBox_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldMessageBox_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldMessageBox_on_frame_complete,
     .show = (ldShowFunc_t)ldMessageBox_show,
 };
 
@@ -189,7 +191,7 @@ ldMessageBox_t* ldMessageBox_init( ld_scene_t *ptScene,ldMessageBox_t *ptWidget,
     return ptWidget;
 }
 
-void ldMessageBox_depose( ldMessageBox_t *ptWidget)
+void ldMessageBox_depose(ld_scene_t *ptScene, ldMessageBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -209,7 +211,7 @@ void ldMessageBox_depose( ldMessageBox_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldMessageBox_on_load( ldMessageBox_t *ptWidget)
+void ldMessageBox_on_load(ld_scene_t *ptScene, ldMessageBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -218,7 +220,16 @@ void ldMessageBox_on_load( ldMessageBox_t *ptWidget)
     }
 }
 
-void ldMessageBox_on_frame_start( ldMessageBox_t *ptWidget)
+void ldMessageBox_on_frame_start(ld_scene_t *ptScene, ldMessageBox_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+}
+
+void ldMessageBox_on_frame_complete(ld_scene_t *ptScene, ldMessageBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)

@@ -48,9 +48,6 @@ typedef struct ldLabel_t ldLabel_t;
 struct ldLabel_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     arm_2d_align_t tAlign;
     arm_2d_tile_t *ptImgTile;
     arm_2d_font_t *ptFont;
@@ -61,9 +58,10 @@ struct ldLabel_t
 };
 
 ldLabel_t* ldLabel_init(ld_scene_t *ptScene, ldLabel_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height,arm_2d_font_t *ptFont);
-void ldLabel_depose( ldLabel_t *ptWidget);
-void ldLabel_on_load( ldLabel_t *ptWidget);
-void ldLabel_on_frame_start( ldLabel_t *ptWidget);
+void ldLabel_depose(ld_scene_t *ptScene, ldLabel_t *ptWidget);
+void ldLabel_on_load(ld_scene_t *ptScene, ldLabel_t *ptWidget);
+void ldLabel_on_frame_start(ld_scene_t *ptScene, ldLabel_t *ptWidget);
+void ldLabel_on_frame_complete(ld_scene_t *ptScene, ldLabel_t *ptWidget);
 void ldLabel_show(ld_scene_t *ptScene, ldLabel_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldLabelSetTransparent(ldLabel_t* ptWidget,bool isTransparent);

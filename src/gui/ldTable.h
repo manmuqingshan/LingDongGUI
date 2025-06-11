@@ -74,10 +74,6 @@ typedef struct ldTable_t ldTable_t;
 struct ldTable_t
 {
     implement(ldBase_t);
-//ARM_PRIVATE(
-//    ld_scene_t *ptScene;
-//)
-
     uint8_t rowCount;
     uint8_t columnCount;
     uint8_t itemSpace;//item 间隔
@@ -97,9 +93,10 @@ struct ldTable_t
 };
 
 ldTable_t* ldTable_init(ld_scene_t *ptScene, ldTable_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, uint8_t rowCount, uint8_t columnCount, uint8_t itemSpace, arm_2d_font_t *ptFont);
-void ldTable_depose( ldTable_t *ptWidget);
-void ldTable_on_load( ldTable_t *ptWidget);
-void ldTable_on_frame_start( ldTable_t *ptWidget);
+void ldTable_depose(ld_scene_t *ptScene, ldTable_t *ptWidget);
+void ldTable_on_load(ld_scene_t *ptScene, ldTable_t *ptWidget);
+void ldTable_on_frame_start(ld_scene_t *ptScene, ldTable_t *ptWidget);
+void ldTable_on_frame_complete(ld_scene_t *ptScene, ldTable_t *ptWidget);
 void ldTable_show(ld_scene_t *pScene, ldTable_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldTableSetItemWidth(ldTable_t *ptWidget,uint8_t column,int16_t width);

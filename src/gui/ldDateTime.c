@@ -46,6 +46,8 @@
 const ldBaseWidgetFunc_t ldDateTimeFunc = {
     .depose = (ldDeposeFunc_t)ldDateTime_depose,
     .load = (ldLoadFunc_t)ldDateTime_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldDateTime_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldDateTime_on_frame_complete,
     .show = (ldShowFunc_t)ldDateTime_show,
 };
 
@@ -97,7 +99,7 @@ ldDateTime_t* ldDateTime_init(ld_scene_t *ptScene, ldDateTime_t *ptWidget, uint1
     return ptWidget;
 }
 
-void ldDateTime_depose( ldDateTime_t *ptWidget)
+void ldDateTime_depose(ld_scene_t *ptScene, ldDateTime_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -117,16 +119,22 @@ void ldDateTime_depose( ldDateTime_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldDateTime_on_load( ldDateTime_t *ptWidget)
+void ldDateTime_on_load(ld_scene_t *ptScene, ldDateTime_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldDateTime_on_frame_start( ldDateTime_t *ptWidget)
+void ldDateTime_on_frame_start(ld_scene_t *ptScene, ldDateTime_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldDateTime_on_frame_complete(ld_scene_t *ptScene, ldDateTime_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+
 }
 
 void ldDateTime_show(ld_scene_t *ptScene, ldDateTime_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

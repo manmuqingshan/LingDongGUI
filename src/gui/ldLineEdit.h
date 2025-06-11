@@ -49,9 +49,6 @@ typedef struct ldLineEdit_t ldLineEdit_t;
 struct ldLineEdit_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     arm_2d_font_t *ptFont;
     arm_2d_align_t tAlign;
     uint16_t kbNameId;
@@ -65,9 +62,10 @@ struct ldLineEdit_t
 };
 
 ldLineEdit_t* ldLineEdit_init(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont, uint8_t textMax);
-void ldLineEdit_depose( ldLineEdit_t *ptWidget);
-void ldLineEdit_on_load( ldLineEdit_t *ptWidget);
-void ldLineEdit_on_frame_start( ldLineEdit_t *ptWidget);
+void ldLineEdit_depose(ld_scene_t *ptScene, ldLineEdit_t *ptWidget);
+void ldLineEdit_on_load(ld_scene_t *ptScene, ldLineEdit_t *ptWidget);
+void ldLineEdit_on_frame_start(ld_scene_t *ptScene, ldLineEdit_t *ptWidget);
+void ldLineEdit_on_frame_complete(ld_scene_t *ptScene, ldLineEdit_t *ptWidget);
 void ldLineEdit_show(ld_scene_t *pScene, ldLineEdit_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldLineEditSetText(ldLineEdit_t* ptWidget,uint8_t *pText);

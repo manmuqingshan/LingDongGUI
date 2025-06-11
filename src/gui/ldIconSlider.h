@@ -55,9 +55,6 @@ typedef struct ldIconSlider_t ldIconSlider_t;
 struct ldIconSlider_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     arm_2d_font_t *ptFont;
     ldIconInfo_t* ptIconInfoList;
     uint8_t rowCount:4;
@@ -81,10 +78,11 @@ struct ldIconSlider_t
     bool isScrollEn:1;
 };
 
-ldIconSlider_t* ldIconSlider_init( ld_scene_t *ptScene,ldIconSlider_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, int16_t iconWidth, uint8_t iconSpace, uint8_t columnCount, uint8_t rowCount, uint8_t pageMax, arm_2d_font_t* ptFont);
-void ldIconSlider_depose( ldIconSlider_t *ptWidget);
-void ldIconSlider_on_load( ldIconSlider_t *ptWidget);
-void ldIconSlider_on_frame_start( ldIconSlider_t *ptWidget);
+ldIconSlider_t* ldIconSlider_init(ld_scene_t *ptScene, ldIconSlider_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, int16_t iconWidth, uint8_t iconSpace, uint8_t columnCount, uint8_t rowCount, uint8_t pageMax, arm_2d_font_t* ptFont);
+void ldIconSlider_depose(ld_scene_t *ptScene, ldIconSlider_t *ptWidget);
+void ldIconSlider_on_load(ld_scene_t *ptScene, ldIconSlider_t *ptWidget);
+void ldIconSlider_on_frame_start(ld_scene_t *ptScene, ldIconSlider_t *ptWidget);
+void ldIconSlider_on_frame_complete(ld_scene_t *ptScene, ldIconSlider_t *ptWidget);
 void ldIconSlider_show(ld_scene_t *pScene, ldIconSlider_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldIconSliderAddIcon(ldIconSlider_t *ptWidget,arm_2d_tile_t *ptImgTile,arm_2d_tile_t *ptMaskTile,const uint8_t* pNameStr);

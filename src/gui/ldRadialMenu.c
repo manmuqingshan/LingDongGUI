@@ -51,6 +51,8 @@
 const ldBaseWidgetFunc_t ldRadialMenuFunc = {
     .depose = (ldDeposeFunc_t)ldRadialMenu_depose,
     .load = (ldLoadFunc_t)ldRadialMenu_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldRadialMenu_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldRadialMenu_on_frame_complete,
     .show = (ldShowFunc_t)ldRadialMenu_show,
 };
 
@@ -218,7 +220,7 @@ ldRadialMenu_t* ldRadialMenu_init( ld_scene_t *ptScene,ldRadialMenu_t *ptWidget,
     return ptWidget;
 }
 
-void ldRadialMenu_depose( ldRadialMenu_t *ptWidget)
+void ldRadialMenu_depose(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -240,7 +242,7 @@ void ldRadialMenu_depose( ldRadialMenu_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldRadialMenu_on_load( ldRadialMenu_t *ptWidget)
+void ldRadialMenu_on_load(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
@@ -324,10 +326,15 @@ static void _autoSort(ldRadialMenu_t *ptWidget)
 
 }
 
-void ldRadialMenu_on_frame_start( ldRadialMenu_t *ptWidget)
+void ldRadialMenu_on_frame_start(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget)
 {
     assert(NULL != ptWidget);
 
+}
+
+void ldRadialMenu_on_frame_complete(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldRadialMenu_show(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

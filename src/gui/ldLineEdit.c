@@ -47,6 +47,8 @@
 const ldBaseWidgetFunc_t ldLineEditFunc = {
     .depose = (ldDeposeFunc_t)ldLineEdit_depose,
     .load = (ldLoadFunc_t)ldLineEdit_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldLineEdit_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldLineEdit_on_frame_complete,
     .show = (ldShowFunc_t)ldLineEdit_show,
 };
 
@@ -146,7 +148,7 @@ ldLineEdit_t* ldLineEdit_init( ld_scene_t *ptScene,ldLineEdit_t *ptWidget, uint1
     return ptWidget;
 }
 
-void ldLineEdit_depose( ldLineEdit_t *ptWidget)
+void ldLineEdit_depose(ld_scene_t *ptScene, ldLineEdit_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -166,16 +168,21 @@ void ldLineEdit_depose( ldLineEdit_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldLineEdit_on_load( ldLineEdit_t *ptWidget)
+void ldLineEdit_on_load(ld_scene_t *ptScene, ldLineEdit_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldLineEdit_on_frame_start( ldLineEdit_t *ptWidget)
+void ldLineEdit_on_frame_start(ld_scene_t *ptScene, ldLineEdit_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldLineEdit_on_frame_complete(ld_scene_t *ptScene, ldLineEdit_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldLineEdit_show(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

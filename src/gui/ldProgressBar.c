@@ -46,6 +46,8 @@
 const ldBaseWidgetFunc_t ldProgressBarFunc = {
     .depose = (ldDeposeFunc_t)ldProgressBar_depose,
     .load = (ldLoadFunc_t)ldProgressBar_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldProgressBar_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldProgressBar_on_frame_complete,
     .show = (ldShowFunc_t)ldProgressBar_show,
 };
 
@@ -90,7 +92,7 @@ ldProgressBar_t* ldProgressBar_init( ld_scene_t *ptScene,ldProgressBar_t *ptWidg
     return ptWidget;
 }
 
-void ldProgressBar_depose( ldProgressBar_t *ptWidget)
+void ldProgressBar_depose(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -110,16 +112,21 @@ void ldProgressBar_depose( ldProgressBar_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldProgressBar_on_load( ldProgressBar_t *ptWidget)
+void ldProgressBar_on_load(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldProgressBar_on_frame_start( ldProgressBar_t *ptWidget)
+void ldProgressBar_on_frame_start(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldProgressBar_on_frame_complete(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 static void _progressBarColorShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTarget)

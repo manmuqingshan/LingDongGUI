@@ -49,9 +49,8 @@ typedef struct ldText_t ldText_t;
 struct ldText_t
 {
     implement(ldBase_t);
-//ARM_PRIVATE(
-//    ld_scene_t *ptScene;
-//)
+    text_box_c_str_reader_t tStringReader;
+    text_box_t tTextPanel;
     arm_2d_helper_pi_slider_t tPISlider;
     arm_2d_tile_t *ptImgTile;
     arm_2d_tile_t *ptMaskTile;
@@ -67,13 +66,14 @@ struct ldText_t
     bool _isTopScroll:1;
     bool _isBottomScroll:1;
     bool _isStatic:1;
+    bool bDownScrolling:1;
 };
 
 ldText_t* ldText_init(ld_scene_t *ptScene, ldText_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont,bool isScroll);
-void ldText_depose( ldText_t *ptWidget);
-void ldText_on_load( ldText_t *ptWidget);
-void ldText_on_frame_start( ldText_t *ptWidget);
-void ldText_on_frame_complete(ldText_t *ptWidget);
+void ldText_depose(ld_scene_t *ptScene, ldText_t *ptWidget);
+void ldText_on_load(ld_scene_t *ptScene, ldText_t *ptWidget);
+void ldText_on_frame_start(ld_scene_t *ptScene, ldText_t *ptWidget);
+void ldText_on_frame_complete(ld_scene_t *ptScene, ldText_t *ptWidget);
 void ldText_show(ld_scene_t *pScene, ldText_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldTextSetTransparent(ldText_t* ptWidget,bool isTransparent);

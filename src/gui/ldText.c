@@ -115,7 +115,7 @@ static bool slotTextVerticalScroll(ld_scene_t *ptScene,ldMsg_t msg)
     return false;
 }
 
-ldText_t* ldText_init( ld_scene_t *ptScene,ldText_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height,arm_2d_font_t *ptFont,bool isScroll)
+ldText_t* ldText_init(ld_scene_t *ptScene,ldText_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height,arm_2d_font_t *ptFont,bool isScroll)
 {
     assert(NULL != ptScene);
     ldBase_t *ptParent;
@@ -159,7 +159,7 @@ ldText_t* ldText_init( ld_scene_t *ptScene,ldText_t *ptWidget, uint16_t nameId, 
     return ptWidget;
 }
 
-void ldText_depose( ldText_t *ptWidget)
+void ldText_depose(ld_scene_t *ptScene, ldText_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -182,19 +182,19 @@ void ldText_depose( ldText_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldText_on_load( ldText_t *ptWidget)
+void ldText_on_load(ld_scene_t *ptScene, ldText_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldText_on_frame_start(ldText_t *ptWidget)
+void ldText_on_frame_start(ld_scene_t *ptScene, ldText_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldText_on_frame_complete(ldText_t *ptWidget)
+void ldText_on_frame_complete(ld_scene_t *ptScene, ldText_t *ptWidget)
 {
     assert(NULL != ptWidget);
 

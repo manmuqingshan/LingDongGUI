@@ -89,7 +89,7 @@ ldTemplate_t* ldTemplate_init(ld_scene_t *ptScene,ldTemplate_t *ptWidget, uint16
     return ptWidget;
 }
 
-void ldTemplate_depose(ldTemplate_t *ptWidget)
+void ldTemplate_depose(ld_scene_t *ptScene, ldTemplate_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -109,7 +109,7 @@ void ldTemplate_depose(ldTemplate_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldTemplate_on_load(ldTemplate_t *ptWidget)
+void ldTemplate_on_load(ld_scene_t *ptScene, ldTemplate_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -118,7 +118,7 @@ void ldTemplate_on_load(ldTemplate_t *ptWidget)
     }
 }
 
-void ldTemplate_on_frame_start(ldTemplate_t *ptWidget)
+void ldTemplate_on_frame_start(ld_scene_t *ptScene, ldTemplate_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -127,7 +127,7 @@ void ldTemplate_on_frame_start(ldTemplate_t *ptWidget)
     }
 }
 
-void ldTemplate_on_frame_complete(ldTemplate_t *ptWidget)
+void ldTemplate_on_frame_complete(ld_scene_t *ptScene, ldTemplate_t *ptWidget)
 {
     assert(NULL != ptWidget);
 

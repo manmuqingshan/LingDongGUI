@@ -49,9 +49,6 @@ typedef struct ldComboBox_t ldComboBox_t;
 struct ldComboBox_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     arm_2d_tile_t *ptDropdownImgTile;
     arm_2d_tile_t *ptDropdownMaskTile;
     uint8_t itemMax;
@@ -67,9 +64,10 @@ struct ldComboBox_t
 };
 
 ldComboBox_t* ldComboBox_init(ld_scene_t *ptScene, ldComboBox_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont);
-void ldComboBox_depose( ldComboBox_t *ptWidget);
-void ldComboBox_on_load( ldComboBox_t *ptWidget);
-void ldComboBox_on_frame_start( ldComboBox_t *ptWidget);
+void ldComboBox_depose(ld_scene_t *ptScene, ldComboBox_t *ptWidget);
+void ldComboBox_on_load(ld_scene_t *ptScene, ldComboBox_t *ptWidget);
+void ldComboBox_on_frame_start(ld_scene_t *ptScene, ldComboBox_t *ptWidget);
+void ldComboBox_on_frame_complete(ld_scene_t *ptScene, ldComboBox_t *ptWidget);
 void ldComboBox_show(ld_scene_t *pScene, ldComboBox_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize);

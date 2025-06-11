@@ -71,9 +71,10 @@ struct ldList_t
 };
 
 ldList_t* ldList_init(ld_scene_t *ptScene, ldList_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height);
-void ldList_depose( ldList_t *ptWidget);
-void ldList_on_load( ldList_t *ptWidget);
-void ldList_on_frame_start( ldList_t *ptWidget);
+void ldList_depose(ld_scene_t *ptScene, ldList_t *ptWidget);
+void ldList_on_load(ld_scene_t *ptScene, ldList_t *ptWidget);
+void ldList_on_frame_start(ld_scene_t *ptScene, ldList_t *ptWidget);
+void ldList_on_frame_complete(ld_scene_t *ptScene, ldList_t *ptWidget);
 void ldList_show(ld_scene_t *pScene, ldList_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldListSetItemHeight(ldList_t* ptWidget,uint8_t itemHeight);

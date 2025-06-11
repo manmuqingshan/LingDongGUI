@@ -56,9 +56,6 @@ typedef struct ldGraph_t ldGraph_t;
 struct ldGraph_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     uint16_t xAxisMax;
     uint16_t yAxisMax;
     uint16_t xAxisOffset;
@@ -75,9 +72,10 @@ struct ldGraph_t
 };
 
 ldGraph_t* ldGraph_init(ld_scene_t *ptScene, ldGraph_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, uint8_t seriesMax);
-void ldGraph_depose( ldGraph_t *ptWidget);
-void ldGraph_on_load( ldGraph_t *ptWidget);
-void ldGraph_on_frame_start( ldGraph_t *ptWidget);
+void ldGraph_depose(ld_scene_t *pScene, ldGraph_t *ptWidget);
+void ldGraph_on_load(ld_scene_t *pScene, ldGraph_t *ptWidget);
+void ldGraph_on_frame_start(ld_scene_t *pScene, ldGraph_t *ptWidget);
+void ldGraph_on_frame_complete(ld_scene_t *pScene, ldGraph_t *ptWidget);
 void ldGraph_show(ld_scene_t *pScene, ldGraph_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldGraphSetAxis(ldGraph_t *ptWidget, uint16_t xAxis, uint16_t yAxis, uint16_t xAxisOffset);

@@ -45,6 +45,8 @@
 const ldBaseWidgetFunc_t ldButtonFunc = {
     .depose = (ldDeposeFunc_t)ldButton_depose,
     .load = (ldLoadFunc_t)ldButton_on_load,
+    .frameStart = (ldFrameStartFunc_t)ldButton_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldButton_on_frame_complete,
     .show = (ldShowFunc_t)ldButton_show,
 };
 
@@ -131,7 +133,7 @@ ldButton_t *ldButton_init(ld_scene_t *ptScene, ldButton_t *ptWidget, uint16_t na
     return ptWidget;
 }
 
-void ldButton_depose(ldButton_t *ptWidget)
+void ldButton_depose(ld_scene_t *ptScene, ldButton_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -151,7 +153,7 @@ void ldButton_depose(ldButton_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldButton_on_load(ldButton_t *ptWidget)
+void ldButton_on_load(ld_scene_t *ptScene, ldButton_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -160,7 +162,16 @@ void ldButton_on_load(ldButton_t *ptWidget)
     }
 }
 
-void ldButton_on_frame_start(ldButton_t *ptWidget)
+void ldButton_on_frame_start(ld_scene_t *ptScene, ldButton_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+}
+
+void ldButton_on_frame_complete(ld_scene_t *ptScene, ldButton_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
