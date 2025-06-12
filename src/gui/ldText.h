@@ -60,7 +60,8 @@ struct ldText_t
     ldColor textColor;
     int16_t scrollOffset;
     int16_t _scrollOffset;
-    int16_t strHeight;
+    uint16_t strHeight;
+    uint16_t lastLineNum;
     bool isTransparent:1;
     bool isMoveReset:1;
     bool _isTopScroll:1;
