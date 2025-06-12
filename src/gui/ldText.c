@@ -129,7 +129,7 @@ static bool slotTextVerticalScroll(ld_scene_t *ptScene,ldMsg_t msg)
     return false;
 }
 
-ldText_t* ldText_init(ld_scene_t *ptScene,ldText_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height,arm_2d_font_t *ptFont,bool isScroll)
+ldText_t* ldText_init(ld_scene_t *ptScene,ldText_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height,arm_2d_font_t *ptFont,text_box_line_alignment_t align,bool isScroll)
 {
     assert(NULL != ptScene);
     ldBase_t *ptParent;
@@ -168,7 +168,7 @@ ldText_t* ldText_init(ld_scene_t *ptScene,ldText_t *ptWidget, uint16_t nameId, u
             .ptIO       = &TEXT_BOX_IO_C_STRING_READER,
             .pTarget    = (uintptr_t)&ptWidget->tStringReader,
         },
-        .u2LineAlign = TEXT_BOX_LINE_ALIGN_LEFT,
+        .u2LineAlign = align,
         //.fScale = 1.0f,
         //.chSpaceBetweenParagraph = 20,
 
