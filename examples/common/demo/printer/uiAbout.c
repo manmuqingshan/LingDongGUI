@@ -37,7 +37,7 @@ void uiAboutInit(ld_scene_t* ptScene)
     ldButtonSetText(obj,"返回");
     connect(ID_BTN_RET,SIGNAL_RELEASE,slotJumpReady);
 
-    obj=ldTextInit(ID_TXT,ID_BG,20,50,440,200,FONT_ALIBABAPUHUITI_3_55_REGULAR_18,false);
+    obj=ldTextInit(ID_TXT,ID_BG,20,50,440,200,FONT_ALIBABAPUHUITI_3_55_REGULAR_18,TEXT_BOX_LINE_ALIGN_LEFT,false);
     ldTextSetText(obj,aboutText);
 }
 

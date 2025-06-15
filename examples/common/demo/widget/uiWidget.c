@@ -115,7 +115,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
 //    ldProgressBarSetHorizontal(obj,false);
     ldProgressBarSetImage(obj,IMAGE_PROGRESSBARBG_BMP,NULL,IMAGE_PROGRESSBARFG_BMP,NULL);
 
-    obj=ldTextInit(9,0,300,10,150,200,FONT_ARIAL_12,true);
+    obj=ldTextInit(9,0,300,10,150,200,FONT_ARIAL_12,TEXT_BOX_LINE_ALIGN_LEFT,true);
     ldTextSetBgImage(obj,IMAGE_LETTER_PAPER_BMP,NULL);
     ldTextSetText(obj,"123\n12333");
 
