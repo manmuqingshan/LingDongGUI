@@ -50,6 +50,7 @@ struct ldLabel_t
     implement(ldBase_t);
     arm_2d_align_t tAlign;
     arm_2d_tile_t *ptImgTile;
+    arm_2d_tile_t *ptMaskTile;
     arm_2d_font_t *ptFont;
     ldColor bgColor;
     ldColor textColor;
@@ -68,7 +69,7 @@ void ldLabelSetTransparent(ldLabel_t* ptWidget,bool isTransparent);
 void ldLabelSetText(ldLabel_t* ptWidget,uint8_t *pStr);
 void ldLabelSetTextColor(ldLabel_t* ptWidget,ldColor textColor);
 void ldLabelSetAlign(ldLabel_t *ptWidget,arm_2d_align_t tAlign);
-void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile);
+void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
 void ldLabelSetBgColor(ldLabel_t *ptWidget, ldColor bgColor);
 void ldLabelSetOpacity(ldLabel_t *ptWidget, uint8_t opacity);
 

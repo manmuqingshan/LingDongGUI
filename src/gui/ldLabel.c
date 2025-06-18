@@ -165,7 +165,7 @@ void ldLabel_show(ld_scene_t *ptScene, ldLabel_t *ptWidget, const arm_2d_tile_t 
                 }
                 else
                 {
-                    ldBaseImage(&tTarget,NULL,ptWidget->ptImgTile,NULL,0,ptWidget->use_as__ldBase_t.opacity);
+                    ldBaseImage(&tTarget,NULL,ptWidget->ptImgTile,ptWidget->ptMaskTile,0,ptWidget->use_as__ldBase_t.opacity);
                 }
                 arm_2d_op_wait_async(NULL);
             }
@@ -232,7 +232,7 @@ void ldLabelSetAlign(ldLabel_t *ptWidget,arm_2d_align_t tAlign)
     ptWidget->tAlign=tAlign;
 }
 
-void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile)
+void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
 {
     if(ptWidget==NULL)
     {
@@ -240,6 +240,7 @@ void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile)
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ptImgTile=ptImgTile;
+    ptWidget->ptMaskTile=ptMaskTile;
     ptWidget->isTransparent=false;
 }
 
