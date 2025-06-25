@@ -73,6 +73,34 @@ https://code.visualstudio.com/Download
 
 https://git-scm.com/download/win
 
+### 安装 gcc
+
+我使用的是MinGW-w64
+
+https://www.mingw-w64.org/
+
+然后在这网站，找到这里
+
+https://github.com/niXman/mingw-builds-binaries/releases/
+
+i686是32位
+
+x86_64是64位
+
+选择参考
+
+i686-15.1.0-release-posix-dwarf-ucrt-rt_v12-rev0.7z
+
+x86_64-15.1.0-release-posix-seh-ucrt-rt_v12-rev0.7z
+
+demo默认gcc安装位置为：
+
+D:\mingw32
+
+D:\mingw64
+
+根据自己需求选择即可
+
 ## 下载源码
 
 ### 方法1
@@ -104,37 +132,9 @@ git clone --recursive https://github.com/gzbkey/LingDongGUI.git
 
 ## VSCode SDL Demo 的使用
 
-### 安装 gcc
-
-我使用的是MinGW-w64
-
-https://www.mingw-w64.org/
-
-然后在这网站，找到这里
-
-https://github.com/niXman/mingw-builds-binaries/releases/
-
-i686是32位
-
-x86_64是64位
-
-选择参考
-
-686-13.1.0-release-win32-dwarf-ucrt-rt_v11-rev1.7z
-
-x86_64-13.1.0-release-win32-seh-ucrt-rt_v11-rev1.7z
-
-demo默认gcc安装位置为：
-
-D:\mingw32
-
-D:\mingw64
-
-根据自己需求选择即可
-
 ### 修改配置
 
-gcc安装位置不是以上的默认位置，则需要修改配置
+gcc安装位置，如果使用以上的默认位置，则跳过本步骤
 
 1. 通过vscode打开项目文件夹
 
@@ -158,3 +158,40 @@ gcc安装位置不是以上的默认位置，则需要修改配置
 
 3. 项目编译前，会自动复制SDL2的dll文件到对应的文件内，无需手动操作。
 
+# Makefile SDL Demo
+
+## 软件准备
+
+### 安装 gcc
+
+我使用的是MinGW-w64
+
+https://www.mingw-w64.org/
+
+然后在这网站，找到这里
+
+https://github.com/niXman/mingw-builds-binaries/releases/
+
+i686是32位
+
+x86_64是64位
+
+选择参考
+
+i686-15.1.0-release-posix-dwarf-ucrt-rt_v12-rev0.7z
+
+x86_64-15.1.0-release-posix-seh-ucrt-rt_v12-rev0.7z
+
+demo默认gcc安装位置为：
+
+D:\mingw32
+
+D:\mingw64
+
+根据自己需求选择即可
+
+将gcc安装位置添加到环境变量中
+
+### 编译
+
+进入makefile目录下，执行mingw32-make即可进行编译
