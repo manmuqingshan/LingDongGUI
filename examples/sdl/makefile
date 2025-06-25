@@ -18,7 +18,7 @@ LDFLAGS =
 LIBS = -L./sdl2/64/lib -lSDL2 -lSDL2main -lpthread
 
 # 输出目录
-BUILD_DIR = build
+BUILD_DIR = ./build
 
 # 源文件收集
 SOURCES = \

@@ -738,7 +738,7 @@ void ldKeyboard_show(ld_scene_t *ptScene, ldKeyboard_t *ptWidget, const arm_2d_t
                 isExit=false;
                 ptWidget->upperState=0;
                 ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY=LD_CFG_SCEEN_HEIGHT;
-                ldKeyboardSetHidden(ptWidget,true);
+                ldKeyboardSetHidden((ldBase_t *)ptWidget,true);
                 emit(ptWidget->editorId,SIGNAL_FINISHED,0);
 
                 ldBaseBgMove(ptScene,LD_CFG_SCEEN_WIDTH,LD_CFG_SCEEN_HEIGHT,0,0);

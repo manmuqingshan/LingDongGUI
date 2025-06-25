@@ -25,9 +25,9 @@ static bool slotTest(ld_scene_t *ptScene,ldMsg_t msg)
 
 //   ldButtonSetText(btn,"222");
 //   ldButtonMove(btn,150,100);
-   ldImage_t*img=ldBaseGetWidget(ptScene->ptNodeRoot,1);
+   ldImage_t *img=ldBaseGetWidget(ptScene->ptNodeRoot,1);
 //   ldImageSetHidden(img,!img->use_as__ldBase_t.isHidden);
-   ldImageSetOpacity(img,128);
+   ldImageSetOpacity((ldBase_t *)img,128);
    return false;
 }
 

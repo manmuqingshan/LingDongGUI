@@ -61,7 +61,7 @@ void uiPrintInit(ld_scene_t* ptScene)
     connect(ID_BTN_RET,SIGNAL_RELEASE,slotJumpMain);
 
     obj=ldListInit(ID_LIST,ID_BG,20,55,250,200);
-    ldListSetText(obj,pListName,7,FONT_ALIBABAPUHUITI_3_55_REGULAR_18);
+    ldListSetText(obj,(const unsigned char **)pListName,7,FONT_ALIBABAPUHUITI_3_55_REGULAR_18);
     ldListSetItemHeight(obj,40);
     ldListSetAlign(obj,ARM_2D_ALIGN_LEFT);
     ((ldList_t*)obj)->padding.left=20;

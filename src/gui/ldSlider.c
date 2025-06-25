@@ -59,7 +59,7 @@ static bool slotSliderMove(ld_scene_t *ptScene,ldMsg_t msg)
     tClickLocal.iX=(int16_t)GET_SIGNAL_VALUE_X(msg.value);
     tClickLocal.iY=(int16_t)GET_SIGNAL_VALUE_Y(msg.value);
 
-    tClickLocal=ldBaseGetRelativeLocation(ptWidget,tClickLocal);
+    tClickLocal=ldBaseGetRelativeLocation((ldBase_t *)ptWidget,tClickLocal);
 
     uint8_t halfIndicWidth=ptWidget->indicWidth>>1;
 

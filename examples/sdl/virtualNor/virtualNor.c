@@ -117,7 +117,7 @@ void norErasePage(uint16_t pageNum)
     addr=pageNum*NOR_PAGE_SIZE;
     memset(buf,0xff,NOR_PAGE_SIZE);
     VIRTUAL_NOR_LOG("erase addr %d\n",addr);
-    norWrite(buf,addr,NOR_PAGE_SIZE);
+    norWrite((uint8_t*)buf,addr,NOR_PAGE_SIZE);
 }
 
 void norReadWrite_fast(FILE *fp_fast,uint8_t *path,bool isWrite,uint8_t *buf, uint32_t addr, uint16_t length)

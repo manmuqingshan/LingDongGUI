@@ -232,7 +232,7 @@ void ldText_on_frame_start(ld_scene_t *ptScene, ldText_t *ptWidget)
 
     if(ptWidget->isMoveReset)
     {
-        int32_t iResult;
+        int16_t iResult;
         bool isPiEnd;
 
         isPiEnd=arm_2d_helper_pi_slider(&ptWidget->tPISlider, ptWidget->_scrollOffset, &iResult);

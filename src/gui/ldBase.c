@@ -196,7 +196,7 @@ void ldBaseNodeTreePrint(arm_2d_control_node_t *ptNodeRoot, int depth)
         LOG_PRINT("  "); // 打印缩进
     }
 
-    LOG_NORMAL("type:%02d,id:%02d",((ldBase_t*)ptNodeRoot)->widgetType,((ldBase_t*)ptNodeRoot)->nameId);
+    LOG_NORMAL("type:%02d,id:%02d",((ldBase_t *)ptNodeRoot)->widgetType,((ldBase_t *)ptNodeRoot)->nameId);
 
     arm_2d_control_node_t *child = ptNodeRoot->ptChildList;
     while (child != NULL)
@@ -551,8 +551,8 @@ arm_2d_location_t ldBaseGetRelativeLocation(ldBase_t *ptWidget,arm_2d_location_t
 
     while(ptRoot!=NULL)
     {
-        tLocation.iX-=((ldBase_t*)ptRoot)->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
-        tLocation.iY-=((ldBase_t*)ptRoot)->use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
+        tLocation.iX-=((ldBase_t *)ptRoot)->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
+        tLocation.iY-=((ldBase_t *)ptRoot)->use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
         ptRoot=ptRoot->ptParent;
     }
     return tLocation;
@@ -564,8 +564,8 @@ arm_2d_location_t ldBaseGetAbsoluteLocation(ldBase_t *ptWidget,arm_2d_location_t
 
     while(ptNode!=NULL)
     {
-        tLocation.iX+=((ldBase_t*)ptNode)->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
-        tLocation.iY+=((ldBase_t*)ptNode)->use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
+        tLocation.iX+=((ldBase_t *)ptNode)->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
+        tLocation.iY+=((ldBase_t *)ptNode)->use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
         ptNode=ptNode->ptParent;
     }
     return tLocation;
@@ -725,17 +725,17 @@ void ldBaseDrawLine(arm_2d_tile_t *pTile,int16_t x0, int16_t y0, int16_t x1, int
 
 ldBase_t* ldBaseGetParent(ldBase_t* ptWidget)
 {
-    return ptWidget->use_as__arm_2d_control_node_t.ptParent;
+    return (ldBase_t *)ptWidget->use_as__arm_2d_control_node_t.ptParent;
 }
 
 ldBase_t* ldBaseGetChildList(ldBase_t* ptWidget)
 {
-    return ptWidget->use_as__arm_2d_control_node_t.ptChildList;
+    return (ldBase_t *)ptWidget->use_as__arm_2d_control_node_t.ptChildList;
 }
 
 void ldBaseBgMove(ld_scene_t *ptScene, int16_t bgWidth,int16_t bgHeight,int16_t offsetX,int16_t offsetY)
 {
-    ldBase_t *ptWidget= ptScene->ptNodeRoot;
+    ldBase_t *ptWidget= (ldBase_t *)ptScene->ptNodeRoot;
 
     ldBaseMove(ptWidget,offsetX,offsetY);
 

@@ -80,17 +80,17 @@ static bool slotLineEditProcess(ld_scene_t *ptScene,ldMsg_t msg)
                 kb->editorId=ptWidget->use_as__ldBase_t.nameId;
                 cursorBlinkFlag=true;
                 cursorBlinkCount=0;
-                ldKeyboardSetHidden(kb,false);
+                ldKeyboardSetHidden((ldBase_t *)kb,false);
 
                 if((ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY+ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight)>(LD_CFG_SCEEN_HEIGHT>>1))
                 {
-                    ldKeyboardMove(kb,0,LD_CFG_SCEEN_HEIGHT>>1);
+                    ldKeyboardMove((ldBase_t *)kb,0,LD_CFG_SCEEN_HEIGHT>>1);
                     ldBaseBgMove(ptScene,LD_CFG_SCEEN_WIDTH,LD_CFG_SCEEN_HEIGHT,0,-(LD_CFG_SCEEN_HEIGHT>>1));
 
                 }
                 else
                 {
-                    ldKeyboardMove(kb,0,0);
+                    ldKeyboardMove((ldBase_t *)kb,0,0);
                 }
             }
         }

@@ -70,7 +70,7 @@ static bool slotMenuSelect(ld_scene_t *ptScene,ldMsg_t msg)
         tClickLocal.iX=(int16_t)GET_SIGNAL_VALUE_X(msg.value);
         tClickLocal.iY=(int16_t)GET_SIGNAL_VALUE_Y(msg.value);
 
-        tClickLocal=ldBaseGetRelativeLocation(ptWidget,tClickLocal);
+        tClickLocal=ldBaseGetRelativeLocation((ldBase_t *)ptWidget,tClickLocal);
         break;
     }
     case SIGNAL_HOLD_DOWN:
@@ -133,7 +133,7 @@ static bool slotMenuSelect(ld_scene_t *ptScene,ldMsg_t msg)
             tReleaseLoc.iX=(int16_t)GET_SIGNAL_VALUE_X(msg.value);
             tReleaseLoc.iY=(int16_t)GET_SIGNAL_VALUE_Y(msg.value);
 
-            tReleaseLoc=ldBaseGetRelativeLocation(ptWidget,tReleaseLoc);
+            tReleaseLoc=ldBaseGetRelativeLocation((ldBase_t *)ptWidget,tReleaseLoc);
 
 //            ldRadialMenuItem_t *ptItemList=(ldRadialMenuItem_t *)ptWidget->use_as__ldBase_t.ptItemList;
 
