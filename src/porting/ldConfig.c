@@ -2,7 +2,7 @@
 #include "arm_2d_types.h"
 #include "ldMem.h"
 
-void __aeabi_assert(const char *chCond, const char *chLine, int wErrCode)
+__WEAK void __aeabi_assert(const char *chCond, const char *chLine, int wErrCode)
 {
     (void)chCond;
     (void)chLine;
