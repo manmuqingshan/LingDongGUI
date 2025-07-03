@@ -98,12 +98,19 @@ static bool slotMsgBoxToggle(ld_scene_t *ptScene,ldMsg_t msg)
                 ptWidget->ptFunc(ptScene,ptWidget);
             }
             ptWidget->clickNum=-1;
-            ptWidget->use_as__ldBase_t.isHidden=true;
-            ldBaseSetDeleteLater((ldBase_t*)ptWidget);
-//            ptWidget->use_as__ldBase_t.ptGuiFunc->depose(ptWidget);
-        }
-        ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
 
+#if 0
+            ldBaseSetHidden((ldBase_t*)ptWidget,true);
+#else
+            ldBase_t* parent=ldBaseGetParent((ldBase_t*)ptWidget);
+            parent->isDirtyRegionUpdate = true;
+            ptWidget->use_as__ldBase_t.ptGuiFunc->depose(ptScene,ptWidget);
+#endif
+        }
+        else
+        {
+            ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+        }
         break;
     }
     default:

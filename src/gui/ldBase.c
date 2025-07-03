@@ -512,8 +512,25 @@ void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
     {
         return;
     }
+#if 0
     ptWidget->isDirtyRegionUpdate = true;
     ptWidget->isHidden=isHidden;
+#else
+    arm_2d_control_node_t *ptNodeRoot=ldBaseGetRootNode(&ptWidget->use_as__arm_2d_control_node_t);
+    arm_2d_control_node_t *ptNode=&ptWidget->use_as__arm_2d_control_node_t;
+    int16_t x,y;
+    if(isHidden)
+    {
+        x=ptNode->tRegion.tLocation.iX-ptNodeRoot->tRegion.tSize.iWidth;
+        y=ptNode->tRegion.tLocation.iY-ptNodeRoot->tRegion.tSize.iHeight;
+    }
+    else
+    {
+        x=ptNode->tRegion.tLocation.iX+ptNodeRoot->tRegion.tSize.iWidth;
+        y=ptNode->tRegion.tLocation.iY+ptNodeRoot->tRegion.tSize.iHeight;
+    }
+    ldBaseMove(ptWidget,x,y);
+#endif
 }
 
 void ldBaseMove(ldBase_t* ptWidget,int16_t x,int16_t y)
@@ -951,9 +968,4 @@ int16_t ldBaseAutoVerticalGridAlign(arm_2d_region_t widgetRegion,int16_t current
         }
     }
     return targetOffset;
-}
-
-void ldBaseSetDeleteLater(ldBase_t *ptWidget)
-{
-    ptWidget->deleteLaterCount=2;
 }

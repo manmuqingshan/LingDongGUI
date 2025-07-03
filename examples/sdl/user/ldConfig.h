@@ -95,7 +95,7 @@ extern "C" {
 #define LOG_NEW_LINE_TYPE                         (0)
 #endif
 
-#define __DISP0_CFG_DEBUG_DIRTY_REGIONS__         (1)
+#define __DISP0_CFG_DEBUG_DIRTY_REGIONS__         (0)
 #define __ARM_2D_CFG_ENABLE_LOG__                 (0)
 
 #ifndef USE_DEMO
