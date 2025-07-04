@@ -505,6 +505,23 @@ arm_2d_size_t arm_lcd_text_get_box(uint8_t *pStr, arm_2d_font_t *ptFont)
     return tDrawBox.tSize;
 }
 
+ARM_NONNULL(1,2)
+bool __arm_2d_helper_control_user_whether_ignore_node(  arm_2d_control_node_t *ptRoot,
+                                                        arm_2d_control_node_t *ptNode,
+                                                        arm_2d_location_t tLocation)
+{
+    ARM_2D_UNUSED(ptRoot);
+    ARM_2D_UNUSED(tLocation);
+
+    ldBase_t* ptWidget=(ldBase_t*)ptNode;
+    if(ptWidget->isHidden)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
 {
     assert(NULL != ptWidget);
@@ -512,7 +529,7 @@ void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
     {
         return;
     }
-#if 0
+#if 1
     ptWidget->isDirtyRegionUpdate = true;
     ptWidget->isHidden=isHidden;
 #else

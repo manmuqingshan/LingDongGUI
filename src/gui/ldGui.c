@@ -89,13 +89,6 @@ void ldGuiClickedAction(ld_scene_t *ptScene,uint8_t touchSignal,arm_2d_location_
             ptWidget=(ldBase_t*)arm_2d_helper_control_find_node_with_location(ptScene->ptNodeRoot,tLocation);
         }
 
-        while(ptWidget->isHidden)
-        {
-            LOG_DEBUG("widget id:%d, is hidden.",ptWidget->nameId);
-            ptWidget=ldBaseGetParent(ptWidget);
-            LOG_DEBUG("find parent widget id:%d",ptWidget->nameId);
-        }
-
 #if (USE_LOG_LEVEL>=LOG_LEVEL_DEBUG)
         if(ptWidget!=NULL)
         {
