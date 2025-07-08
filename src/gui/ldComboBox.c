@@ -198,6 +198,9 @@ ldComboBox_t* ldComboBox_init(ld_scene_t *ptScene,ldComboBox_t *ptWidget, uint16
     ptWidget->isCorner=true;
     ptWidget->ptFont=ptFont;
     ptWidget->textColor=GLCD_COLOR_BLACK;
+    ptWidget->bgColor=GLCD_COLOR_WHITE;
+    ptWidget->frameColor=GLCD_COLOR_LIGHT_GREY;
+    ptWidget->selectColor=__RGB( 0x7F, 0xB0, 0xEF );
 
     ldMsgConnect(ptWidget,SIGNAL_PRESS,slotComboBoxProcess);
     ldMsgConnect(ptWidget,SIGNAL_RELEASE,slotComboBoxProcess);
@@ -280,13 +283,13 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
 
             if(ptWidget->isCorner)
             {
-                draw_round_corner_box(&tTarget,&displayRegion,GLCD_COLOR_WHITE,255,bIsNewFrame);
-                draw_round_corner_border(&tTarget,&displayRegion,GLCD_COLOR_LIGHT_GREY,(arm_2d_border_opacity_t){255,255,255,255},(arm_2d_corner_opacity_t){255,255,255,255});
+                draw_round_corner_box(&tTarget,&displayRegion,ptWidget->bgColor,255,bIsNewFrame);
+                draw_round_corner_border(&tTarget,&displayRegion,ptWidget->frameColor,(arm_2d_border_opacity_t){255,255,255,255},(arm_2d_corner_opacity_t){255,255,255,255});
             }
             else
             {
-                ldBaseColor(&tTarget,NULL,GLCD_COLOR_WHITE,255);
-                arm_2d_draw_box(&tTarget,&displayRegion,1,GLCD_COLOR_LIGHT_GREY,255);
+                ldBaseColor(&tTarget,NULL,ptWidget->bgColor,255);
+                arm_2d_draw_box(&tTarget,&displayRegion,1,ptWidget->frameColor,255);
             }
 
             arm_2d_tile_t tChildTile;
@@ -343,13 +346,13 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
                     displayRegion.tSize.iHeight=tempTile.tRegion.tSize.iHeight;
                     if(ptWidget->isCorner)
                     {
-                        draw_round_corner_box(&tempTile,&displayRegion,GLCD_COLOR_WHITE,255,bIsNewFrame);
-                        draw_round_corner_border(&tempTile,&displayRegion,GLCD_COLOR_LIGHT_GREY,(arm_2d_border_opacity_t){255,255,255,255},(arm_2d_corner_opacity_t){255,255,255,255});
+                        draw_round_corner_box(&tempTile,&displayRegion,ptWidget->bgColor,255,bIsNewFrame);
+                        draw_round_corner_border(&tempTile,&displayRegion,ptWidget->frameColor,(arm_2d_border_opacity_t){255,255,255,255},(arm_2d_corner_opacity_t){255,255,255,255});
                     }
                     else
                     {
-                        ldBaseColor(&tempTile,NULL,GLCD_COLOR_WHITE,255);
-                        arm_2d_draw_box(&tempTile,&displayRegion,1,GLCD_COLOR_LIGHT_GREY,255);
+                        ldBaseColor(&tempTile,NULL,ptWidget->bgColor,255);
+                        arm_2d_draw_box(&tempTile,&displayRegion,1,ptWidget->frameColor,255);
                     }
 
                     arm_2d_tile_generate_child(&tTarget,
@@ -365,10 +368,10 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
                     {
                         ldBaseLabel(&tTarget,&tempTile.tRegion,ptWidget->ppItemStrGroup[i],ptWidget->ptFont,ARM_2D_ALIGN_LEFT,ptWidget->textColor,ptWidget->use_as__ldBase_t.opacity);
 
-                        lineColor=GLCD_COLOR_LIGHT_GREY;
+                        lineColor=ptWidget->frameColor;
                         if(ptWidget->itemPreSelect==i)
                         {
-                            lineColor=__RGB( 0x7F, 0xB0, 0xEF  );
+                            lineColor=ptWidget->selectColor;
                         }
 
                         ldBaseColor(&tTarget,
@@ -397,6 +400,66 @@ void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ppItemStrGroup=pStrArray;
     ptWidget->itemCount=arraySize;
+}
+
+void ldComboBoxSetTextColor(ldComboBox_t* ptWidget, ldColor textColor)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->textColor=textColor;
+}
+
+void ldComboBoxSetBackgroundColor(ldComboBox_t* ptWidget, ldColor backgroundColor)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->bgColor=backgroundColor;
+}
+
+void ldComboBoxSetFrameColor(ldComboBox_t* ptWidget, ldColor frameColor)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->frameColor=frameColor;
+}
+
+void ldComboBoxSetSelectColor(ldComboBox_t* ptWidget, ldColor selectColor)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->selectColor=selectColor;
+}
+
+void ldComboBoxSetSelectItem(ldComboBox_t* ptWidget, uint8_t itemIndex)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    if(itemIndex>=ptWidget->itemCount)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->itemSelect=itemIndex;
+    ptWidget->itemPreSelect=itemIndex;
 }
 
 #if defined(__clang__)

@@ -59,6 +59,9 @@ struct ldComboBox_t
     arm_2d_font_t *ptFont;
     const uint8_t **ppItemStrGroup;
     ldColor textColor;
+    ldColor bgColor;
+    ldColor frameColor;
+    ldColor selectColor;
     bool isExpand:1;
     bool isCorner:1;
 };
@@ -75,6 +78,11 @@ void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_
 #define ldComboBoxInit(nameId,parentNameId,x,y,width,height,ptFont) \
         ldComboBox_init(ptScene,NULL,nameId,parentNameId,x,y,width,height,ptFont)
 
+void ldComboBoxSetTextColor(ldComboBox_t* ptWidget, ldColor textColor);
+void ldComboBoxSetBackgroundColor(ldComboBox_t* ptWidget, ldColor backgroundColor);
+void ldComboBoxSetFrameColor(ldComboBox_t* ptWidget, ldColor frameColor);
+void ldComboBoxSetSelectColor(ldComboBox_t* ptWidget, ldColor selectColor);
+void ldComboBoxSetSelectItem(ldComboBox_t* ptWidget, uint8_t itemIndex);
 #define ldComboBoxSetHidden                ldBaseSetHidden
 #define ldComboBoxMove                     ldBaseMove
 #define ldComboBoxSetOpacity               ldBaseSetOpacity
