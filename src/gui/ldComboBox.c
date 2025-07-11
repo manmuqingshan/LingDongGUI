@@ -496,6 +496,18 @@ void ldComboBoxSetCorner(ldComboBox_t* ptWidget,bool isCorner)
     ptWidget->isCorner=isCorner;
 }
 
+void ldComboBoxSetDropdownImage(ldComboBox_t* ptWidget,arm_2d_tile_t* ptDropdownImgTile,arm_2d_tile_t* ptDropdownMaskTile)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->ptDropdownImgTile=ptDropdownImgTile;
+    ptWidget->ptDropdownMaskTile=ptDropdownMaskTile;
+}
+
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif

@@ -73,8 +73,6 @@ void ldComboBox_on_frame_start(ld_scene_t *ptScene, ldComboBox_t *ptWidget);
 void ldComboBox_on_frame_complete(ld_scene_t *ptScene, ldComboBox_t *ptWidget);
 void ldComboBox_show(ld_scene_t *pScene, ldComboBox_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
-void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize);
-
 #define ldComboBoxInit(nameId,parentNameId,x,y,width,height,ptFont) \
         ldComboBox_init(ptScene,NULL,nameId,parentNameId,x,y,width,height,ptFont)
 
@@ -84,6 +82,8 @@ void ldComboBoxSetFrameColor(ldComboBox_t* ptWidget, ldColor frameColor);
 void ldComboBoxSetSelectColor(ldComboBox_t* ptWidget, ldColor selectColor);
 void ldComboBoxSetSelectItem(ldComboBox_t* ptWidget, uint8_t itemIndex);
 void ldComboBoxSetCorner(ldComboBox_t* ptWidget,bool isCorner);
+void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize);
+void ldComboBoxSetDropdownImage(ldComboBox_t* ptWidget,arm_2d_tile_t* ptDropdownImgTile,arm_2d_tile_t* ptDropdownMaskTile);
 
 #define ldComboBoxSetHidden                ldBaseSetHidden
 #define ldComboBoxMove                     ldBaseMove
