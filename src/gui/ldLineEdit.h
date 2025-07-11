@@ -53,6 +53,8 @@ struct ldLineEdit_t
     arm_2d_align_t tAlign;
     uint16_t kbNameId;
     ldColor textColor;
+    ldColor backgroundColor;
+    ldColor frameColor;
     uint8_t *pText;
     uint8_t textMax;
     bool isEditing:1;
@@ -72,6 +74,8 @@ void ldLineEditSetText(ldLineEdit_t* ptWidget,uint8_t *pText);
 void ldLineEditSetKeyboard(ldLineEdit_t* ptWidget,uint16_t kbNameId);
 void ldLineEditSetType(ldLineEdit_t* ptWidget,ldEditType_t editType);
 void ldLineEditSetAlign(ldLineEdit_t *ptWidget,arm_2d_align_t tAlign);
+void ldLineEditSetCorner(ldLineEdit_t *ptWidget, bool isCorner);
+void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backgroundColor, ldColor frameColor);
 
 #define ldLineEditInit(nameId,parentNameId,x,y,width,height,ptFont,textMax) \
         ldLineEdit_init(ptScene,NULL,nameId,parentNameId,x,y,width,height,ptFont,textMax)
