@@ -83,6 +83,8 @@ void ldComboBoxSetBackgroundColor(ldComboBox_t* ptWidget, ldColor backgroundColo
 void ldComboBoxSetFrameColor(ldComboBox_t* ptWidget, ldColor frameColor);
 void ldComboBoxSetSelectColor(ldComboBox_t* ptWidget, ldColor selectColor);
 void ldComboBoxSetSelectItem(ldComboBox_t* ptWidget, uint8_t itemIndex);
+void ldComboBoxSetCorner(ldComboBox_t* ptWidget,bool isCorner);
+
 #define ldComboBoxSetHidden                ldBaseSetHidden
 #define ldComboBoxMove                     ldBaseMove
 #define ldComboBoxSetOpacity               ldBaseSetOpacity

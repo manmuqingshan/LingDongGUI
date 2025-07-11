@@ -283,13 +283,17 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
 
             if(ptWidget->isCorner)
             {
-                draw_round_corner_box(&tTarget,&displayRegion,ptWidget->bgColor,255,bIsNewFrame);
-                draw_round_corner_border(&tTarget,&displayRegion,ptWidget->frameColor,(arm_2d_border_opacity_t){255,255,255,255},(arm_2d_corner_opacity_t){255,255,255,255});
+                draw_round_corner_box(&tTarget,&displayRegion,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
+                draw_round_corner_border(&tTarget,
+                                         &displayRegion,
+                                         ptWidget->frameColor,
+                                         (arm_2d_border_opacity_t){ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity},
+                                         (arm_2d_corner_opacity_t){ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity});
             }
             else
             {
-                ldBaseColor(&tTarget,NULL,ptWidget->bgColor,255);
-                arm_2d_draw_box(&tTarget,&displayRegion,1,ptWidget->frameColor,255);
+                ldBaseColor(&tTarget,&displayRegion,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
+                arm_2d_draw_box(&tTarget,&displayRegion,2,ptWidget->frameColor,ptWidget->use_as__ldBase_t.opacity);
             }
 
             arm_2d_tile_t tChildTile;
@@ -332,7 +336,6 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
 
                 arm_2d_op_wait_async(NULL);
 
-
                 if(ptWidget->isExpand)
                 {
                     arm_2d_tile_generate_child(&tTarget,
@@ -346,13 +349,17 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
                     displayRegion.tSize.iHeight=tempTile.tRegion.tSize.iHeight;
                     if(ptWidget->isCorner)
                     {
-                        draw_round_corner_box(&tempTile,&displayRegion,ptWidget->bgColor,255,bIsNewFrame);
-                        draw_round_corner_border(&tempTile,&displayRegion,ptWidget->frameColor,(arm_2d_border_opacity_t){255,255,255,255},(arm_2d_corner_opacity_t){255,255,255,255});
+                        draw_round_corner_box(&tempTile,&displayRegion,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
+                        draw_round_corner_border(&tempTile,
+                                                 &displayRegion,
+                                                 ptWidget->frameColor,
+                                                 (arm_2d_border_opacity_t){ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity},
+                                                 (arm_2d_corner_opacity_t){ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity});
                     }
                     else
                     {
-                        ldBaseColor(&tempTile,NULL,ptWidget->bgColor,255);
-                        arm_2d_draw_box(&tempTile,&displayRegion,1,ptWidget->frameColor,255);
+                        ldBaseColor(&tempTile,NULL,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
+                        arm_2d_draw_box(&tempTile,&displayRegion,2,ptWidget->frameColor,ptWidget->use_as__ldBase_t.opacity);
                     }
 
                     arm_2d_tile_generate_child(&tTarget,
@@ -363,25 +370,41 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
                                                &tempTile,
                                                false);
 
-                    ldColor lineColor;
+                    arm_2d_tile_t selectTile;
+                    int frameSize=2;
+                    if(ptWidget->frameColor==ptWidget->bgColor)
+                    {
+                        frameSize=0;
+                    }
+                    arm_2d_tile_generate_child(&tTarget,
+                                               &((arm_2d_region_t){frameSize,
+                                                                   ptWidget->itemHeight+frameSize,
+                                                                   ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth-frameSize*2,
+                                                                   ptWidget->itemHeight-frameSize*2}),
+                                               &selectTile,
+                                               false);
+
+                    ldColor selectColor;
                     for(uint8_t i=0;i<ptWidget->itemCount;i++)
                     {
-                        ldBaseLabel(&tTarget,&tempTile.tRegion,ptWidget->ppItemStrGroup[i],ptWidget->ptFont,ARM_2D_ALIGN_LEFT,ptWidget->textColor,ptWidget->use_as__ldBase_t.opacity);
-
-                        lineColor=ptWidget->frameColor;
+                        selectColor=ptWidget->frameColor;
                         if(ptWidget->itemPreSelect==i)
                         {
-                            lineColor=ptWidget->selectColor;
+                            selectColor=ptWidget->selectColor;
+
+                            if(ptWidget->isCorner)
+                            {
+                                draw_round_corner_box(&selectTile,NULL,selectColor,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
+                            }
+                            else
+                            {
+                                ldBaseColor(&selectTile,NULL,selectColor,ptWidget->use_as__ldBase_t.opacity);
+                            }
                         }
 
-                        ldBaseColor(&tTarget,
-                                    &((arm_2d_region_t){tempTile.tRegion.tLocation.iX,
-                                                        tempTile.tRegion.tLocation.iY+ptWidget->itemHeight-5,
-                                                        ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth-COMBO_BOX_TEXT_LEFT_OFFSET*2,
-                                                        3}),
-                                    lineColor,
-                                    ptWidget->use_as__ldBase_t.opacity);
+                        ldBaseLabel(&tTarget,&tempTile.tRegion,ptWidget->ppItemStrGroup[i],ptWidget->ptFont,ARM_2D_ALIGN_LEFT,ptWidget->textColor,ptWidget->use_as__ldBase_t.opacity);
                         tempTile.tRegion.tLocation.iY+=ptWidget->itemHeight;
+                        selectTile.tRegion.tLocation.iY+=ptWidget->itemHeight;
                     }
                 }
             }
@@ -460,6 +483,17 @@ void ldComboBoxSetSelectItem(ldComboBox_t* ptWidget, uint8_t itemIndex)
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->itemSelect=itemIndex;
     ptWidget->itemPreSelect=itemIndex;
+}
+
+void ldComboBoxSetCorner(ldComboBox_t* ptWidget,bool isCorner)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->isCorner=isCorner;
 }
 
 #if defined(__clang__)
