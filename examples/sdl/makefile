@@ -57,7 +57,8 @@ DEFINES = \
     -D__ARM_2D_USER_APP_CFG_H__=\"ldConfig.h\" \
     "-DARM_SECTION(x)= "\
     -D__va_list=va_list \
-    -DRTE_Acceleration_Arm_2D_Helper_Disp_Adapter0
+    -DRTE_Acceleration_Arm_2D_Helper_Disp_Adapter0 \
+    -DRTE_Acceleration_Arm_2D_Alpha_Blending
 
 # 头文件搜索路径
 INCLUDEPATH = \

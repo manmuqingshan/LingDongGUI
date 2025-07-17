@@ -347,7 +347,7 @@ IMPL_PFB_ON_DRAW(__disp_adapter0_draw_navigation)
 #else
         arm_lcd_printf( 
             "LCD:%2"PRIu32"ms",
-            (uint32_t)arm_2d_helper_convert_ticks_to_ms(DISP0_ADAPTER.Benchmark.wLCDLatency) );
+            (uint_fast64_t)arm_2d_helper_convert_ticks_to_ms(DISP0_ADAPTER.Benchmark.wLCDLatency) );
 #endif
     }
 
@@ -739,8 +739,6 @@ void disp_adapter0_navigator_init(void)
 
 #if __DISP0_CFG_NAVIGATION_LAYER_MODE__ == 2
     
-
-    
     arm_2d_align_bottom_centre(tScreen, s_tNavDirtyRegionList[0].tRegion.tSize) {
         s_tNavDirtyRegionList[0].tRegion = __bottom_centre_region;
         s_tNavDirtyRegionList[0].tRegion.tLocation.iY -= 16;
@@ -767,7 +765,7 @@ void disp_adapter0_navigator_init(void)
     do {
 
     #if __DISP0_CFG_CONSOLE_INPUT_BUFFER__
-        static uint8_t s_chInputBuffer[__DISP0_CFG_CONSOLE_INPUT_BUFFER__];
+        static uint8_t s_chInputBuffer[256];
     #endif
         static uint8_t s_chConsoleBuffer[   (__DISP0_CONSOLE_WIDTH__ / 6) 
                                         *   (__DISP0_CONSOLE_HEIGHT__ / 8)];
