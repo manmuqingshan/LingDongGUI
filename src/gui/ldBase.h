@@ -62,23 +62,33 @@ typedef enum{
 
 
 #ifndef SET_BITS
-#define SET_BITS(data,value)                    ((data)|=(value))
+#define SET_BITS(data,value)            ((data)|=(value))
 #endif
 #ifndef CLR_BITS
-#define CLR_BITS(data,value)                    ((data)&=~(value))
+#define CLR_BITS(data,value)            ((data)&=~(value))
 #endif
 #ifndef SETBIT
-#define SETBIT(data,move)                       ((data)|=(1<<(move)))
+#define SETBIT(data,move)               ((data)|=(1<<(move)))
 #endif
 #ifndef CLRBIT
-#define CLRBIT(data,move)                       ((data)&=~(1<<(move)))
+#define CLRBIT(data,move)               ((data)&=~(1<<(move)))
 #endif
 #ifndef GETBIT
-#define GETBIT(data,move)                       (((data)>>(move))&0x01)
+#define GETBIT(data,move)               (((data)>>(move))&0x01)
 #endif
 #ifndef PUTBIT
-#define PUTBIT(data,value,move)                 ((value)?SETBIT(data,move):CLRBIT(data,move))
+#define PUTBIT(data,value,move)         ((value)?SETBIT(data,move):CLRBIT(data,move))
 #endif
+
+#define   GET16H(data)                  (((data)>>8)&0xFF)
+#define   GET16L(data)                  ((data)&0xFF)
+#define   CONNECT16(H,L)                (((H)<<8)+(L))
+
+#define   GET32H(data)                  (((data)>>24)&0xFF)
+#define   GET32MH(data)                 (((data)>>16)&0xFF)
+#define   GET32ML(data)                 (((data)>>8)&0xFF)
+#define   GET32L(data)                  ((data)&0xFF)
+#define   CONNECT32(H,MH,ML,L)          (((H)<<24)+((MH)<<16)+((ML)<<8)+(L))
 
 //btn占用0-9
 #define SIGNAL_NO_OPERATION             BTN_NO_OPERATION
@@ -101,7 +111,7 @@ typedef enum{
 
 #define ldColor                         COLOUR_INT
 
-#define CURSOR_WIDTH                    2
+#define CURSOR_WIDTH                    (2)
 
 #define MEM_MODE_FREERTOS_HEAP4         (0)
 #define MEM_MODE_TLFS                   (1)
