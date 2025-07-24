@@ -82,6 +82,20 @@ ldImage_t* ldImage_init( ld_scene_t *ptScene,ldImage_t *ptWidget,uint16_t nameId
     ptWidget->ptImgTile=ptImgTile;
     ptWidget->ptMaskTile=ptMaskTile;
 
+#if USE_VIRTUAL_RESOURCE == 1
+    if(ptImgTile!=NULL)
+    {
+        ptWidget->imgTile=*(arm_2d_vres_t*)ptImgTile;
+        ptWidget->ptImgTile=&ptWidget->imgTile;
+    }
+
+    if(ptMaskTile!=NULL)
+    {
+        ptWidget->maskTile=*(arm_2d_vres_t*)ptMaskTile;
+        ptWidget->ptMaskTile=&ptWidget->maskTile;
+    }
+#endif
+
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate=true;
     ptWidget->use_as__ldBase_t.isDirtyRegionAutoReset = true;
 

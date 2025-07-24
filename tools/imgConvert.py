@@ -93,8 +93,9 @@ class BinaryTracker:
                 self.offset += pad
         
         if isinstance(data, np.ndarray):
-            data.tofile(self.binfile)
-            self.offset += data.nbytes
+            data_be = data.astype(data.dtype.newbyteorder('>'))
+            data_be.tofile(self.binfile)
+            self.offset += data_be.nbytes
         else:
             self.binfile.write(data)
             self.offset += len(data)
