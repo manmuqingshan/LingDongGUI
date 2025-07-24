@@ -46,9 +46,8 @@
 const ldBaseWidgetFunc_t ldSliderFunc = {
     .depose = (ldDeposeFunc_t)ldSlider_depose,
     .load = (ldLoadFunc_t)ldSlider_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldSlider_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldSlider_on_frame_complete,
     .show = (ldShowFunc_t)ldSlider_show,
 };
 
@@ -60,7 +59,7 @@ static bool slotSliderMove(ld_scene_t *ptScene,ldMsg_t msg)
     tClickLocal.iX=(int16_t)GET_SIGNAL_VALUE_X(msg.value);
     tClickLocal.iY=(int16_t)GET_SIGNAL_VALUE_Y(msg.value);
 
-    tClickLocal=ldBaseGetRelativeLocation(ptWidget,tClickLocal);
+    tClickLocal=ldBaseGetRelativeLocation((ldBase_t *)ptWidget,tClickLocal);
 
     uint8_t halfIndicWidth=ptWidget->indicWidth>>1;
 
@@ -145,7 +144,7 @@ ldSlider_t* ldSlider_init( ld_scene_t *ptScene,ldSlider_t *ptWidget, uint16_t na
     return ptWidget;
 }
 
-void ldSlider_depose( ldSlider_t *ptWidget)
+void ldSlider_depose(ld_scene_t *ptScene, ldSlider_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -165,16 +164,21 @@ void ldSlider_depose( ldSlider_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldSlider_on_load( ldSlider_t *ptWidget)
+void ldSlider_on_load(ld_scene_t *ptScene, ldSlider_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldSlider_on_frame_start( ldSlider_t *ptWidget)
+void ldSlider_on_frame_start(ld_scene_t *ptScene, ldSlider_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldSlider_on_frame_complete(ld_scene_t *ptScene, ldSlider_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldSlider_show(ld_scene_t *ptScene, ldSlider_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

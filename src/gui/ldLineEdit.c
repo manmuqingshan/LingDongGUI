@@ -47,9 +47,8 @@
 const ldBaseWidgetFunc_t ldLineEditFunc = {
     .depose = (ldDeposeFunc_t)ldLineEdit_depose,
     .load = (ldLoadFunc_t)ldLineEdit_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldLineEdit_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldLineEdit_on_frame_complete,
     .show = (ldShowFunc_t)ldLineEdit_show,
 };
 
@@ -81,17 +80,17 @@ static bool slotLineEditProcess(ld_scene_t *ptScene,ldMsg_t msg)
                 kb->editorId=ptWidget->use_as__ldBase_t.nameId;
                 cursorBlinkFlag=true;
                 cursorBlinkCount=0;
-                ldKeyboardSetHidden(kb,false);
+                ldKeyboardSetHidden((ldBase_t *)kb,false);
 
                 if((ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY+ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight)>(LD_CFG_SCEEN_HEIGHT>>1))
                 {
-                    ldKeyboardMove(kb,0,LD_CFG_SCEEN_HEIGHT>>1);
+                    ldKeyboardMove((ldBase_t *)kb,0,LD_CFG_SCEEN_HEIGHT>>1);
                     ldBaseBgMove(ptScene,LD_CFG_SCEEN_WIDTH,LD_CFG_SCEEN_HEIGHT,0,-(LD_CFG_SCEEN_HEIGHT>>1));
 
                 }
                 else
                 {
-                    ldKeyboardMove(kb,0,0);
+                    ldKeyboardMove((ldBase_t *)kb,0,0);
                 }
             }
         }
@@ -139,6 +138,8 @@ ldLineEdit_t* ldLineEdit_init( ld_scene_t *ptScene,ldLineEdit_t *ptWidget, uint1
     ptWidget->textMax=textMax;
     ptWidget->ptFont=ptFont;
     ptWidget->textColor=GLCD_COLOR_BLACK;
+    ptWidget->backgroundColor=GLCD_COLOR_WHITE;
+    ptWidget->frameColor=GLCD_COLOR_LIGHT_GREY;
     ptWidget->editType=typeString;
     ptWidget->tAlign=ARM_2D_ALIGN_LEFT;
 
@@ -149,7 +150,7 @@ ldLineEdit_t* ldLineEdit_init( ld_scene_t *ptScene,ldLineEdit_t *ptWidget, uint1
     return ptWidget;
 }
 
-void ldLineEdit_depose( ldLineEdit_t *ptWidget)
+void ldLineEdit_depose(ld_scene_t *ptScene, ldLineEdit_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -169,16 +170,21 @@ void ldLineEdit_depose( ldLineEdit_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldLineEdit_on_load( ldLineEdit_t *ptWidget)
+void ldLineEdit_on_load(ld_scene_t *ptScene, ldLineEdit_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldLineEdit_on_frame_start( ldLineEdit_t *ptWidget)
+void ldLineEdit_on_frame_start(ld_scene_t *ptScene, ldLineEdit_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldLineEdit_on_frame_complete(ld_scene_t *ptScene, ldLineEdit_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldLineEdit_show(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)
@@ -214,13 +220,17 @@ void ldLineEdit_show(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, const arm_2d_t
             }
             if(ptWidget->isCorner)
             {
-                draw_round_corner_box(&tTarget,&tTarget_canvas,GLCD_COLOR_WHITE,255,bIsNewFrame);
-                draw_round_corner_border(&tTarget,&tTarget_canvas,GLCD_COLOR_LIGHT_GREY,(arm_2d_border_opacity_t){255,255,255,255},(arm_2d_corner_opacity_t){255,255,255,255});
+                draw_round_corner_box(&tTarget,&tTarget_canvas,ptWidget->backgroundColor,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
+                draw_round_corner_border(&tTarget,
+                                         &tTarget_canvas,
+                                         ptWidget->frameColor,
+                                         (arm_2d_border_opacity_t){ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity},
+                                         (arm_2d_corner_opacity_t){ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity});
             }
             else
             {
-                ldBaseColor(&tTarget,&tTarget_canvas,GLCD_COLOR_WHITE,255);
-                arm_2d_draw_box(&tTarget,&tTarget_canvas,1,GLCD_COLOR_LIGHT_GREY,255);
+                ldBaseColor(&tTarget,&tTarget_canvas,ptWidget->backgroundColor,ptWidget->use_as__ldBase_t.opacity);
+                arm_2d_draw_box(&tTarget,&tTarget_canvas,1,ptWidget->frameColor,ptWidget->use_as__ldBase_t.opacity);
             }
             arm_2d_op_wait_async(NULL);
 
@@ -274,7 +284,7 @@ void ldLineEdit_show(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, const arm_2d_t
                 arm_2d_draw_box(&tTarget,
                                 &cursorRegion,
                                 1,
-                                0,
+                                ptWidget->textColor,
                                 ptWidget->use_as__ldBase_t.opacity);
             }
         }
@@ -334,6 +344,28 @@ void ldLineEditSetAlign(ldLineEdit_t *ptWidget,arm_2d_align_t tAlign)
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->tAlign=tAlign;
+}
+
+void ldLineEditSetCorner(ldLineEdit_t *ptWidget, bool isCorner)
+{
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->isCorner=isCorner;
+}
+
+void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backgroundColor, ldColor frameColor)
+{
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->textColor=textColor;
+    ptWidget->backgroundColor=backgroundColor;
+    ptWidget->frameColor=frameColor;
 }
 
 #if defined(__clang__)

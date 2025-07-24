@@ -46,9 +46,8 @@
 const ldBaseWidgetFunc_t ldProgressBarFunc = {
     .depose = (ldDeposeFunc_t)ldProgressBar_depose,
     .load = (ldLoadFunc_t)ldProgressBar_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldProgressBar_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldProgressBar_on_frame_complete,
     .show = (ldShowFunc_t)ldProgressBar_show,
 };
 
@@ -85,6 +84,7 @@ ldProgressBar_t* ldProgressBar_init( ld_scene_t *ptScene,ldProgressBar_t *ptWidg
     ptWidget->bgColor=GLCD_COLOR_WHITE;
     ptWidget->fgColor=__RGB(0x94, 0xd2, 0x52);
     ptWidget->frameColor=__RGB(0xa5, 0xc6, 0xef);
+    ptWidget->frameColorSize=0;
     ptWidget->isHorizontal=true;
     ptWidget->timer=0;
 
@@ -92,7 +92,7 @@ ldProgressBar_t* ldProgressBar_init( ld_scene_t *ptScene,ldProgressBar_t *ptWidg
     return ptWidget;
 }
 
-void ldProgressBar_depose( ldProgressBar_t *ptWidget)
+void ldProgressBar_depose(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -112,16 +112,21 @@ void ldProgressBar_depose( ldProgressBar_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldProgressBar_on_load( ldProgressBar_t *ptWidget)
+void ldProgressBar_on_load(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldProgressBar_on_frame_start( ldProgressBar_t *ptWidget)
+void ldProgressBar_on_frame_start(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldProgressBar_on_frame_complete(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 static void _progressBarColorShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTarget)
@@ -132,12 +137,12 @@ static void _progressBarColorShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
     {
         arm_2d_region_t tBarRegion = {
             .tLocation = {
-                .iX = 1,
-                .iY = 1,
+                .iX = 0,
+                .iY = 0,
             },
             .tSize = {
-                .iWidth=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth-2,
-                .iHeight=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight-2,
+                .iWidth=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth,
+                .iHeight=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight,
             },
         };
 
@@ -154,7 +159,10 @@ static void _progressBarColorShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
         ldBaseColor( ptTarget,&tBarRegion,ptWidget->fgColor,ptWidget->use_as__ldBase_t.opacity);
     }
 
-    arm_2d_draw_box(ptTarget,NULL,1,ptWidget->frameColor,ptWidget->use_as__ldBase_t.opacity);
+    if(ptWidget->frameColorSize)
+    {
+        arm_2d_draw_box(ptTarget,NULL,ptWidget->frameColorSize,ptWidget->frameColor,ptWidget->use_as__ldBase_t.opacity);
+    }
 }
 
 static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTarget,bool bIsNewFrame)
@@ -182,7 +190,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
             };
             arm_2d_tile_t tileInnerSlot;
             arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-            arm_2d_tile_fill_only(ptWidget->ptBgImgTile,&tileInnerSlot,&tInnerRegion);
+            ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile);
         }while(0);
     }
     else
@@ -199,7 +207,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
             };
             arm_2d_tile_t tileInnerSlot;
             arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-            arm_2d_tile_fill_only(ptWidget->ptBgImgTile,&tileInnerSlot,&tInnerRegion);
+            ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile);
         }while(0);
     }
 
@@ -223,7 +231,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
 
                 arm_2d_tile_t tileInnerSlot;
                 arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-                arm_2d_tile_fill_only(ptWidget->ptFgImgTile,&tileInnerSlot,&tInnerRegion);
+                ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptFgImgTile,ptWidget->ptFgMaskTile);
             }while(0);
         }
         else
@@ -244,7 +252,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
 
                 arm_2d_tile_t tileInnerSlot;
                 arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-                arm_2d_tile_fill_only(ptWidget->ptFgImgTile,&tileInnerSlot,&tInnerRegion);
+                ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptFgImgTile,ptWidget->ptFgMaskTile);
             }while(0);
         }
     }
@@ -255,8 +263,8 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
         ldBaseImage(ptTarget,
                     NULL,
                     ptWidget->ptFrameImgTile,
-                    NULL,
-                    0,
+                    ptWidget->ptFrameMaskTile,
+                    ptWidget->frameColor,
                     ptWidget->use_as__ldBase_t.opacity);
     }
 
@@ -374,7 +382,7 @@ void ldProgressBarSetPercent(ldProgressBar_t *ptWidget,float percent)
     }
 }
 
-void ldProgressBarSetImage(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptBgImgTile,arm_2d_tile_t *ptFgImgTile)
+void ldProgressBarSetImage(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptBgImgTile,arm_2d_tile_t *ptBgMaskTile,arm_2d_tile_t *ptFgImgTile,arm_2d_tile_t *ptFgMaskTile)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -383,10 +391,12 @@ void ldProgressBarSetImage(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptBgImgTile,
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ptBgImgTile=ptBgImgTile;
+    ptWidget->ptBgMaskTile=ptBgMaskTile;
     ptWidget->ptFgImgTile=ptFgImgTile;
+    ptWidget->ptFgMaskTile=ptFgMaskTile;
 }
 
-void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFrameImgTile)
+void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFrameImgTile, arm_2d_tile_t *ptFrameMaskTile)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -395,9 +405,10 @@ void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFram
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ptFrameImgTile=ptFrameImgTile;
+    ptWidget->ptFrameMaskTile=ptFrameMaskTile;
 }
 
-void ldProgressBarSetColor(ldProgressBar_t *ptWidget,ldColor bgColor,ldColor fgColor,ldColor frameColor)
+void ldProgressBarSetColor(ldProgressBar_t *ptWidget, ldColor bgColor, ldColor fgColor)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -410,7 +421,18 @@ void ldProgressBarSetColor(ldProgressBar_t *ptWidget,ldColor bgColor,ldColor fgC
     ptWidget->ptFrameImgTile=NULL;
     ptWidget->bgColor=bgColor;
     ptWidget->fgColor=fgColor;
+}
+
+void ldProgressBarSetFrameColor(ldProgressBar_t *ptWidget, ldColor frameColor, uint8_t frameColorSize)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->frameColor=frameColor;
+    ptWidget->frameColorSize=frameColorSize;
 }
 
 void ldProgressBarSetHorizontal(ldProgressBar_t *ptWidget,bool isHorizontal)

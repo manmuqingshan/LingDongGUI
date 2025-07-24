@@ -46,13 +46,12 @@
 const ldBaseWidgetFunc_t ldArcFunc = {
     .depose = (ldDeposeFunc_t)ldArc_depose,
     .load = (ldLoadFunc_t)ldArc_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldArc_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldArc_on_frame_complete,
     .show = (ldShowFunc_t)ldArc_show,
 };
 
-ldArc_t* ldArc_init( ld_scene_t *ptScene,ldArc_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height,arm_2d_tile_t *ptQuarterImgTile,arm_2d_tile_t *ptQuarterMaskTile,ldColor parentColor)
+ldArc_t* ldArc_init(ld_scene_t *ptScene,ldArc_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height,arm_2d_tile_t *ptQuarterImgTile,arm_2d_tile_t *ptQuarterMaskTile,ldColor parentColor)
 {
     assert(NULL != ptScene);
     ldBase_t *ptParent;
@@ -102,7 +101,7 @@ ldArc_t* ldArc_init( ld_scene_t *ptScene,ldArc_t *ptWidget, uint16_t nameId, uin
     return ptWidget;
 }
 
-void ldArc_depose( ldArc_t *ptWidget)
+void ldArc_depose(ld_scene_t *ptScene, ldArc_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -123,13 +122,19 @@ void ldArc_depose( ldArc_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldArc_on_load( ldArc_t *ptWidget)
+void ldArc_on_load(ld_scene_t *ptScene, ldArc_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldArc_on_frame_start( ldArc_t *ptWidget)
+void ldArc_on_frame_start(ld_scene_t *ptScene, ldArc_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    
+}
+
+void ldArc_on_frame_complete(ld_scene_t *ptScene, ldArc_t *ptWidget)
 {
     assert(NULL != ptWidget);
     

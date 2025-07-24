@@ -49,9 +49,6 @@ typedef struct ldComboBox_t ldComboBox_t;
 struct ldComboBox_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     arm_2d_tile_t *ptDropdownImgTile;
     arm_2d_tile_t *ptDropdownMaskTile;
     uint8_t itemMax;
@@ -62,20 +59,31 @@ struct ldComboBox_t
     arm_2d_font_t *ptFont;
     const uint8_t **ppItemStrGroup;
     ldColor textColor;
+    ldColor bgColor;
+    ldColor frameColor;
+    ldColor selectColor;
     bool isExpand:1;
     bool isCorner:1;
 };
 
 ldComboBox_t* ldComboBox_init(ld_scene_t *ptScene, ldComboBox_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont);
-void ldComboBox_depose( ldComboBox_t *ptWidget);
-void ldComboBox_on_load( ldComboBox_t *ptWidget);
-void ldComboBox_on_frame_start( ldComboBox_t *ptWidget);
+void ldComboBox_depose(ld_scene_t *ptScene, ldComboBox_t *ptWidget);
+void ldComboBox_on_load(ld_scene_t *ptScene, ldComboBox_t *ptWidget);
+void ldComboBox_on_frame_start(ld_scene_t *ptScene, ldComboBox_t *ptWidget);
+void ldComboBox_on_frame_complete(ld_scene_t *ptScene, ldComboBox_t *ptWidget);
 void ldComboBox_show(ld_scene_t *pScene, ldComboBox_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
-
-void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize);
 
 #define ldComboBoxInit(nameId,parentNameId,x,y,width,height,ptFont) \
         ldComboBox_init(ptScene,NULL,nameId,parentNameId,x,y,width,height,ptFont)
+
+void ldComboBoxSetTextColor(ldComboBox_t* ptWidget, ldColor textColor);
+void ldComboBoxSetBackgroundColor(ldComboBox_t* ptWidget, ldColor backgroundColor);
+void ldComboBoxSetFrameColor(ldComboBox_t* ptWidget, ldColor frameColor);
+void ldComboBoxSetSelectColor(ldComboBox_t* ptWidget, ldColor selectColor);
+void ldComboBoxSetSelectItem(ldComboBox_t* ptWidget, uint8_t itemIndex);
+void ldComboBoxSetCorner(ldComboBox_t* ptWidget,bool isCorner);
+void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize);
+void ldComboBoxSetDropdownImage(ldComboBox_t* ptWidget,arm_2d_tile_t* ptDropdownImgTile,arm_2d_tile_t* ptDropdownMaskTile);
 
 #define ldComboBoxSetHidden                ldBaseSetHidden
 #define ldComboBoxMove                     ldBaseMove

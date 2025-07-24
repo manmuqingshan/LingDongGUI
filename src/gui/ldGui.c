@@ -89,13 +89,6 @@ void ldGuiClickedAction(ld_scene_t *ptScene,uint8_t touchSignal,arm_2d_location_
             ptWidget=(ldBase_t*)arm_2d_helper_control_find_node_with_location(ptScene->ptNodeRoot,tLocation);
         }
 
-        while(ptWidget->isHidden)
-        {
-            LOG_DEBUG("widget id:%d, is hidden.",ptWidget->nameId);
-            ptWidget=ldBaseGetParent(ptWidget);
-            LOG_DEBUG("find parent widget id:%d",ptWidget->nameId);
-        }
-
 #if (USE_LOG_LEVEL>=LOG_LEVEL_DEBUG)
         if(ptWidget!=NULL)
         {
@@ -238,20 +231,10 @@ void ldGuiFrameStart(ld_scene_t *ptScene)
     {
         arm_ctrl_enum(ptScene->ptNodeRoot, ptItem, PREORDER_TRAVERSAL)
         {
-            if(((ldBase_t*)ptItem)->deleteLaterCount>0)
-            {
-                ((ldBase_t*)ptItem)->deleteLaterCount--;
-                if(((ldBase_t*)ptItem)->deleteLaterCount==0)
-                {
-                    ((ldBase_t*)ptItem)->ptGuiFunc->depose(ptItem);
-                }
-            }
-#ifdef FRAME_START
             if(((ldBase_t*)ptItem)->ptGuiFunc->frameStart!=NULL)
             {
-                ((ldBase_t*)ptItem)->ptGuiFunc->frameStart(ptScene);
+                ((ldBase_t*)ptItem)->ptGuiFunc->frameStart(ptScene,ptItem);
             }
-#endif
         }
     }
 
@@ -259,6 +242,14 @@ void ldGuiFrameStart(ld_scene_t *ptScene)
     {
         xBtnTick(SYS_TICK_CYCLE_MS,ptScene);
         cursorBlinkCount++;
+    }
+
+    if(ptScene->ldGuiFuncGroup!=NULL)
+    {
+        if(ptScene->ldGuiFuncGroup->loop)
+        {
+            ptScene->ldGuiFuncGroup->loop(ptScene);
+        }
     }
 }
 
@@ -270,24 +261,13 @@ void ldGuiLoad(ld_scene_t *ptScene)
         {
             if(((ldBase_t*)ptItem)->ptGuiFunc->load!=NULL)
             {
-                ((ldBase_t*)ptItem)->ptGuiFunc->load(ptScene);
+                ((ldBase_t*)ptItem)->ptGuiFunc->load(ptScene,ptItem);
             }
         }
     }
 }
 
-void ldGuiLogicLoop(ld_scene_t *ptScene)
-{
-    if(ptScene->ldGuiFuncGroup!=NULL)
-    {
-        if(ptScene->ldGuiFuncGroup->loop)
-        {
-            ptScene->ldGuiFuncGroup->loop(ptScene);
-        }
-    }
-}
-
-void ldGuiQuit(ld_scene_t *ptScene)
+void ldGuiDespose(ld_scene_t *ptScene)
 {
     if(ptScene->ldGuiFuncGroup!=NULL)
     {
@@ -303,7 +283,7 @@ void ldGuiQuit(ld_scene_t *ptScene)
         {
             if(((ldBase_t *)ptItem))
             {
-                ((ldBase_t *)ptItem)->ptGuiFunc->depose(ptItem);
+                ((ldBase_t *)ptItem)->ptGuiFunc->depose(ptScene,ptItem);
             }
         }
     }
@@ -313,6 +293,17 @@ void ldGuiQuit(ld_scene_t *ptScene)
 
 void ldGuiFrameComplete(ld_scene_t *ptScene)
 {
+    if(ptScene->ptNodeRoot!=NULL)
+    {
+        arm_ctrl_enum(ptScene->ptNodeRoot, ptItem, PREORDER_TRAVERSAL)
+        {
+            if(((ldBase_t*)ptItem)->ptGuiFunc->frameComplete!=NULL)
+            {
+                ((ldBase_t*)ptItem)->ptGuiFunc->frameComplete(ptScene,ptItem);
+            }
+        }
+    }
+
 #if USE_SCENE_SWITCHING == 1
     if(isGuiSwthcnScene)
     {
@@ -322,7 +313,7 @@ void ldGuiFrameComplete(ld_scene_t *ptScene)
 #else
     if(ptSysGuiFuncGroup[0]!=ptSysGuiFuncGroup[1])
     {
-        ldGuiQuit(ptScene);
+        ldGuiDespose(ptScene);
         ptSysGuiFuncGroup[0]=ptSysGuiFuncGroup[1];
         ptScene->ldGuiFuncGroup=ptSysGuiFuncGroup[0];
         arm_2d_scene_player_update_scene_background(ptScene->use_as__arm_2d_scene_t.ptPlayer);

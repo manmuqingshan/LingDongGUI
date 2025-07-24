@@ -24,7 +24,6 @@
  */
 #include "xBtnAction.h"
 #include "string.h"
-#include "xLog.h"
 
 #define IS_PRESS_LEVEL                  1
 
@@ -45,9 +44,20 @@ void xBtnConfig(uint8_t debounceMs,uint16_t longPressMs,uint16_t longShootMs,uin
     btnClickTimeOut=clickTimeOutMs/btnDebounceMs;
 }
 
-void xBtnInit(uint16_t id, isBtnPressFunc pFunc)
+void __xBtnInit(uint16_t id, isBtnPressFunc pFunc, xBtnInfo_t *pBtnBuf)
 {
-    xBtnInfo_t * link = (xBtnInfo_t *)XMALLOC(sizeof(xBtnInfo_t));
+    xBtnInfo_t * link = NULL;
+    if(pBtnBuf==NULL)
+    {
+#ifdef XMALLOC
+        link = (xBtnInfo_t *)XMALLOC(sizeof(xBtnInfo_t));
+#endif
+    }
+    else
+    {
+        link = pBtnBuf;
+    }
+
     if(link!=NULL)
     {
         memset(link, 0, sizeof (xBtnInfo_t));
@@ -303,14 +313,15 @@ void xBtnReset(void)
 
 void xBtnDestroy(void)
 {
-    xBtnInfo_t *btnInfo=NULL,*ptNext=NULL;
+    xBtnInfo_t *btnInfo = xBtnLink;
 
-    ptNext=xBtnLink;
-
-    while (ptNext!=NULL)
+    while (btnInfo != NULL)
     {
-        btnInfo=ptNext;
-        ptNext=ptNext->pNext;
+        xBtnInfo_t *next = btnInfo->pNext;
+#ifdef XFREE
         XFREE(btnInfo);
+#endif
+        btnInfo = next;
     }
+    xBtnLink=NULL;
 }

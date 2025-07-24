@@ -46,9 +46,8 @@
 const ldBaseWidgetFunc_t ldQRCodeFunc = {
     .depose = (ldDeposeFunc_t)ldQRCode_depose,
     .load = (ldLoadFunc_t)ldQRCode_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldQRCode_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldQRCode_on_frame_complete,
     .show = (ldShowFunc_t)ldQRCode_show,
 };
 
@@ -99,7 +98,7 @@ ldQRCode_t* ldQRCode_init(ld_scene_t *ptScene, ldQRCode_t *ptWidget, uint16_t na
     return ptWidget;
 }
 
-void ldQRCode_depose( ldQRCode_t *ptWidget)
+void ldQRCode_depose(ld_scene_t *ptScene, ldQRCode_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -119,16 +118,21 @@ void ldQRCode_depose( ldQRCode_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldQRCode_on_load( ldQRCode_t *ptWidget)
+void ldQRCode_on_load(ld_scene_t *ptScene, ldQRCode_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldQRCode_on_frame_start( ldQRCode_t *ptWidget)
+void ldQRCode_on_frame_start(ld_scene_t *ptScene, ldQRCode_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldQRCode_on_frame_complete(ld_scene_t *ptScene, ldQRCode_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldQRCode_show(ld_scene_t *ptScene, ldQRCode_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

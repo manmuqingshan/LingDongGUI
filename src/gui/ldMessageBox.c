@@ -48,9 +48,8 @@
 const ldBaseWidgetFunc_t ldMessageBoxFunc = {
     .depose = (ldDeposeFunc_t)ldMessageBox_depose,
     .load = (ldLoadFunc_t)ldMessageBox_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldMessageBox_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldMessageBox_on_frame_complete,
     .show = (ldShowFunc_t)ldMessageBox_show,
 };
 
@@ -99,12 +98,19 @@ static bool slotMsgBoxToggle(ld_scene_t *ptScene,ldMsg_t msg)
                 ptWidget->ptFunc(ptScene,ptWidget);
             }
             ptWidget->clickNum=-1;
-            ptWidget->use_as__ldBase_t.isHidden=true;
-            ldBaseSetDeleteLater((ldBase_t*)ptWidget);
-//            ptWidget->use_as__ldBase_t.ptGuiFunc->depose(ptWidget);
-        }
-        ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
 
+#if 0
+            ldBaseSetHidden((ldBase_t*)ptWidget,true);
+#else
+            ldBase_t* parent=ldBaseGetParent((ldBase_t*)ptWidget);
+            parent->isDirtyRegionUpdate = true;
+            ptWidget->use_as__ldBase_t.ptGuiFunc->depose(ptScene,ptWidget);
+#endif
+        }
+        else
+        {
+            ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+        }
         break;
     }
     default:
@@ -192,7 +198,7 @@ ldMessageBox_t* ldMessageBox_init( ld_scene_t *ptScene,ldMessageBox_t *ptWidget,
     return ptWidget;
 }
 
-void ldMessageBox_depose( ldMessageBox_t *ptWidget)
+void ldMessageBox_depose(ld_scene_t *ptScene, ldMessageBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -212,7 +218,7 @@ void ldMessageBox_depose( ldMessageBox_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldMessageBox_on_load( ldMessageBox_t *ptWidget)
+void ldMessageBox_on_load(ld_scene_t *ptScene, ldMessageBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -221,7 +227,16 @@ void ldMessageBox_on_load( ldMessageBox_t *ptWidget)
     }
 }
 
-void ldMessageBox_on_frame_start( ldMessageBox_t *ptWidget)
+void ldMessageBox_on_frame_start(ld_scene_t *ptScene, ldMessageBox_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+}
+
+void ldMessageBox_on_frame_complete(ld_scene_t *ptScene, ldMessageBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)

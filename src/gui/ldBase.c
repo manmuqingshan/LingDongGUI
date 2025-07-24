@@ -196,7 +196,7 @@ void ldBaseNodeTreePrint(arm_2d_control_node_t *ptNodeRoot, int depth)
         LOG_PRINT("  "); // 打印缩进
     }
 
-    LOG_NORMAL("type:%02d,id:%02d",((ldBase_t*)ptNodeRoot)->widgetType,((ldBase_t*)ptNodeRoot)->nameId);
+    LOG_NORMAL("type:%02d,id:%02d",((ldBase_t *)ptNodeRoot)->widgetType,((ldBase_t *)ptNodeRoot)->nameId);
 
     arm_2d_control_node_t *child = ptNodeRoot->ptChildList;
     while (child != NULL)
@@ -320,6 +320,18 @@ void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_t
                                         tCentre,
                                         0,
                                         scale);
+    }
+}
+
+void ldBaseImageFill(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
+{
+    if(ptMaskTile==NULL)
+    {
+        arm_2d_tile_fill_only(ptImgTile,ptTile,ptRegion);
+    }
+    else
+    {
+        arm_2d_tile_fill_with_src_mask_only(ptImgTile,ptMaskTile,ptTile,ptRegion);
     }
 }
 
@@ -493,6 +505,23 @@ arm_2d_size_t arm_lcd_text_get_box(uint8_t *pStr, arm_2d_font_t *ptFont)
     return tDrawBox.tSize;
 }
 
+ARM_NONNULL(1,2)
+bool __arm_2d_helper_control_user_whether_ignore_node(  arm_2d_control_node_t *ptRoot,
+                                                        arm_2d_control_node_t *ptNode,
+                                                        arm_2d_location_t tLocation)
+{
+    ARM_2D_UNUSED(ptRoot);
+    ARM_2D_UNUSED(tLocation);
+
+    ldBase_t* ptWidget=(ldBase_t*)ptNode;
+    if(ptWidget->isHidden)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
 {
     assert(NULL != ptWidget);
@@ -500,8 +529,25 @@ void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
     {
         return;
     }
+#if 1
     ptWidget->isDirtyRegionUpdate = true;
     ptWidget->isHidden=isHidden;
+#else
+    arm_2d_control_node_t *ptNodeRoot=ldBaseGetRootNode(&ptWidget->use_as__arm_2d_control_node_t);
+    arm_2d_control_node_t *ptNode=&ptWidget->use_as__arm_2d_control_node_t;
+    int16_t x,y;
+    if(isHidden)
+    {
+        x=ptNode->tRegion.tLocation.iX-ptNodeRoot->tRegion.tSize.iWidth;
+        y=ptNode->tRegion.tLocation.iY-ptNodeRoot->tRegion.tSize.iHeight;
+    }
+    else
+    {
+        x=ptNode->tRegion.tLocation.iX+ptNodeRoot->tRegion.tSize.iWidth;
+        y=ptNode->tRegion.tLocation.iY+ptNodeRoot->tRegion.tSize.iHeight;
+    }
+    ldBaseMove(ptWidget,x,y);
+#endif
 }
 
 void ldBaseMove(ldBase_t* ptWidget,int16_t x,int16_t y)
@@ -539,8 +585,8 @@ arm_2d_location_t ldBaseGetRelativeLocation(ldBase_t *ptWidget,arm_2d_location_t
 
     while(ptRoot!=NULL)
     {
-        tLocation.iX-=((ldBase_t*)ptRoot)->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
-        tLocation.iY-=((ldBase_t*)ptRoot)->use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
+        tLocation.iX-=((ldBase_t *)ptRoot)->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
+        tLocation.iY-=((ldBase_t *)ptRoot)->use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
         ptRoot=ptRoot->ptParent;
     }
     return tLocation;
@@ -552,8 +598,8 @@ arm_2d_location_t ldBaseGetAbsoluteLocation(ldBase_t *ptWidget,arm_2d_location_t
 
     while(ptNode!=NULL)
     {
-        tLocation.iX+=((ldBase_t*)ptNode)->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
-        tLocation.iY+=((ldBase_t*)ptNode)->use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
+        tLocation.iX+=((ldBase_t *)ptNode)->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
+        tLocation.iY+=((ldBase_t *)ptNode)->use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
         ptNode=ptNode->ptParent;
     }
     return tLocation;
@@ -713,17 +759,17 @@ void ldBaseDrawLine(arm_2d_tile_t *pTile,int16_t x0, int16_t y0, int16_t x1, int
 
 ldBase_t* ldBaseGetParent(ldBase_t* ptWidget)
 {
-    return ptWidget->use_as__arm_2d_control_node_t.ptParent;
+    return (ldBase_t *)ptWidget->use_as__arm_2d_control_node_t.ptParent;
 }
 
 ldBase_t* ldBaseGetChildList(ldBase_t* ptWidget)
 {
-    return ptWidget->use_as__arm_2d_control_node_t.ptChildList;
+    return (ldBase_t *)ptWidget->use_as__arm_2d_control_node_t.ptChildList;
 }
 
 void ldBaseBgMove(ld_scene_t *ptScene, int16_t bgWidth,int16_t bgHeight,int16_t offsetX,int16_t offsetY)
 {
-    ldBase_t *ptWidget= ptScene->ptNodeRoot;
+    ldBase_t *ptWidget= (ldBase_t *)ptScene->ptNodeRoot;
 
     ldBaseMove(ptWidget,offsetX,offsetY);
 
@@ -939,9 +985,4 @@ int16_t ldBaseAutoVerticalGridAlign(arm_2d_region_t widgetRegion,int16_t current
         }
     }
     return targetOffset;
-}
-
-void ldBaseSetDeleteLater(ldBase_t *ptWidget)
-{
-    ptWidget->deleteLaterCount=2;
 }

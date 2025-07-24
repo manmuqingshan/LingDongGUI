@@ -45,9 +45,8 @@
 const ldBaseWidgetFunc_t ldLabelFunc = {
     .depose = (ldDeposeFunc_t)ldLabel_depose,
     .load = (ldLoadFunc_t)ldLabel_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldLabel_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldLabel_on_frame_complete,
     .show = (ldShowFunc_t)ldLabel_show,
 };
 
@@ -94,7 +93,7 @@ ldLabel_t* ldLabel_init( ld_scene_t *ptScene,ldLabel_t *ptWidget,uint16_t nameId
     return ptWidget;
 }
 
-void ldLabel_depose( ldLabel_t *ptWidget)
+void ldLabel_depose(ld_scene_t *ptScene, ldLabel_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -114,13 +113,19 @@ void ldLabel_depose( ldLabel_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldLabel_on_load( ldLabel_t *ptWidget)
+void ldLabel_on_load(ld_scene_t *ptScene, ldLabel_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldLabel_on_frame_start( ldLabel_t *ptWidget)
+void ldLabel_on_frame_start(ld_scene_t *ptScene, ldLabel_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    
+}
+
+void ldLabel_on_frame_complete(ld_scene_t *ptScene, ldLabel_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
@@ -160,7 +165,7 @@ void ldLabel_show(ld_scene_t *ptScene, ldLabel_t *ptWidget, const arm_2d_tile_t 
                 }
                 else
                 {
-                    ldBaseImage(&tTarget,NULL,ptWidget->ptImgTile,NULL,0,ptWidget->use_as__ldBase_t.opacity);
+                    ldBaseImage(&tTarget,NULL,ptWidget->ptImgTile,ptWidget->ptMaskTile,0,ptWidget->use_as__ldBase_t.opacity);
                 }
                 arm_2d_op_wait_async(NULL);
             }
@@ -227,7 +232,7 @@ void ldLabelSetAlign(ldLabel_t *ptWidget,arm_2d_align_t tAlign)
     ptWidget->tAlign=tAlign;
 }
 
-void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile)
+void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
 {
     if(ptWidget==NULL)
     {
@@ -235,6 +240,7 @@ void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile)
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ptImgTile=ptImgTile;
+    ptWidget->ptMaskTile=ptMaskTile;
     ptWidget->isTransparent=false;
 }
 

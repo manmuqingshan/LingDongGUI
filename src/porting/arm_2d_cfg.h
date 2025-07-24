@@ -56,7 +56,6 @@ extern "C" {
 // <o>Enable Anti-Alias support for all transform operations.
 //     <0=>     No Anti-Alias
 //     <1=>     Use 4x Supersampling Anti-Alias (4xSSAA)
-//     <2=>     Use 2x Supersampling Anti-Alias (2xSSAA)
 // <i> Note that enabling this feature suffers a non-negligible performance drop.
 // <i> This feature is disabled by default.
 #ifndef __ARM_2D_HAS_ANTI_ALIAS_TRANSFORM__
@@ -127,6 +126,7 @@ extern "C" {
             |   ARM_2D_LOG_CHN_DIRTY_REGION_OPTIMISATION                        \
             |   ARM_2D_LOG_CHN_STATISTICS                                       \
             |   ARM_2D_LOG_CHN_CONTROLS                                         \
+            |   ARM_2D_LOG_CHN_GUI_STACK                                        \
             |   ARM_2D_LOG_CHN_APP)
 #endif
 
@@ -138,7 +138,7 @@ extern "C" {
 
 // </h>
 
-// <h>Patches for improving performance
+// <h>Patches for improving performance or memory footprint
 // =======================
 // 
 // <c1> Do NOT treat alpha value 255 as completely opaque in mask related operations
@@ -156,6 +156,27 @@ extern "C" {
 //#define __ARM_2D_CFG_UNSAFE_NO_SATURATION_IN_FIXED_POINT__ 
 // </c>
 
+// <c1> Remove the Helium RGB565 Patch in IIR Blur operations
+// <i> This option is used to remove helium rgb565 patch in IIR Blur to gain a better performance, a ghost-shadow effects might noticible when background is white or light.
+//#define __ARM_2D_CFG_UNSAFE_NO_HELIUM_RGB565_PATCH_IN_IIR_BLUR__ 
+// </c>
+
+// <c1> Remove the PFB support in IIR Blur Helium acceleration
+// <i> This option is used to remove the PFB support in IIR Blur Helium backend to gain a better performance.
+//#define __ARM_2D_CFG_UNSAFE_NO_PFB_SUPPORT_IN_IIR_BLUR_HELIUM__ 
+// </c>
+
+// <c1> Disable Dirty Region Optimization Algorithm permanently in PFB helper service
+// <i> This option is used to remove dirty region optimization in PFB helper service. Warning: Some of the application behaviours would be affected, and the dirty region debug mode is no longer available. Disable the dirty region optimization can reduce memory footprint.
+//#define __ARM_2D_CFG_PFB_DISABLE_DIRTY_REGION_OPTIMIZATION__
+// </c>
+
+// <q> When opacity is 255, call the non-opacity version of API implicitily
+// <i> This option is used to improve the performance and reduce the application complexity in API selection. Disable this feature allows linker to remove unused APIs further.
+// <i> This option is enabled by default
+#ifndef __ARM_2D_CFG_CALL_NON_OPACITY_VERSION_IMPLICITILY_FOR_255__
+#   define __ARM_2D_CFG_CALL_NON_OPACITY_VERSION_IMPLICITILY_FOR_255__         1
+#endif
 
 // <q> Optimize the scaler version of transform operations for pointer-like resources
 // <i> This feature is enabled by default. There is no guarantee that the performance will increase or decrease. It is all depends your applications. In most of the case, enabling it helps.
@@ -171,8 +192,14 @@ extern "C" {
 #   define __ARM_2D_CFG_OPTIMIZE_FOR_HOLLOW_OUT_MASK_IN_TRANSFORM__         0
 #endif
 
-// </h>
+// <q> Improve the User Application Performance with optimization in Layout Assistant. 
+// <i> Ignore the user application code when a PFB is output of the areas that generated with the layout assistant. Enabling this feature can improve the user application performance. This feature is disabled by default. It is recommended when you trys to optimize the application performance.
+// <i> If you see some visual elements are imcomplete, you can choose those layout assistants with "_open" as posfix in corresonding area. For example, arm_2d_align_centre() can be changed to arm_2d_align_centre_open().
+#ifndef __ARM_2D_CFG_OPTIMIZE_FOR_PFB_IN_LAYOUT_ASSISTANT__
+#   define __ARM_2D_CFG_OPTIMIZE_FOR_PFB_IN_LAYOUT_ASSISTANT__              0
+#endif
 
+// </h>
 
 // <h>Extra Components
 // =======================
@@ -240,6 +267,13 @@ extern "C" {
 // <i> This feature is disabled by default.
 #ifndef __ARM_2D_CFG_BENCHMARK_EXIT_WHEN_FINISH__
 #   define __ARM_2D_CFG_BENCHMARK_EXIT_WHEN_FINISH__                    0
+#endif
+
+// <q> Enable Context in Text Box
+// <i> When your PFB is small (< 1/10 FB) and the text box visual area is big, you can enable the context feature and see whether the performance is improved or not.
+// <i> This feature is disabled by default to save memory footprint
+#ifndef __ARM_2D_CFG_CONTROL_USE_CONTEXT__
+#   define __ARM_2D_CFG_CONTROL_USE_CONTEXT__                           0
 #endif
 
 //</h>

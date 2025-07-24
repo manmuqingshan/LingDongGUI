@@ -12,6 +12,7 @@ extern "C" {
 extern const ldPageFuncGroup_t uiStartupFunc;
 
 #define ID_BG                           0
+#define ID_WIN                          1
 
 #ifdef __cplusplus
 }

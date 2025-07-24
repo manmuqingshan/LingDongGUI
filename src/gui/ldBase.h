@@ -25,6 +25,7 @@ extern "C" {
 
 #include "arm_2d.h"
 #include "arm_2d_helper_control.h"
+#include "arm_2d_example_controls.h"
 #include "xLog.h"
 #include "xBtnAction.h"
 #include "ldMem.h"
@@ -61,23 +62,33 @@ typedef enum{
 
 
 #ifndef SET_BITS
-#define SET_BITS(data,value)                    ((data)|=(value))
+#define SET_BITS(data,value)            ((data)|=(value))
 #endif
 #ifndef CLR_BITS
-#define CLR_BITS(data,value)                    ((data)&=~(value))
+#define CLR_BITS(data,value)            ((data)&=~(value))
 #endif
 #ifndef SETBIT
-#define SETBIT(data,move)                       ((data)|=(1<<(move)))
+#define SETBIT(data,move)               ((data)|=(1<<(move)))
 #endif
 #ifndef CLRBIT
-#define CLRBIT(data,move)                       ((data)&=~(1<<(move)))
+#define CLRBIT(data,move)               ((data)&=~(1<<(move)))
 #endif
 #ifndef GETBIT
-#define GETBIT(data,move)                       (((data)>>(move))&0x01)
+#define GETBIT(data,move)               (((data)>>(move))&0x01)
 #endif
 #ifndef PUTBIT
-#define PUTBIT(data,value,move)                 ((value)?SETBIT(data,move):CLRBIT(data,move))
+#define PUTBIT(data,value,move)         ((value)?SETBIT(data,move):CLRBIT(data,move))
 #endif
+
+#define   GET16H(data)                  (((data)>>8)&0xFF)
+#define   GET16L(data)                  ((data)&0xFF)
+#define   CONNECT16(H,L)                (((H)<<8)+(L))
+
+#define   GET32H(data)                  (((data)>>24)&0xFF)
+#define   GET32MH(data)                 (((data)>>16)&0xFF)
+#define   GET32ML(data)                 (((data)>>8)&0xFF)
+#define   GET32L(data)                  ((data)&0xFF)
+#define   CONNECT32(H,MH,ML,L)          (((H)<<24)+((MH)<<16)+((ML)<<8)+(L))
 
 //btn占用0-9
 #define SIGNAL_NO_OPERATION             BTN_NO_OPERATION
@@ -100,7 +111,7 @@ typedef enum{
 
 #define ldColor                         COLOUR_INT
 
-#define CURSOR_WIDTH                    2
+#define CURSOR_WIDTH                    (2)
 
 #define MEM_MODE_FREERTOS_HEAP4         (0)
 #define MEM_MODE_TLFS                   (1)
@@ -114,19 +125,17 @@ typedef void (*ldPageFunc_t)(ld_scene_t*);
 typedef void (*ldDrawFunc_t)(ld_scene_t *,arm_2d_tile_t *,bool);
 typedef struct ldPageFuncGroup_t ldPageFuncGroup_t;
 
-typedef void (*ldDeposeFunc_t)(void *);
-typedef void (*ldShowFunc_t)(ld_scene_t*,void *,void *,bool);
-#ifdef FRAME_START
-typedef void (*ldFrameStartFunc_t)(void *);
-#endif
-typedef void (*ldLoadFunc_t)(void *);
+typedef void (*ldLoadFunc_t)(ld_scene_t *ptScene, void *ptWidget);
+typedef void (*ldDeposeFunc_t)(ld_scene_t *ptScene, void *ptWidget);
+typedef void (*ldFrameStartFunc_t)(ld_scene_t *ptScene, void *ptWidget);
+typedef void (*ldFrameCompleteFunc_t)(ld_scene_t *ptScene, void *ptWidget);
+typedef void (*ldShowFunc_t)(ld_scene_t *ptScene, void *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 typedef struct {
     ldDeposeFunc_t depose;
     ldLoadFunc_t load;
-#ifdef FRAME_START
     ldFrameStartFunc_t frameStart;
-#endif
+    ldFrameCompleteFunc_t frameComplete;
     ldShowFunc_t show;
 }ldBaseWidgetFunc_t;
 
@@ -174,7 +183,6 @@ typedef struct {
     bool isDirtyRegionUpdate:1;
     bool isDirtyRegionAutoReset:1;
     bool isHidden:1;
-    uint8_t deleteLaterCount:2;
 }ldBase_t;
 
 typedef enum{
@@ -207,6 +215,7 @@ void ldBaseNodeTreePrint(arm_2d_control_node_t *ptNodeRoot, int depth);
 void* ldBaseGetWidget(arm_2d_control_node_t *ptNodeRoot, uint16_t nameId);
 void ldBaseColor(arm_2d_tile_t* ptTile, arm_2d_region_t* ptRegion, ldColor color, uint8_t opacity);
 void ldBaseImage(arm_2d_tile_t* ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t* ptImgTile, arm_2d_tile_t* ptMaskTile, ldColor color, uint8_t opacity);
+void ldBaseImageFill(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
 void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile,float scale,arm_2d_op_trans_msk_opa_t *ptOP,bool bIsNewFrame);
 void ldBaseLabel(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, uint8_t *pStr, arm_2d_font_t *ptFont, arm_2d_align_t tAlign, ldColor textColor, uint8_t opacity);
 void arm_lcd_text_puts(arm_2d_region_t* ptRegion,arm_2d_font_t *ptFont,uint8_t *pStr,uint8_t opacity);
@@ -224,7 +233,6 @@ arm_2d_region_t ldBaseGetAlignRegion(arm_2d_region_t parentRegion,arm_2d_region_
 arm_2d_control_node_t *ldBaseGetRootNode(arm_2d_control_node_t *ptNode);
 int16_t ldBaseAutoVerticalGridAlign(arm_2d_region_t widgetRegion, int16_t currentOffset, uint8_t itemCount, uint8_t itemHeight, uint8_t space);
 void ldBaseSetCenter(ldBase_t *ptWidget);
-void ldBaseSetDeleteLater(ldBase_t *ptWidget);
 
 #define ldBaseGetWidgetById(nameId)     ldBaseGetWidget(ptScene->ptNodeRoot, nameId)
 

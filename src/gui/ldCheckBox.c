@@ -147,9 +147,8 @@ static struct {
 const ldBaseWidgetFunc_t ldCheckBoxFunc = {
     .depose = (ldDeposeFunc_t)ldCheckBox_depose,
     .load = (ldLoadFunc_t)ldCheckBox_on_load,
-#ifdef FRAME_START
-    .frameStart = (ldFrameStartFunc_t)ldCheckBox_on_frame_start,
-#endif
+    .frameStart  = (ldFrameStartFunc_t)ldCheckBox_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldCheckBox_on_frame_complete,
     .show = (ldShowFunc_t)ldCheckBox_show,
 };
 
@@ -224,7 +223,7 @@ ldCheckBox_t* ldCheckBox_init( ld_scene_t *ptScene,ldCheckBox_t *ptWidget, uint1
     return ptWidget;
 }
 
-void ldCheckBox_depose( ldCheckBox_t *ptWidget)
+void ldCheckBox_depose(ld_scene_t *ptScene, ldCheckBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -244,16 +243,22 @@ void ldCheckBox_depose( ldCheckBox_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldCheckBox_on_load( ldCheckBox_t *ptWidget)
+void ldCheckBox_on_load(ld_scene_t *ptScene, ldCheckBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldCheckBox_on_frame_start( ldCheckBox_t *ptWidget)
+void ldCheckBox_on_frame_start(ld_scene_t *ptScene, ldCheckBox_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldCheckBox_on_frame_complete(ld_scene_t *ptScene, ldCheckBox_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+
 }
 
 void ldCheckBox_show(ld_scene_t *ptScene, ldCheckBox_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

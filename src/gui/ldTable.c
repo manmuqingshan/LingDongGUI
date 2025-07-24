@@ -47,9 +47,8 @@
 const ldBaseWidgetFunc_t ldTableFunc = {
     .depose = (ldDeposeFunc_t)ldTable_depose,
     .load = (ldLoadFunc_t)ldTable_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldTable_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldTable_on_frame_complete,
     .show = (ldShowFunc_t)ldTable_show,
 };
 
@@ -241,7 +240,7 @@ static bool slotTableProcess(ld_scene_t *ptScene,ldMsg_t msg)
     case SIGNAL_PRESS:
     {
         arm_2d_location_t tLocation={0};
-        tLocation=ldBaseGetAbsoluteLocation(ptWidget,tLocation);
+        tLocation=ldBaseGetAbsoluteLocation((ldBase_t *)ptWidget,tLocation);
         x=(int16_t)GET_SIGNAL_VALUE_X(msg.value)-tLocation.iX;
         y=(int16_t)GET_SIGNAL_VALUE_Y(msg.value)-tLocation.iY;
 
@@ -299,18 +298,18 @@ static bool slotTableProcess(ld_scene_t *ptScene,ldMsg_t msg)
                         kb->editorId=ptWidget->use_as__ldBase_t.nameId;
                         cursorBlinkFlag=true;
                         cursorBlinkCount=0;
-                        ldKeyboardSetHidden(kb,false);
+                        ldKeyboardSetHidden((ldBase_t *)kb,false);
 
                         arm_2d_region_t itemRegion= _ldTableGetItemRegion(ptWidget,ptWidget->currentRow,ptWidget->currentColumn);
 
                         if((itemRegion.tLocation.iY+itemRegion.tSize.iHeight+ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY)>(LD_CFG_SCEEN_HEIGHT>>1))
                         {
-                            ldKeyboardMove(kb,0,LD_CFG_SCEEN_HEIGHT>>1);
+                            ldKeyboardMove((ldBase_t *)kb,0,LD_CFG_SCEEN_HEIGHT>>1);
                             ldBaseBgMove(ptScene,LD_CFG_SCEEN_WIDTH,LD_CFG_SCEEN_HEIGHT,0,-(LD_CFG_SCEEN_HEIGHT>>1));
                         }
                         else
                         {
-                            ldKeyboardMove(kb,0,0);
+                            ldKeyboardMove((ldBase_t *)kb,0,0);
                         }
                     }
                 }
@@ -534,7 +533,7 @@ ldTable_t* ldTable_init( ld_scene_t *ptScene,ldTable_t *ptWidget, uint16_t nameI
     return ptWidget;
 }
 
-void ldTable_depose( ldTable_t *ptWidget)
+void ldTable_depose(ld_scene_t *ptScene, ldTable_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -564,16 +563,21 @@ void ldTable_depose( ldTable_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldTable_on_load( ldTable_t *ptWidget)
+void ldTable_on_load(ld_scene_t *ptScene, ldTable_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldTable_on_frame_start( ldTable_t *ptWidget)
+void ldTable_on_frame_start(ld_scene_t *ptScene, ldTable_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldTable_on_frame_complete(ld_scene_t *ptScene, ldTable_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldTable_show(ld_scene_t *ptScene, ldTable_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

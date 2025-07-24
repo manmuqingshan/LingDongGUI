@@ -48,10 +48,11 @@ const ldBaseWidgetFunc_t ldTemplateFunc = {
     .depose = (ldDeposeFunc_t)ldTemplate_depose,
     .load = (ldLoadFunc_t)ldTemplate_on_load,
     .frameStart = (ldFrameStartFunc_t)ldTemplate_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldTemplate_on_frame_complete,
     .show = (ldShowFunc_t)ldTemplate_show,
 };
 
-ldTemplate_t* ldTemplate_init( ld_scene_t *ptScene,ldTemplate_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height)
+ldTemplate_t* ldTemplate_init(ld_scene_t *ptScene,ldTemplate_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height)
 {
     assert(NULL != ptScene);
     ldBase_t *ptParent;
@@ -88,7 +89,7 @@ ldTemplate_t* ldTemplate_init( ld_scene_t *ptScene,ldTemplate_t *ptWidget, uint1
     return ptWidget;
 }
 
-void ldTemplate_depose( ldTemplate_t *ptWidget)
+void ldTemplate_depose(ld_scene_t *ptScene, ldTemplate_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -108,7 +109,7 @@ void ldTemplate_depose( ldTemplate_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldTemplate_on_load( ldTemplate_t *ptWidget)
+void ldTemplate_on_load(ld_scene_t *ptScene, ldTemplate_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -117,13 +118,19 @@ void ldTemplate_on_load( ldTemplate_t *ptWidget)
     }
 }
 
-void ldTemplate_on_frame_start( ldTemplate_t *ptWidget)
+void ldTemplate_on_frame_start(ld_scene_t *ptScene, ldTemplate_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
     {
         return;
     }
+}
+
+void ldTemplate_on_frame_complete(ld_scene_t *ptScene, ldTemplate_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+
 }
 
 void ldTemplate_show(ld_scene_t *ptScene, ldTemplate_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

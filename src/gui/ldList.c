@@ -48,9 +48,8 @@
 const ldBaseWidgetFunc_t ldListFunc = {
     .depose = (ldDeposeFunc_t)ldList_depose,
     .load = (ldLoadFunc_t)ldList_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldList_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldList_on_frame_complete,
     .show = (ldShowFunc_t)ldList_show,
 };
 
@@ -111,7 +110,7 @@ static bool slotListScroll(ld_scene_t *ptScene,ldMsg_t msg)
     return false;
 }
 
-ldList_t* ldList_init( ld_scene_t *ptScene,ldList_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height)
+ldList_t* ldList_init(ld_scene_t *ptScene, ldList_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height)
 {
     assert(NULL != ptScene);
     ldBase_t *ptParent;
@@ -162,7 +161,7 @@ ldList_t* ldList_init( ld_scene_t *ptScene,ldList_t *ptWidget, uint16_t nameId, 
     return ptWidget;
 }
 
-void ldList_depose( ldList_t *ptWidget)
+void ldList_depose(ld_scene_t *ptScene, ldList_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -182,7 +181,7 @@ void ldList_depose( ldList_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldList_on_load( ldList_t *ptWidget)
+void ldList_on_load(ld_scene_t *ptScene, ldList_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -191,7 +190,16 @@ void ldList_on_load( ldList_t *ptWidget)
     }
 }
 
-void ldList_on_frame_start( ldList_t *ptWidget)
+void ldList_on_frame_start(ld_scene_t *ptScene, ldList_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+}
+
+void ldList_on_frame_complete(ld_scene_t *ptScene, ldList_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)

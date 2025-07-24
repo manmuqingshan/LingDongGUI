@@ -49,13 +49,12 @@ typedef struct ldLineEdit_t ldLineEdit_t;
 struct ldLineEdit_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     arm_2d_font_t *ptFont;
     arm_2d_align_t tAlign;
     uint16_t kbNameId;
     ldColor textColor;
+    ldColor backgroundColor;
+    ldColor frameColor;
     uint8_t *pText;
     uint8_t textMax;
     bool isEditing:1;
@@ -65,15 +64,18 @@ struct ldLineEdit_t
 };
 
 ldLineEdit_t* ldLineEdit_init(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont, uint8_t textMax);
-void ldLineEdit_depose( ldLineEdit_t *ptWidget);
-void ldLineEdit_on_load( ldLineEdit_t *ptWidget);
-void ldLineEdit_on_frame_start( ldLineEdit_t *ptWidget);
+void ldLineEdit_depose(ld_scene_t *ptScene, ldLineEdit_t *ptWidget);
+void ldLineEdit_on_load(ld_scene_t *ptScene, ldLineEdit_t *ptWidget);
+void ldLineEdit_on_frame_start(ld_scene_t *ptScene, ldLineEdit_t *ptWidget);
+void ldLineEdit_on_frame_complete(ld_scene_t *ptScene, ldLineEdit_t *ptWidget);
 void ldLineEdit_show(ld_scene_t *pScene, ldLineEdit_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldLineEditSetText(ldLineEdit_t* ptWidget,uint8_t *pText);
 void ldLineEditSetKeyboard(ldLineEdit_t* ptWidget,uint16_t kbNameId);
 void ldLineEditSetType(ldLineEdit_t* ptWidget,ldEditType_t editType);
 void ldLineEditSetAlign(ldLineEdit_t *ptWidget,arm_2d_align_t tAlign);
+void ldLineEditSetCorner(ldLineEdit_t *ptWidget, bool isCorner);
+void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backgroundColor, ldColor frameColor);
 
 #define ldLineEditInit(nameId,parentNameId,x,y,width,height,ptFont,textMax) \
         ldLineEdit_init(ptScene,NULL,nameId,parentNameId,x,y,width,height,ptFont,textMax)

@@ -51,8 +51,6 @@ typedef void (*ldMsgBoxFunc_t)(ld_scene_t *ptScene,ldMessageBox_t *);
 struct ldMessageBox_t
 {
     implement(ldBase_t);
-
-
     arm_2d_tile_t *ptBgImgTile;
     arm_2d_tile_t *ptBgMaskTile;
     arm_2d_font_t *ptFont;
@@ -78,9 +76,10 @@ struct ldMessageBox_t
 };
 
 ldMessageBox_t* ldMessageBox_init(ld_scene_t *ptScene, ldMessageBox_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont);
-void ldMessageBox_depose( ldMessageBox_t *ptWidget);
-void ldMessageBox_on_load( ldMessageBox_t *ptWidget);
-void ldMessageBox_on_frame_start( ldMessageBox_t *ptWidget);
+void ldMessageBox_depose(ld_scene_t *ptScene, ldMessageBox_t *ptWidget);
+void ldMessageBox_on_load(ld_scene_t *ptScene, ldMessageBox_t *ptWidget);
+void ldMessageBox_on_frame_start(ld_scene_t *ptScene, ldMessageBox_t *ptWidget);
+void ldMessageBox_on_frame_complete(ld_scene_t *ptScene, ldMessageBox_t *ptWidget);
 void ldMessageBox_show(ld_scene_t *pScene, ldMessageBox_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldMessageBoxSetTitle(ldMessageBox_t* ptWidget,const uint8_t *pStr);

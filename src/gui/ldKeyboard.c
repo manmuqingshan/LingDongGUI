@@ -288,9 +288,8 @@ static uint8_t _letterOffset[3]={0,32,32};
 const ldBaseWidgetFunc_t ldKeyboardFunc = {
     .depose = (ldDeposeFunc_t)ldKeyboard_depose,
     .load = (ldLoadFunc_t)ldKeyboard_on_load,
-#ifdef FRAME_START
-    .frameStart = (ldFrameStartFunc_t)ldKeyboard_on_frame_start,
-#endif
+    .frameStart  = (ldFrameStartFunc_t)ldKeyboard_on_frame_start,
+    .frameComplete = (ldFrameCompleteFunc_t)ldKeyboard_on_frame_complete,
     .show = (ldShowFunc_t)ldKeyboard_show,
 };
 
@@ -595,7 +594,7 @@ static bool slotKBProcess(ld_scene_t *ptScene,ldMsg_t msg)
     return true;
 }
 
-ldKeyboard_t* ldKeyboard_init( ld_scene_t *ptScene,ldKeyboard_t *ptWidget, uint16_t nameId, uint16_t parentNameId,arm_2d_font_t *ptFont)
+ldKeyboard_t* ldKeyboard_init(ld_scene_t *ptScene, ldKeyboard_t *ptWidget, uint16_t nameId, uint16_t parentNameId,arm_2d_font_t *ptFont)
 {
     assert(NULL != ptScene);
     ldBase_t *ptParent;
@@ -643,7 +642,7 @@ ldKeyboard_t* ldKeyboard_init( ld_scene_t *ptScene,ldKeyboard_t *ptWidget, uint1
     return ptWidget;
 }
 
-void ldKeyboard_depose( ldKeyboard_t *ptWidget)
+void ldKeyboard_depose(ld_scene_t *ptScene, ldKeyboard_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -663,13 +662,19 @@ void ldKeyboard_depose( ldKeyboard_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldKeyboard_on_load( ldKeyboard_t *ptWidget)
+void ldKeyboard_on_load(ld_scene_t *ptScene, ldKeyboard_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldKeyboard_on_frame_start( ldKeyboard_t *ptWidget)
+void ldKeyboard_on_frame_start(ld_scene_t *ptScene, ldKeyboard_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    
+}
+
+void ldKeyboard_on_frame_complete(ld_scene_t *ptScene, ldKeyboard_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
@@ -733,7 +738,7 @@ void ldKeyboard_show(ld_scene_t *ptScene, ldKeyboard_t *ptWidget, const arm_2d_t
                 isExit=false;
                 ptWidget->upperState=0;
                 ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY=LD_CFG_SCEEN_HEIGHT;
-                ldKeyboardSetHidden(ptWidget,true);
+                ldKeyboardSetHidden((ldBase_t *)ptWidget,true);
                 emit(ptWidget->editorId,SIGNAL_FINISHED,0);
 
                 ldBaseBgMove(ptScene,LD_CFG_SCEEN_WIDTH,LD_CFG_SCEEN_HEIGHT,0,0);

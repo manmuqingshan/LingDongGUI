@@ -64,9 +64,10 @@ struct ldCheckBox_t
 };
 
 ldCheckBox_t* ldCheckBox_init(ld_scene_t *ptScene, ldCheckBox_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height);
-void ldCheckBox_depose( ldCheckBox_t *ptWidget);
-void ldCheckBox_on_load( ldCheckBox_t *ptWidget);
-void ldCheckBox_on_frame_start( ldCheckBox_t *ptWidget);
+void ldCheckBox_depose(ld_scene_t *ptScene, ldCheckBox_t *ptWidget);
+void ldCheckBox_on_load(ld_scene_t *ptScene, ldCheckBox_t *ptWidget);
+void ldCheckBox_on_frame_start(ld_scene_t *ptScene, ldCheckBox_t *ptWidget);
+void ldCheckBox_on_frame_complete(ld_scene_t *ptScene, ldCheckBox_t *ptWidget);
 void ldCheckBox_show(ld_scene_t *pScene, ldCheckBox_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldCheckBoxSetColor(ldCheckBox_t* ptWidget,ldColor bgColor,ldColor fgColor);

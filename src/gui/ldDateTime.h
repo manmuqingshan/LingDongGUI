@@ -70,9 +70,10 @@ struct ldDateTime_t
 };
 
 ldDateTime_t* ldDateTime_init(ld_scene_t *ptScene, ldDateTime_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont);
-void ldDateTime_depose( ldDateTime_t *ptWidget);
-void ldDateTime_on_load( ldDateTime_t *ptWidget);
-void ldDateTime_on_frame_start( ldDateTime_t *ptWidget);
+void ldDateTime_depose(ld_scene_t *ptScene, ldDateTime_t *ptWidget);
+void ldDateTime_on_load(ld_scene_t *ptScene, ldDateTime_t *ptWidget);
+void ldDateTime_on_frame_start(ld_scene_t *ptScene, ldDateTime_t *ptWidget);
+void ldDateTime_on_frame_complete(ld_scene_t *ptScene, ldDateTime_t *ptWidget);
 void ldDateTime_show(ld_scene_t *pScene, ldDateTime_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldDateTimeSetTransparent(ldDateTime_t* ptWidget,bool isTransparent);

@@ -46,9 +46,8 @@
 const ldBaseWidgetFunc_t ldAnimationFunc = {
     .depose = (ldDeposeFunc_t)ldAnimation_depose,
     .load = (ldLoadFunc_t)ldAnimation_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldAnimation_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldAnimation_on_frame_complete,
     .show = (ldShowFunc_t)ldAnimation_show,
 };
 
@@ -94,7 +93,7 @@ ldAnimation_t* ldAnimation_init( ld_scene_t *ptScene,ldAnimation_t *ptWidget, ui
     return ptWidget;
 }
 
-void ldAnimation_depose( ldAnimation_t *ptWidget)
+void ldAnimation_depose(ld_scene_t *ptScene, ldAnimation_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -114,7 +113,7 @@ void ldAnimation_depose( ldAnimation_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldAnimation_on_load( ldAnimation_t *ptWidget)
+void ldAnimation_on_load(ld_scene_t *ptScene, ldAnimation_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -123,7 +122,16 @@ void ldAnimation_on_load( ldAnimation_t *ptWidget)
     }
 }
 
-void ldAnimation_on_frame_start( ldAnimation_t *ptWidget)
+void ldAnimation_on_frame_start(ld_scene_t *ptScene, ldAnimation_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+}
+
+void ldAnimation_on_frame_complete(ld_scene_t *ptScene, ldAnimation_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)

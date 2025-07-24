@@ -51,9 +51,8 @@
 const ldBaseWidgetFunc_t ldRadialMenuFunc = {
     .depose = (ldDeposeFunc_t)ldRadialMenu_depose,
     .load = (ldLoadFunc_t)ldRadialMenu_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldRadialMenu_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldRadialMenu_on_frame_complete,
     .show = (ldShowFunc_t)ldRadialMenu_show,
 };
 
@@ -71,7 +70,7 @@ static bool slotMenuSelect(ld_scene_t *ptScene,ldMsg_t msg)
         tClickLocal.iX=(int16_t)GET_SIGNAL_VALUE_X(msg.value);
         tClickLocal.iY=(int16_t)GET_SIGNAL_VALUE_Y(msg.value);
 
-        tClickLocal=ldBaseGetRelativeLocation(ptWidget,tClickLocal);
+        tClickLocal=ldBaseGetRelativeLocation((ldBase_t *)ptWidget,tClickLocal);
         break;
     }
     case SIGNAL_HOLD_DOWN:
@@ -134,9 +133,7 @@ static bool slotMenuSelect(ld_scene_t *ptScene,ldMsg_t msg)
             tReleaseLoc.iX=(int16_t)GET_SIGNAL_VALUE_X(msg.value);
             tReleaseLoc.iY=(int16_t)GET_SIGNAL_VALUE_Y(msg.value);
 
-            tReleaseLoc=ldBaseGetRelativeLocation(ptWidget,tReleaseLoc);
-
-//            ldRadialMenuItem_t *ptItemList=(ldRadialMenuItem_t *)ptWidget->use_as__ldBase_t.ptItemList;
+            tReleaseLoc=ldBaseGetRelativeLocation((ldBase_t *)ptWidget,tReleaseLoc);
 
             for(int8_t i=ptWidget->use_as__ldBase_t.itemCount-1;i>=0;i--)
             {
@@ -150,6 +147,7 @@ static bool slotMenuSelect(ld_scene_t *ptScene,ldMsg_t msg)
                     (tReleaseLoc.iY<(ptWidget->use_as__ldBase_t.ptItemRegionList[ptWidget->pShowList[i]].itemRegion.tLocation.iY+ptWidget->use_as__ldBase_t.ptItemRegionList[ptWidget->pShowList[i]].itemRegion.tSize.iHeight-1))))
                 {
                     ldRadialMenuSelectItem(ptWidget,ptWidget->pShowList[i]);
+                    ldMsgEmit(ptScene->ptMsgQueue,ptWidget,SIGNAL_CLICKED_ITEM,ptWidget->pShowList[i]);
                     LOG_DEBUG("click item %d",ptWidget->pShowList[i]);
                     break;
                 }
@@ -221,7 +219,7 @@ ldRadialMenu_t* ldRadialMenu_init( ld_scene_t *ptScene,ldRadialMenu_t *ptWidget,
     return ptWidget;
 }
 
-void ldRadialMenu_depose( ldRadialMenu_t *ptWidget)
+void ldRadialMenu_depose(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -243,7 +241,7 @@ void ldRadialMenu_depose( ldRadialMenu_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldRadialMenu_on_load( ldRadialMenu_t *ptWidget)
+void ldRadialMenu_on_load(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
@@ -327,10 +325,15 @@ static void _autoSort(ldRadialMenu_t *ptWidget)
 
 }
 
-void ldRadialMenu_on_frame_start( ldRadialMenu_t *ptWidget)
+void ldRadialMenu_on_frame_start(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget)
 {
     assert(NULL != ptWidget);
 
+}
+
+void ldRadialMenu_on_frame_complete(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldRadialMenu_show(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)
@@ -399,6 +402,8 @@ void ldRadialMenu_show(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget, const arm_
                 ptWidget->selectItem=ptWidget->targetItem;
                 ptWidget->nowAngle%=360;
                 _autoScalePercent(ptWidget);
+                ldMsgEmit(ptScene->ptMsgQueue,ptWidget,SIGNAL_VALUE_CHANGED,ptWidget->selectItem);
+                LOG_DEBUG("current item %d",ptWidget->selectItem);
             }
 
             ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;

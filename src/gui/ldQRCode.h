@@ -55,9 +55,6 @@ typedef struct ldQRCode_t ldQRCode_t;
 struct ldQRCode_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     uint8_t qrEcc;
     uint8_t qrMaxVersion;
     uint8_t qrZoom;
@@ -67,9 +64,10 @@ struct ldQRCode_t
 };
 
 ldQRCode_t* ldQRCode_init(ld_scene_t *ptScene, ldQRCode_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, uint8_t* pStr, ldColor qrColor, ldColor bgColor, uint8_t qrEcc, uint8_t qrMaxVersion, uint8_t qrZoom);
-void ldQRCode_depose( ldQRCode_t *ptWidget);
-void ldQRCode_on_load( ldQRCode_t *ptWidget);
-void ldQRCode_on_frame_start( ldQRCode_t *ptWidget);
+void ldQRCode_depose(ld_scene_t *ptScene, ldQRCode_t *ptWidget);
+void ldQRCode_on_load(ld_scene_t *ptScene, ldQRCode_t *ptWidget);
+void ldQRCode_on_frame_start(ld_scene_t *ptScene, ldQRCode_t *ptWidget);
+void ldQRCode_on_frame_complete(ld_scene_t *ptScene, ldQRCode_t *ptWidget);
 void ldQRCode_show(ld_scene_t *pScene, ldQRCode_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldQRCodeSetText(ldQRCode_t *ptWidget, uint8_t *pStr);

@@ -142,7 +142,7 @@ int main(void)
     //user gui page init
 
 #else
-    ldGuiInit(LD_DEMO_GUI_FUNC);
+    ldGuiInit((ldPageFuncGroup_t *)&LD_DEMO_GUI_FUNC);
 #endif
 #endif
     

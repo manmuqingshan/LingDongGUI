@@ -50,9 +50,8 @@
 const ldBaseWidgetFunc_t ldIconSliderFunc = {
     .depose = (ldDeposeFunc_t)ldIconSlider_depose,
     .load = (ldLoadFunc_t)ldIconSlider_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldIconSlider_on_frame_start,
-#endif
+    .frameComplete = (ldFrameCompleteFunc_t)ldIconSlider_on_frame_complete,
     .show = (ldShowFunc_t)ldIconSlider_show,
 };
 
@@ -395,7 +394,7 @@ ldIconSlider_t* ldIconSlider_init( ld_scene_t *ptScene,ldIconSlider_t *ptWidget,
     return ptWidget;
 }
 
-void ldIconSlider_depose( ldIconSlider_t *ptWidget)
+void ldIconSlider_depose(ld_scene_t *ptScene, ldIconSlider_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -415,16 +414,21 @@ void ldIconSlider_depose( ldIconSlider_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldIconSlider_on_load( ldIconSlider_t *ptWidget)
+void ldIconSlider_on_load(ld_scene_t *ptScene, ldIconSlider_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldIconSlider_on_frame_start( ldIconSlider_t *ptWidget)
+void ldIconSlider_on_frame_start(ld_scene_t *ptScene, ldIconSlider_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldIconSlider_on_frame_complete(ld_scene_t *ptScene, ldIconSlider_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldIconSlider_show(ld_scene_t *ptScene, ldIconSlider_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

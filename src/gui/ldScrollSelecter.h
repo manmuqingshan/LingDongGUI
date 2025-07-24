@@ -49,9 +49,6 @@ typedef struct ldScrollSelecter_t ldScrollSelecter_t;
 struct ldScrollSelecter_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     arm_2d_font_t *ptFont;
     arm_2d_tile_t *ptImgTile;
     arm_2d_tile_t *ptIndicatorTile;
@@ -71,9 +68,10 @@ struct ldScrollSelecter_t
 };
 
 ldScrollSelecter_t* ldScrollSelecter_init(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont);
-void ldScrollSelecter_depose( ldScrollSelecter_t *ptWidget);
-void ldScrollSelecter_on_load( ldScrollSelecter_t *ptWidget);
-void ldScrollSelecter_on_frame_start( ldScrollSelecter_t *ptWidget);
+void ldScrollSelecter_depose(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget);
+void ldScrollSelecter_on_load(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget);
+void ldScrollSelecter_on_frame_start(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget);
+void ldScrollSelecter_on_frame_complete(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget);
 void ldScrollSelecter_show(ld_scene_t *pScene, ldScrollSelecter_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldScrollSelecterSetItems(ldScrollSelecter_t* ptWidget, const uint8_t *pStrArray[], uint8_t arraySize);

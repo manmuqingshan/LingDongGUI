@@ -63,9 +63,10 @@ struct ldArc_t
 };
 
 ldArc_t* ldArc_init(ld_scene_t *ptScene, ldArc_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height,arm_2d_tile_t *ptQuarterImgTile,arm_2d_tile_t *ptQuarterMaskTile,ldColor parentColor);
-void ldArc_depose( ldArc_t *ptWidget);
-void ldArc_on_load( ldArc_t *ptWidget);
-void ldArc_on_frame_start( ldArc_t *ptWidget);
+void ldArc_depose(ld_scene_t *ptScene, ldArc_t *ptWidget);
+void ldArc_on_load(ld_scene_t *ptScene, ldArc_t *ptWidget);
+void ldArc_on_frame_start(ld_scene_t *ptScene, ldArc_t *ptWidget);
+void ldArc_on_frame_complete(ld_scene_t *ptScene, ldArc_t *ptWidget);
 void ldArc_show(ld_scene_t *pScene, ldArc_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldArcSetBgAngle(ldArc_t *pWidget,float bgStart,float bgEnd);

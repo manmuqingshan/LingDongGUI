@@ -49,9 +49,6 @@ typedef struct ldSlider_t ldSlider_t;
 struct ldSlider_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     uint16_t permille;
     ldColor bgColor;
     ldColor frameColor;
@@ -66,9 +63,10 @@ struct ldSlider_t
 };
 
 ldSlider_t* ldSlider_init(ld_scene_t *ptScene, ldSlider_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height);
-void ldSlider_depose( ldSlider_t *ptWidget);
-void ldSlider_on_load( ldSlider_t *ptWidget);
-void ldSlider_on_frame_start( ldSlider_t *ptWidget);
+void ldSlider_depose(ld_scene_t *pScene, ldSlider_t *ptWidget);
+void ldSlider_on_load(ld_scene_t *pScene, ldSlider_t *ptWidget);
+void ldSlider_on_frame_start(ld_scene_t *pScene, ldSlider_t *ptWidget);
+void ldSlider_on_frame_complete(ld_scene_t *pScene, ldSlider_t *ptWidget);
 void ldSlider_show(ld_scene_t *pScene, ldSlider_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldSliderSetPercent(ldSlider_t *ptWidget,float percent);

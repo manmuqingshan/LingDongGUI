@@ -59,22 +59,17 @@ extern bool cursorBlinkFlag;
 #define SYS_TICK_CYCLE_MS           10
 
 void ldGuiLoad(ld_scene_t *ptScene);
+void ldGuiDespose(ld_scene_t *ptScene);
 void ldGuiFrameStart(ld_scene_t *ptScene);
+void ldGuiFrameComplete(ld_scene_t *ptScene);
 void ldGuiDraw(ld_scene_t *ptScene,arm_2d_tile_t *ptTile,bool bIsNewFrame);
-
-
-
 void ldGuiInit(ldPageFuncGroup_t *ptFuncGroup);
-
-
-
 
 void ldGuiTouchProcess(ld_scene_t *ptScene);
 
 void ldGuiSceneInit(ld_scene_t *ptScene);
-void ldGuiLogicLoop(ld_scene_t *ptScene);
-void ldGuiQuit(ld_scene_t *ptScene);
-void ldGuiFrameComplete(ld_scene_t *ptScene);
+
+
 void __ldGuiJumpPage(ldPageFuncGroup_t *ptFuncGroup,arm_2d_scene_switch_mode_t *ptMode,uint16_t switchTimeMs);
 
 #define ldGuiJumpPage(pageFuncGroupName,mode,ms)           ({extern const ldPageFuncGroup_t pageFuncGroupName; \

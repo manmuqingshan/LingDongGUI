@@ -72,9 +72,8 @@ const arm_2d_tile_t c_tile_graphDefalutDot_Mask = {
 const ldBaseWidgetFunc_t ldGraphFunc = {
     .depose = (ldDeposeFunc_t)ldGraph_depose,
     .load = (ldLoadFunc_t)ldGraph_on_load,
-#ifdef FRAME_START
     .frameStart = (ldFrameStartFunc_t)ldGraph_on_frame_start,
-#endif
+    .frameComplete  = (ldFrameCompleteFunc_t)ldGraph_on_frame_complete,
     .show = (ldShowFunc_t)ldGraph_show,
 };
 
@@ -127,7 +126,7 @@ ldGraph_t* ldGraph_init( ld_scene_t *ptScene,ldGraph_t *ptWidget, uint16_t nameI
     return ptWidget;
 }
 
-void ldGraph_depose( ldGraph_t *ptWidget)
+void ldGraph_depose(ld_scene_t *pScene, ldGraph_t *ptWidget)
 {
     assert(NULL != ptWidget);
     if (ptWidget == NULL)
@@ -147,16 +146,21 @@ void ldGraph_depose( ldGraph_t *ptWidget)
     ldFree(ptWidget);
 }
 
-void ldGraph_on_load( ldGraph_t *ptWidget)
+void ldGraph_on_load(ld_scene_t *pScene, ldGraph_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
 }
 
-void ldGraph_on_frame_start( ldGraph_t *ptWidget)
+void ldGraph_on_frame_start(ld_scene_t *pScene, ldGraph_t *ptWidget)
 {
     assert(NULL != ptWidget);
     
+}
+
+void ldGraph_on_frame_complete(ld_scene_t *pScene, ldGraph_t *ptWidget)
+{
+    assert(NULL != ptWidget);
 }
 
 void ldGraph_show(ld_scene_t *ptScene, ldGraph_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame)

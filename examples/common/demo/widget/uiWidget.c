@@ -25,9 +25,9 @@ static bool slotTest(ld_scene_t *ptScene,ldMsg_t msg)
 
 //   ldButtonSetText(btn,"222");
 //   ldButtonMove(btn,150,100);
-   ldImage_t*img=ldBaseGetWidget(ptScene->ptNodeRoot,1);
+   ldImage_t *img=ldBaseGetWidget(ptScene->ptNodeRoot,1);
 //   ldImageSetHidden(img,!img->use_as__ldBase_t.isHidden);
-   ldImageSetOpacity(img,128);
+   ldImageSetOpacity((ldBase_t *)img,128);
    return false;
 }
 
@@ -113,9 +113,9 @@ void uiWidgetInit(ld_scene_t* ptScene)
     obj=ldProgressBarInit(8,0,10,500,300,30);
     ldProgressBarSetPercent(obj,45);
 //    ldProgressBarSetHorizontal(obj,false);
-    ldProgressBarSetImage(obj,IMAGE_PROGRESSBARBG_BMP,IMAGE_PROGRESSBARFG_BMP);
+    ldProgressBarSetImage(obj,IMAGE_PROGRESSBARBG_BMP,NULL,IMAGE_PROGRESSBARFG_BMP,NULL);
 
-    obj=ldTextInit(9,0,300,10,150,200,FONT_ARIAL_12,true);
+    obj=ldTextInit(9,0,300,10,150,200,FONT_ARIAL_12,TEXT_BOX_LINE_ALIGN_LEFT,true);
     ldTextSetBgImage(obj,IMAGE_LETTER_PAPER_BMP,NULL);
     ldTextSetText(obj,"123\n12333");
 

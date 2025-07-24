@@ -49,9 +49,6 @@ typedef struct ldGauge_t ldGauge_t;
 struct ldGauge_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     arm_2d_tile_t *ptBgImgTile;
     arm_2d_tile_t *ptBgMaskTile;
     arm_2d_tile_t *ptPointerImgTile;
@@ -68,9 +65,10 @@ struct ldGauge_t
 };
 
 ldGauge_t* ldGauge_init(ld_scene_t *ptScene, ldGauge_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_tile_t *ptBgImgTile, arm_2d_tile_t *ptBgMaskTile, int16_t centreOffsetX, int16_t centreOffsetY);
-void ldGauge_depose( ldGauge_t *ptWidget);
-void ldGauge_on_load( ldGauge_t *ptWidget);
-void ldGauge_on_frame_start( ldGauge_t *ptWidget);
+void ldGauge_depose(ld_scene_t *pScene, ldGauge_t *ptWidget);
+void ldGauge_on_load(ld_scene_t *pScene, ldGauge_t *ptWidget);
+void ldGauge_on_frame_start(ld_scene_t *pScene, ldGauge_t *ptWidget);
+void ldGauge_on_frame_complete(ld_scene_t *pScene, ldGauge_t *ptWidget);
 void ldGauge_show(ld_scene_t *pScene, ldGauge_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldGaugeSetPointerImage(ldGauge_t *ptWidget,arm_2d_tile_t *ptPointerImgTile,arm_2d_tile_t *ptPointerMaskTile,int16_t pointerOriginOffsetX,int16_t pointerOriginOffsetY);

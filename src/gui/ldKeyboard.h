@@ -49,9 +49,6 @@ typedef struct ldKeyboard_t ldKeyboard_t;
 struct ldKeyboard_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     uint8_t **ppStr;
     arm_2d_font_t *ptFont;
     arm_2d_location_t clickPoint;
@@ -69,9 +66,10 @@ struct ldKeyboard_t
 };
 
 ldKeyboard_t* ldKeyboard_init(ld_scene_t *ptScene, ldKeyboard_t *ptWidget, uint16_t nameId, uint16_t parentNameId, arm_2d_font_t *ptFont);
-void ldKeyboard_depose( ldKeyboard_t *ptWidget);
-void ldKeyboard_on_load( ldKeyboard_t *ptWidget);
-void ldKeyboard_on_frame_start( ldKeyboard_t *ptWidget);
+void ldKeyboard_depose(ld_scene_t *ptScene, ldKeyboard_t *ptWidget);
+void ldKeyboard_on_load(ld_scene_t *ptScene, ldKeyboard_t *ptWidget);
+void ldKeyboard_on_frame_start(ld_scene_t *ptScene, ldKeyboard_t *ptWidget);
+void ldKeyboard_on_frame_complete(ld_scene_t *ptScene, ldKeyboard_t *ptWidget);
 void ldKeyboard_show(ld_scene_t *pScene, ldKeyboard_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 #define ldKeyboardInit(nameId,parentNameId,ptFont) \

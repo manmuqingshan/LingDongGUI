@@ -18,7 +18,7 @@ LDFLAGS =
 LIBS = -L./sdl2/64/lib -lSDL2 -lSDL2main -lpthread
 
 # 输出目录
-BUILD_DIR = build
+BUILD_DIR = ./build
 
 # 源文件收集
 SOURCES = \
@@ -57,7 +57,8 @@ DEFINES = \
     -D__ARM_2D_USER_APP_CFG_H__=\"ldConfig.h\" \
     "-DARM_SECTION(x)= "\
     -D__va_list=va_list \
-    -DRTE_Acceleration_Arm_2D_Helper_Disp_Adapter0
+    -DRTE_Acceleration_Arm_2D_Helper_Disp_Adapter0 \
+    -DRTE_Acceleration_Arm_2D_Alpha_Blending
 
 # 头文件搜索路径
 INCLUDEPATH = \

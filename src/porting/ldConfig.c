@@ -2,6 +2,16 @@
 #include "arm_2d_types.h"
 #include "ldMem.h"
 
+__WEAK void __aeabi_assert(const char *chCond, const char *chLine, int wErrCode)
+{
+    (void)chCond;
+    (void)chLine;
+    (void)wErrCode;
+
+    while(1) {
+    }
+}
+
 /**
  * @brief   获取触摸坐标
  * 

@@ -12,28 +12,38 @@ extern "C" {
 
 // base config
 
+#ifndef LD_CFG_COLOR_DEPTH
 // <o> Select the screen colour depth
 //     <8=>     8 Bits
 //     <16=>    16Bits
 //     <32=>    32Bits
 // <i> The colour depth of your screen
 #define LD_CFG_COLOR_DEPTH                        (16)
+#endif
 
+#ifndef LD_CFG_SCEEN_WIDTH
 // <o>Width of the screen <8-32767>
 // <i> The width of your screen
 #define LD_CFG_SCEEN_WIDTH                        (320)
+#endif
 
+#ifndef LD_CFG_SCEEN_HEIGHT
 // <o>Height of the screen <8-32767>
 // <i> The height of your screen
 #define LD_CFG_SCEEN_HEIGHT                       (240)
+#endif
 
+#ifndef LD_CFG_PFB_WIDTH
 // <o>Width of the PFB block
 // <i> The width of your PFB block size
 #define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH)
+#endif
 
+#ifndef LD_CFG_PFB_HEIGHT
 // <o>Height of the PFB block
 // <i> The height of your PFB block size
 #define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
+#endif
 
 // <o>Select Memory Manager
 //     <0=>    freertos heap4
@@ -85,8 +95,7 @@ extern "C" {
 #define LOG_NEW_LINE_TYPE                         (0)
 #endif
 
-#define LD_DEBUG                                  (0)
-#define __DISP0_CFG_DEBUG_DIRTY_REGIONS__         (1)
+#define __DISP0_CFG_DEBUG_DIRTY_REGIONS__         (0)
 #define __ARM_2D_CFG_ENABLE_LOG__                 (0)
 
 #ifndef USE_DEMO

@@ -66,10 +66,6 @@ typedef struct {
 struct ldRadialMenu_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
-
     ldRadialMenuItem_t *ptItemInfoList;
 //    uint8_t itemCount;
     uint8_t itemMax;
@@ -86,9 +82,10 @@ struct ldRadialMenu_t
 };
 
 ldRadialMenu_t* ldRadialMenu_init(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, uint16_t xAxis, uint16_t yAxis, uint8_t itemMax);
-void ldRadialMenu_depose( ldRadialMenu_t *ptWidget);
-void ldRadialMenu_on_load( ldRadialMenu_t *ptWidget);
-void ldRadialMenu_on_frame_start( ldRadialMenu_t *ptWidget);
+void ldRadialMenu_depose(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget);
+void ldRadialMenu_on_load(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget);
+void ldRadialMenu_on_frame_start(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget);
+void ldRadialMenu_on_frame_complete(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget);
 void ldRadialMenu_show(ld_scene_t *pScene, ldRadialMenu_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
 void ldRadialMenuAddItem(ldRadialMenu_t *ptWidget,arm_2d_tile_t *ptImgTile,arm_2d_tile_t *ptMaskTile);
