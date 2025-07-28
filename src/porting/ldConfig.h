@@ -12,29 +12,40 @@ extern "C" {
 
 // base config
 
+#ifndef LD_CFG_COLOR_DEPTH
 // <o> Select the screen colour depth
 //     <8=>     8 Bits
 //     <16=>    16Bits
 //     <32=>    32Bits
 // <i> The colour depth of your screen
 #define LD_CFG_COLOR_DEPTH                        (16)
+#endif
 
+#ifndef LD_CFG_SCEEN_WIDTH
 // <o>Width of the screen <8-32767>
 // <i> The width of your screen
 #define LD_CFG_SCEEN_WIDTH                        (320)
+#endif
 
+#ifndef LD_CFG_SCEEN_HEIGHT
 // <o>Height of the screen <8-32767>
 // <i> The height of your screen
 #define LD_CFG_SCEEN_HEIGHT                       (240)
+#endif
 
+#ifndef LD_CFG_PFB_WIDTH
 // <o>Width of the PFB block
 // <i> The width of your PFB block size
 #define LD_CFG_PFB_WIDTH                          (320)
+#endif
 
+#ifndef LD_CFG_PFB_HEIGHT
 // <o>Height of the PFB block
 // <i> The height of your PFB block size
 #define LD_CFG_PFB_HEIGHT                         (24)
+#endif
 
+#ifndef LD_MEM_MODE
 // <o>Select Memory Manager
 //     <0=>    freertos heap4
 //     <1=>    tlfs
@@ -42,27 +53,37 @@ extern "C" {
 //     <3=>    user
 // <i> default = 0
 #define LD_MEM_MODE                               (0)
+#endif
 
+#ifndef LD_MEM_SIZE
 // <o>LingDongGui memory size
 // <i> The size of memory allocated to the ldgui
 #define LD_MEM_SIZE                               (8*1024) //BYTE
+#endif
 
+#ifndef USE_VIRTUAL_RESOURCE
 // <q>External NOR support
 // <i> Read external nor, please enable this option
 #define USE_VIRTUAL_RESOURCE                      (0)
+#endif
 
 // widget config
 
+#ifndef USE_RADIA_MENU_SCALE
 // <q>Radia menu's scale function support
 // <i> Radia menu's scale function support
 #define USE_RADIA_MENU_SCALE                      (1)
+#endif
 
+#ifndef USE_SCENE_SWITCHING
 // <q>scene switcing support
 // <i> 1:More effects 0:Less ram
 #define USE_SCENE_SWITCHING                       (1)
+#endif
 
 // debug config
 
+#ifndef USE_LOG_LEVEL
 // <o> Log output level
 //     <0=>    LOG_LEVEL_NONE
 //     <1=>    LOG_LEVEL_ERROR
@@ -71,18 +92,25 @@ extern "C" {
 //     <4=>    LOG_LEVEL_DEBUG
 // <i> Do not use log. Please select LOG_LEVEL_NONE
 #define USE_LOG_LEVEL                             (0)
+#endif
 
 #if USE_LOG_LEVEL > 0
+
+#ifndef USE_LOG_COLOR
 // <q>Use Color Log
 // <i> Use Color Log
 #define USE_LOG_COLOR                             (0)
+#endif
 
+#ifndef LOG_NEW_LINE_TYPE
 // <o> Log new line type
 //     <0=>    LF \n
 //     <1=>    CR \r
 //     <2=>    CRLF \r\n
 // <i> default select \n
 #define LOG_NEW_LINE_TYPE                         (0)
+#endif
+
 #endif
 
 #define __DISP0_CFG_DEBUG_DIRTY_REGIONS__         (0)
