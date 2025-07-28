@@ -986,20 +986,3 @@ int16_t ldBaseAutoVerticalGridAlign(arm_2d_region_t widgetRegion,int16_t current
     }
     return targetOffset;
 }
-
-#if USE_VIRTUAL_RESOURCE == 1
-arm_2d_vres_t ldBaseGetVresInfo(uint32_t addr)
-{
-    uint8_t header[16]={0};
-    __disp_adapter0_vres_read_memory(0,header,addr,16);
-
-//    uint32_t data_length = *((uint32_t *)&header[0]);
-    uint16_t width = *((uint16_t *)&header[4]);
-    uint16_t height = *((uint16_t *)&header[6]);
-    uint8_t colorFormat = header[8];
-    // header[9-15] reserve
-
-    arm_2d_vres_t tile =  disp_adapter0_impl_vres(colorFormat,width,height,.pTarget=addr+16);
-    return tile;
-}
-#endif

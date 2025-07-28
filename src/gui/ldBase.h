@@ -233,9 +233,6 @@ arm_2d_region_t ldBaseGetAlignRegion(arm_2d_region_t parentRegion,arm_2d_region_
 arm_2d_control_node_t *ldBaseGetRootNode(arm_2d_control_node_t *ptNode);
 int16_t ldBaseAutoVerticalGridAlign(arm_2d_region_t widgetRegion, int16_t currentOffset, uint8_t itemCount, uint8_t itemHeight, uint8_t space);
 void ldBaseSetCenter(ldBase_t *ptWidget);
-#if USE_VIRTUAL_RESOURCE == 1
-arm_2d_vres_t ldBaseGetVresInfo(uint32_t addr);
-#endif
 
 #define ldBaseGetWidgetById(nameId)     ldBaseGetWidget(ptScene->ptNodeRoot, nameId)
 

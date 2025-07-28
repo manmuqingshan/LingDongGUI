@@ -9,7 +9,7 @@ def process_image(output_dir, image_path, output_path, output_name, has_alpha):
 
     command = [
         sys.executable,
-        os.path.join(output_dir, 'imgConvert.py'),
+        os.path.join(output_dir, 'img2c.py'),
         '-i', image_path,
         '-o', output_path,
         '--name', output_name,
