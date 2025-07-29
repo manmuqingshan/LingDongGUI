@@ -233,7 +233,7 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
         case ARM_2D_COLOUR_1BIT:
         {
             arm_2d_fill_colour_with_a1_mask_and_opacity(ptTile,
-                                                        ptRegion,
+                                                        &ptMaskTile->tRegion,
                                                         ptMaskTile,
                                                         (__arm_2d_color_t){color},
                                                         opacity);
@@ -243,7 +243,7 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
         case ARM_2D_COLOUR_MASK_A2:
         {
             arm_2d_fill_colour_with_a2_mask_and_opacity(ptTile,
-                                                        ptRegion,
+                                                        &ptMaskTile->tRegion,
                                                         ptMaskTile,
                                                         (__arm_2d_color_t){color},
                                                         opacity);
@@ -252,7 +252,7 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
         case ARM_2D_COLOUR_MASK_A4:
         {
             arm_2d_fill_colour_with_a4_mask_and_opacity(ptTile,
-                                                        ptRegion,
+                                                        &ptMaskTile->tRegion,
                                                         ptMaskTile,
                                                         (__arm_2d_color_t){color},
                                                         opacity);
@@ -261,7 +261,7 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
         case ARM_2D_COLOUR_MASK_A8:
         {
             arm_2d_fill_colour_with_mask_and_opacity(ptTile,
-                                                     ptRegion,
+                                                     &ptMaskTile->tRegion,
                                                      ptMaskTile,
                                                      (__arm_2d_color_t){color},
                                                      opacity);

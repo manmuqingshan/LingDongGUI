@@ -234,7 +234,7 @@ void ldImage_show( ld_scene_t *ptScene,ldImage_t *ptWidget,const arm_2d_tile_t *
             else
             {
                 ldBaseImage(&tTarget,
-                            &ptWidget->ptImgTile->tRegion,
+                            NULL,
                             ptWidget->ptImgTile,
                             ptWidget->ptMaskTile,
                             ptWidget->fgColor,
