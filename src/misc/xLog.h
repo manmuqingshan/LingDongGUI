@@ -112,6 +112,20 @@ extern "C" {
 #define LOG_POINT(str,point)            LOG_PRINT("[POINT] %s x=%d,y=%d" LOG_END,str,(point).x,(point).y)
 #define LOG_XY(str,x,y)                 LOG_PRINT("[XY] %s x=%d,y=%d" LOG_END,str,(x),(y))
 #define LOG_TIME_STAMP(fmt, ...)        LOG_PRINT(ANSI_BLUE"[T] %I64d " ANSI_RESET fmt LOG_END,arm_2d_helper_convert_ticks_to_ms(arm_2d_helper_get_system_timestamp()),##__VA_ARGS__)
+#define LOG_TILE(str,tile)              LOG_PRINT("[TILE] %s \n" \
+                                                  "      [INFO]   bIsRoot = %d\n" \
+                                                  "               bHasEnforcedColour = %d\n" \
+                                                  "               bDerivedResource = %d\n" \
+                                                  "               bVirtualResource = %d\n" \
+                                                  "               bVirtualScreen = %d\n" \
+                                                  "               u3ExtensionID = %d\n" \
+                                                  "      [REGION] %d,%d,%d,%d\n" \
+                                                  "      [ADDR]   %d" \
+                                                  LOG_END, \
+                                                  str, \
+                                                  (tile).tInfo.bIsRoot,(tile).tInfo.bHasEnforcedColour,(tile).tInfo.bDerivedResource,(tile).tInfo.bVirtualResource,(tile).tInfo.bVirtualScreen,(tile).tInfo.u3ExtensionID, \
+                                                  (tile).tRegion.tLocation.iX,(tile).tRegion.tLocation.iY,(tile).tRegion.tSize.iWidth,(tile).tRegion.tSize.iHeight), \
+                                                  (tile).nAddress;
 #else
 #define LOG_DEBUG(...)                  {}
 #define LOG_REGION(...)                 {}
@@ -120,6 +134,7 @@ extern "C" {
 #define LOG_POINT(...)                  {}
 #define LOG_XY(...)                     {}
 #define LOG_TIME_STAMP(...)             {}
+#define LOG_TILE(str,tile)              {}
 #endif
 
 #ifdef __cplusplus
