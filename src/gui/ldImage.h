@@ -49,10 +49,6 @@ struct ldImage_t {
     ldColor bgColor;
     arm_2d_tile_t* ptImgTile;
     arm_2d_tile_t* ptMaskTile;
-#if USE_VIRTUAL_RESOURCE == 1
-    arm_2d_vres_t imgTile;
-    arm_2d_vres_t maskTile;
-#endif
     bool isTransparent:1;//window专用
 };
 
