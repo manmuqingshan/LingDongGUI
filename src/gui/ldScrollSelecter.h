@@ -51,6 +51,7 @@ struct ldScrollSelecter_t
     implement(ldBase_t);
     arm_2d_font_t *ptFont;
     arm_2d_tile_t *ptImgTile;
+    arm_2d_tile_t *ptMaskTile;
     arm_2d_tile_t *ptIndicatorTile;
     const uint8_t **ppItemStrGroup;
     int16_t scrollOffset;
@@ -77,7 +78,7 @@ void ldScrollSelecter_show(ld_scene_t *pScene, ldScrollSelecter_t *ptWidget, con
 void ldScrollSelecterSetItems(ldScrollSelecter_t* ptWidget, const uint8_t *pStrArray[], uint8_t arraySize);
 void ldScrollSelecterSetTextColor(ldScrollSelecter_t* ptWidget,ldColor charColor);
 void ldScrollSelecterSetBgColor(ldScrollSelecter_t* pWidget,ldColor bgColor);
-void ldScrollSelecterSetBgImage(ldScrollSelecter_t* pWidget,arm_2d_tile_t *ptImgTile);
+void ldScrollSelecterSetBgImage(ldScrollSelecter_t* pWidget,arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
 void ldScrollSelecterSetTransparent(ldScrollSelecter_t* pWidget,bool isTransparent);
 void ldScrollSelecterSetSpeed(ldScrollSelecter_t *pWidget, uint8_t speed);
 void ldScrollSelecterSelectItem(ldScrollSelecter_t *pWidget, uint8_t itemNum);
