@@ -10,7 +10,11 @@
                 ".\\build\\"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/d", "/c"]
+                }
             },
         },
         {
@@ -23,7 +27,11 @@
                 ".\\build\\"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/d", "/c"]
+                }
             },
         },
         {
@@ -33,6 +41,7 @@
             "command": "D:/mingw32/bin/gcc.exe",
             "args": [
                 "-fdiagnostics-color=always",
+                "-DUSE_DEMO=2",
                 "-DARM_SECTION(x)= ",
                 "-D__va_list=va_list",
                 "-DRTE_Acceleration_Arm_2D_Alpha_Blending",
@@ -53,6 +62,7 @@
                 "${workspaceFolder}/../common/Arm-2D/Library/Source/*.c",
                 "${workspaceFolder}/../common/Arm-2D/Helper/Source/*.c",
                 "${workspaceFolder}/../common/Arm-2D/examples/common/controls/*.c",
+                "${workspaceFolder}/../common/Arm-2D/examples/common/controls/qrcode_box/*.c",
                 "${workspaceFolder}/../common/Arm-2D/examples/common/asset/*.c",
                 "${workspaceFolder}/../common/math/*.c",
                 // "${workspaceFolder}/../common/demo/watch/*.c",
@@ -69,6 +79,7 @@
                 "-I${workspaceFolder}/../common/math",
                 "-I${workspaceFolder}/../common/math/dsp",
                 "-I${workspaceFolder}/../common/Arm-2D/examples/common/controls",
+                "-I${workspaceFolder}/../common/Arm-2D/examples/common/controls/qrcode_box",
                 "-I${workspaceFolder}/../common/demo",
                 // "-I${workspaceFolder}/../common/demo/watch",
                 "-I${workspaceFolder}/../common/demo/widget",
@@ -104,6 +115,7 @@
             "command": "D:/mingw64/bin/gcc.exe",
             "args": [
                 "-fdiagnostics-color=always",
+                "-DUSE_DEMO=2",
                 "-DARM_SECTION(x)= ",
                 "-D__va_list=va_list",
                 "-DRTE_Acceleration_Arm_2D_Alpha_Blending",
@@ -124,6 +136,7 @@
                 "${workspaceFolder}/../common/Arm-2D/Library/Source/*.c",
                 "${workspaceFolder}/../common/Arm-2D/Helper/Source/*.c",
                 "${workspaceFolder}/../common/Arm-2D/examples/common/controls/*.c",
+                "${workspaceFolder}/../common/Arm-2D/examples/common/controls/qrcode_box/*.c",
                 "${workspaceFolder}/../common/Arm-2D/examples/common/asset/*.c",
                 "${workspaceFolder}/../common/math/*.c",
                 // "${workspaceFolder}/../common/demo/watch/*.c",
@@ -140,6 +153,7 @@
                 "-I${workspaceFolder}/../common/math",
                 "-I${workspaceFolder}/../common/math/dsp",
                 "-I${workspaceFolder}/../common/Arm-2D/examples/common/controls",
+                "-I${workspaceFolder}/../common/Arm-2D/examples/common/controls/qrcode_box",
                 "-I${workspaceFolder}/../common/demo",
                 // "-I${workspaceFolder}/../common/demo/watch",
                 "-I${workspaceFolder}/../common/demo/widget",
