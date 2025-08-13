@@ -236,6 +236,19 @@ void ldBaseSetCenter(ldBase_t *ptWidget);
 
 #define ldBaseGetWidgetById(nameId)     ldBaseGetWidget(ptScene->ptNodeRoot, nameId)
 
+#if USE_VIRTUAL_RESOURCE == 1
+
+struct arm_2d_vres_font_t {
+    implement(arm_2d_font_t);
+    uint32_t startAddr;
+    arm_2d_vres_t childTileMask;
+};
+typedef struct arm_2d_vres_font_t arm_2d_vres_font_t;
+arm_2d_vres_t *ldBaseGetVresImage(uint32_t addr);
+arm_2d_vres_font_t* ldBaseGetVresFont(uint32_t addr);
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif
