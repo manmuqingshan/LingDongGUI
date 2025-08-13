@@ -9,7 +9,7 @@ def process_image(output_dir, image_path, output_path, output_name, has_alpha):
 
     command = [
         sys.executable,
-        os.path.join(output_dir, 'img2c.py'),
+        os.path.join(output_dir, 'imgConvert.py'),
         '-i', image_path,
         '-o', output_path,
         '--name', output_name,
@@ -68,6 +68,10 @@ def generate_image_data_for_each_config(imageYaml, output_dir):
 
     thisPyDirPath = os.path.dirname(os.path.abspath(__file__))
 
+    bin_files = []
+    bin_offsets = {}
+    current_offset = 0
+
     for filename in os.listdir(output_dir):
         if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
             base_name, _ = os.path.splitext(filename)
@@ -83,6 +87,14 @@ def generate_image_data_for_each_config(imageYaml, output_dir):
             new_filename = f"{base_name}.c"
             output_path = os.path.join(output_dir, new_filename)
             process_image(thisPyDirPath, image_path, output_path, output_name, has_alpha)
+
+            bin_filename = f"{base_name}.bin"
+            bin_filepath = os.path.join(output_dir, bin_filename)
+            if os.path.exists(bin_filepath):
+                bin_files.append((bin_filename, bin_filepath))
+                bin_offsets[bin_filename] = current_offset
+                file_size = os.path.getsize(bin_filepath)
+                current_offset += file_size
 
             header_parts.append(f"\n// {filename} < {imgW}x{imgH} >")
 
@@ -122,11 +134,39 @@ extern const arm_2d_tile_t c_tile_{text_file_name}_Mask;
             os.remove(image_path)
             header_parts.append("\n")
 
+    images_bin_path = os.path.join(output_dir, "images.bin")
+    with open(images_bin_path, 'wb') as images_bin:
+        for bin_filename, bin_filepath in bin_files:
+            with open(bin_filepath, 'rb') as f:
+                data = f.read()
+                images_bin.write(data)
+
+    images_txt_path = os.path.join(output_dir, "images.txt")
+    combined_offsets = {}
+    if os.path.exists(images_txt_path):
+        with open(images_txt_path, 'r') as f:
+            for line in f:
+                if ':' in line:
+                    name, offset_str = line.strip().split(':', 1)
+                    combined_offsets[name] = int(offset_str, 16)
+
+    for bin_filename, base_offset in bin_offsets.items():
+        txt_filename = os.path.splitext(bin_filename)[0] + ".txt"
+        txt_filepath = os.path.join(output_dir, txt_filename)
+        if os.path.exists(txt_filepath):
+            with open(txt_filepath, 'r') as f:
+                for line in f:
+                    if ':' in line:
+                        name, offset_str = line.strip().split(':', 1)
+                        combined_offsets[name] = base_offset + int(offset_str, 16)
+
+    with open(images_txt_path, 'w') as f:
+        for name, offset in sorted(combined_offsets.items(), key=lambda x: x[1]):
+            f.write(f"{name}:0x{offset:08x}\n")
+    
     full_header = header_content_start + ''.join(header_parts) + header_content_end
     with open(f"{output_dir}/uiImages.h", 'w') as file:
         file.write(full_header)
-
-    print('completed\n')
 
 def main(argv):
     if not argv:

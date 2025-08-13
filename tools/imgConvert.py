@@ -28,12 +28,83 @@
 import sys
 from PIL import Image
 import numpy as np
-import time;
+import time
 import argparse
 import os
 
 
+class ColorType:
+    COLOUR_SZ_1BIT = 0
+    COLOUR_SZ_2BIT = 1
+    COLOUR_SZ_4BIT = 2
+    COLOUR_SZ_8BIT = 3
+    COLOUR_SZ_16BIT = 4
+    COLOUR_SZ_32BIT = 5
+    COLOUR_SZ_24BIT = 6
 
+    COLOUR_SZ_MASK = 0x07 << 1
+    COLOUR_ENDIAN_MASK = 1 << 4
+    COLOUR_ALPHA_MASK = 1 << 0
+    COLOUR_VARIANT_MASK = 0x03 << 5
+
+    GRAY8 = COLOUR_SZ_8BIT << 1
+    RGB565 = COLOUR_SZ_16BIT << 1
+    RGB888 = COLOUR_SZ_32BIT << 1
+    RGBA8888 = (COLOUR_SZ_32BIT << 1) | (1 << 0)
+    MASK_A1 = (COLOUR_SZ_1BIT << 1) | COLOUR_VARIANT_MASK
+    MASK_A2 = COLOUR_SZ_2BIT << 1
+    MASK_A4 = COLOUR_SZ_4BIT << 1
+    MASK_A8 = COLOUR_SZ_8BIT << 1
+
+
+class BinaryTracker:
+    def __init__(self, binfile):
+        self.offset = 0
+        self.binfile = binfile
+        self.offsets = {}
+        
+    def write_header_file(self, header_path, prefix):
+        with open(header_path, 'w') as f:
+            for name, offset in sorted(self.offsets.items()):
+                name=name.replace('__', '_')
+                name=name.strip('_').upper()
+                print(f'{name}:0x{offset:08x}', file=f)
+                
+    def __init__(self, binfile):
+        self.offset = 0
+        self.binfile = binfile
+        self.offsets = {}
+                
+    def write_data(self, data, align=4, name=None, width=0, height=0, color_type=0):
+        start_offset = self.offset
+        
+        data_length = data.nbytes if isinstance(data, np.ndarray) else len(data)
+        self.binfile.write(data_length.to_bytes(4, byteorder='little'))
+        self.binfile.write(width.to_bytes(2, byteorder='little'))
+        self.binfile.write(height.to_bytes(2, byteorder='little'))
+        self.binfile.write(bytes([color_type]))
+        self.binfile.write(bytes([0] * 7))
+        self.offset += 16
+
+        if align > 1:
+            current_position = self.offset
+            pad = (align - (current_position % align)) % align
+            if pad > 0:
+                self.binfile.write(bytes([0] * pad))
+                self.offset += pad
+        
+        if isinstance(data, np.ndarray):
+            data_le = data.astype(data.dtype.newbyteorder('<'))
+            data_le.tofile(self.binfile)
+            self.offset += data_le.nbytes
+        else:
+            self.binfile.write(data)
+            self.offset += len(data)
+            
+        if name:
+            self.offsets[name] = start_offset
+            
+        return start_offset
 hdr="""
 /* Generated on {0} from {1} */
 /* Re-sized : {2} */
@@ -310,6 +381,10 @@ def main(argv):
     if outputfile == None or outputfile == "":
         outputfile = basename + ".c"
 
+    binfile = os.path.splitext(outputfile)[0] + ".bin"
+    header_file = os.path.splitext(outputfile)[0] + ".txt"
+    binary_tracker = BinaryTracker(open(binfile, 'wb'))
+    
     arr_name = args.name
     if arr_name == None or arr_name == "":
         arr_name = basename
@@ -392,6 +467,12 @@ def main(argv):
         print(hdr.format(time.asctime( time.localtime(time.time())), argv[0], resized, args.rot), file=o)
 
         if mode == "RGBA":
+            alpha_data = data[...,3].astype(np.uint8)
+            alpha_offset = binary_tracker.write_data(alpha_data, 
+                                                   name=f"{arr_name}_ALPHA",
+                                                   width=row, 
+                                                   height=col,
+                                                   color_type=ColorType.MASK_A8)
             print('ARM_ALIGN(4) ARM_SECTION(\"arm2d.asset.c_bmp%sAlpha\")' % (arr_name), file=o)
             # alpha channel array available
             print('static const uint8_t c_bmp%sAlpha[%d*%d] = {' % (arr_name, row, col),file=o)
@@ -412,7 +493,6 @@ def main(argv):
 
             # 1-bit Alpha channel
             if args.a1 or args.format == 'all' or args.format == 'mask':
-
                 def RevBitPairPerByte(byteArr):
                     return ((byteArr & 0x01) << 7) | ((byteArr & 0x80) >> 7) | ((byteArr & 0x40) >> 5) | ((byteArr & 0x02) << 5) | \
                         ((byteArr & 0x04) << 3) | ((byteArr & 0x20) >> 3) | ((byteArr & 0x10) >> 1) | ((byteArr & 0x08) << 1)
@@ -420,6 +500,7 @@ def main(argv):
                 print('ARM_ALIGN(4) ARM_SECTION("arm2d.asset.c_bmp%sA1Alpha")' % (arr_name), file=o)
                 print('static const uint8_t c_bmp%sA1Alpha[%d*%d] = {' % (arr_name, (row+7)//8, col), file=o)
                 cnt = 0
+                all_bytes = []
                 alpha = data[...,3].astype(np.uint8)
                 for eachRow in alpha:
                     lineWidth=0
@@ -436,6 +517,7 @@ def main(argv):
                     packedBytes = RevBitPairPerByte(np.packbits(msbBits))
 
                     for elt in packedBytes:
+                        all_bytes.append(elt)
                         if lineWidth % WIDTH_ALPHA == (WIDTH_ALPHA-1):
                             print("0x%02x," %(elt) ,file=o)
                         else:
@@ -445,16 +527,22 @@ def main(argv):
                     print('',file=o)
                 print('};\n', file=o)
 
+                all_bytes = np.array(all_bytes, dtype=np.uint8)
+                a1_offset = binary_tracker.write_data(all_bytes,
+                                                    name=f"{arr_name}_A1ALPHA",
+                                                    width=row,
+                                                    height=col,
+                                                    color_type=ColorType.MASK_A1)
+
             # 2-bit Alpha channel
             if args.a2 or args.format == 'all' or args.format == 'mask':
-
                 def RevBitPairPerByte(byteArr):
                     return ((byteArr & 0x03) << 6) |  ((byteArr & 0xc0) >> 6) | ((byteArr & 0x30) >> 2 ) | ((byteArr & 0x0c) << 2)
 
-
                 print('ARM_ALIGN(4) ARM_SECTION(\"arm2d.asset.c_bmp%sA2Alpha\")' % (arr_name), file=o)
-                print('static const uint8_t c_bmp%sA2Alpha[%d*%d] = {' % (arr_name, (row+3)/4, col),file=o)
+                print('static const uint8_t c_bmp%sA2Alpha[%d*%d] = {' % (arr_name, (row+3)//4, col),file=o)
                 cnt = 0
+                all_bytes = []
                 alpha = data[...,3].astype(np.uint8)
                 for eachRow in alpha:
                     lineWidth=0
@@ -470,6 +558,7 @@ def main(argv):
                     packedBytes = RevBitPairPerByte(np.packbits(bitsArr[idx]))
 
                     for elt in packedBytes:
+                        all_bytes.append(elt)
                         if lineWidth % WIDTH_ALPHA == (WIDTH_ALPHA-1):
                             print("0x%02x," %(elt) ,file=o)
                         else:
@@ -479,16 +568,22 @@ def main(argv):
                     print('',file=o)
                 print('};\r\n', file=o)
 
+                all_bytes = np.array(all_bytes, dtype=np.uint8)
+                a2_offset = binary_tracker.write_data(all_bytes,
+                                                    name=f"{arr_name}_A2ALPHA",
+                                                    width=row,
+                                                    height=col,
+                                                    color_type=ColorType.MASK_A2)
+
             # 4-bit Alpha channel
             if args.a4 or args.format == 'all' or args.format == 'mask':
-
                 def RevBitQuadPerByte(byteArr):
                     return ((byteArr & 0x0f) << 4) |  ((byteArr & 0xf0) >> 4)
 
-
                 print('ARM_ALIGN(4) ARM_SECTION(\"arm2d.asset.c_bmp%sA4Alpha\")' % (arr_name), file=o)
-                print('static const uint8_t c_bmp%sA4Alpha[%d*%d] = {' % (arr_name, (row+1)/2, col),file=o)
+                print('static const uint8_t c_bmp%sA4Alpha[%d*%d] = {' % (arr_name, (row+1)//2, col),file=o)
                 cnt = 0
+                all_bytes = []
                 alpha = data[...,3].astype(np.uint8)
                 for eachRow in alpha:
                     lineWidth=0
@@ -500,12 +595,13 @@ def main(argv):
                     idx = np.arange(0, np.size(bitsArr), 8)
                     idx=np.reshape(np.column_stack(
                             (np.column_stack((idx+0, idx+1)), np.column_stack((idx+2, idx+3)))),
-                            (1,-1)),
+                            (1,-1))
 
                     # extraction + endianness conversion
                     packedBytes = RevBitQuadPerByte(np.packbits(bitsArr[idx]))
 
                     for elt in packedBytes:
+                        all_bytes.append(elt)
                         if lineWidth % WIDTH_ALPHA == (WIDTH_ALPHA - 1):
                             print("0x%02x," %(elt) ,file=o)
                         else:
@@ -514,6 +610,13 @@ def main(argv):
                     cnt+=1
                     print('',file=o)
                 print('};\r\n', file=o)
+
+                all_bytes = np.array(all_bytes, dtype=np.uint8)
+                a4_offset = binary_tracker.write_data(all_bytes,
+                                                    name=f"{arr_name}_A4ALPHA",
+                                                    width=row,
+                                                    height=col,
+                                                    color_type=ColorType.MASK_A4)
 
 
         # Gray8 channel array
@@ -525,6 +628,11 @@ def main(argv):
             # merge
             RGB = np.rint((R + G + B)/3).astype(np.uint8)
 
+            gray8_offset = binary_tracker.write_data(RGB.astype(np.uint8), 
+                                                   name=f"{arr_name}_GRAY8",
+                                                   width=row, 
+                                                   height=col,
+                                                   color_type=ColorType.GRAY8)
             print('',file=o)
             print('ARM_SECTION(\"arm2d.asset.c_bmp%sGRAY8\")' % (arr_name), file=o)
             print('const uint8_t c_bmp%sGRAY8[%d*%d] = {' % (arr_name, row, col), file=o)
@@ -552,6 +660,11 @@ def main(argv):
             # merge
             RGB = R | G | B
 
+            rgb565_offset = binary_tracker.write_data(RGB.astype(np.uint16), 
+                                                    name=f"{arr_name}_RGB565",
+                                                    width=row, 
+                                                    height=col,
+                                                    color_type=ColorType.RGB565)
             print('',file=o)
             print('ARM_SECTION(\"arm2d.asset.c_bmp%sRGB565\")' % (arr_name), file=o)
             print('const uint16_t c_bmp%sRGB565[%d*%d] = {' % (arr_name, row, col), file=o)
@@ -585,8 +698,14 @@ def main(argv):
             # merge
             RGB = R | G | B | A
 
+            data_name = f"{arr_name}_RGBA8888" if mode == "RGBA" else f"{arr_name}_RGB888"
+            color_type = ColorType.RGBA8888 if mode == "RGBA" else ColorType.RGB888
+            rgb32_offset = binary_tracker.write_data(RGB.astype(np.uint32), 
+                                                   name=data_name,
+                                                   width=row, 
+                                                   height=col,
+                                                   color_type=color_type)
             print('',file=o)
-
             if mode == "RGBA":
                 print('ARM_SECTION(\"arm2d.asset.c_bmp%sCCCA8888\")' % (arr_name), file=o)
                 print('const uint32_t c_bmp%sCCCA8888[%d*%d] = {' % (arr_name, row, col), file=o)
@@ -645,6 +764,9 @@ def main(argv):
 
 
         print(tail.format(arr_name, str(row), str(col)), file=o)
+        
+        binary_tracker.write_header_file(header_file, arr_name.upper())
+        binary_tracker.binfile.close()
 
 if __name__ == '__main__':
     main(sys.argv[1:])

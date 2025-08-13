@@ -60,6 +60,8 @@ header_content_end = f"""
 def generate_font_data_for_each_config(fontYaml, output_dir):
     print('')
     header_content=""
+    generated_bin_files = []
+    bin_info_list = []
     for config in fontYaml:
         font_config = config.get('font', {})
         font_index = font_config.get('index', 0)
@@ -100,7 +102,7 @@ def generate_font_data_for_each_config(fontYaml, output_dir):
         
         thisPyPath = os.path.dirname(os.path.abspath(__file__))
         command_args = [
-            sys.executable, f"{thisPyPath}/ttf2c.py", '-i', ttf_path, '-t', font_txt_path, '-o', output_c,
+            sys.executable, f"{thisPyPath}/ttfConvert.py", '-i', ttf_path, '-t', font_txt_path, '-o', output_c,
             '-p', str(pixel_size), '-n', f'{base_font_name}_{pixel_size}'
         ]
         if font_bit_width is not None:
@@ -109,6 +111,24 @@ def generate_font_data_for_each_config(fontYaml, output_dir):
         if ttf_path.lower().endswith('.ttc'):
             command_args.extend(['--index', str(font_index)])
         subprocess.run(command_args)
+
+        if font_bit_width is not None:
+            bin_file = f"{output_dir}/{base_font_name}_{pixel_size}_A{font_bit_width}.bin"
+            if os.path.exists(bin_file):
+                generated_bin_files.append(bin_file)
+                bin_info_list.append({
+                    'name': f"{base_font_name}_{pixel_size}_A{font_bit_width}",
+                    'file': bin_file
+                })
+        else:
+            for i in range(4):
+                bin_file = f"{output_dir}/{base_font_name}_{pixel_size}_A{2**i}.bin"
+                if os.path.exists(bin_file):
+                    generated_bin_files.append(bin_file)
+                    bin_info_list.append({
+                        'name': f"{base_font_name}_{pixel_size}_A{2**i}",
+                        'file': bin_file
+                    })
 
         if font_bit_width is not None:
             header_content += f"""
@@ -142,6 +162,33 @@ struct {{
         file.write(header_content_end)
         file.flush()
 
+    merge_bin_files(output_dir, bin_info_list)
+
+def merge_bin_files(output_dir, bin_info_list):
+    if not bin_info_list:
+        return
+        
+    merged_bin_path = f"{output_dir}/fonts.bin"
+    offset_info_path = f"{output_dir}/fonts.txt"
+    
+    current_offset = 0
+    offset_info = []
+    
+    with open(merged_bin_path, 'wb') as merged_file:
+        for bin_info in bin_info_list:
+            bin_file = bin_info['file']
+            if os.path.exists(bin_file):
+                font_name_upper = bin_info['name'].upper()
+                offset_info.append(f"{font_name_upper}:0x{current_offset:08X}")
+
+                with open(bin_file, 'rb') as f:
+                    data = f.read()
+                    merged_file.write(data)
+                    current_offset += len(data)
+
+    with open(offset_info_path, 'w') as offset_file:
+        for info in offset_info:
+            offset_file.write(info + "\n")
 
 
 def main(argv):
