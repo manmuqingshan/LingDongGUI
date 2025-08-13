@@ -73,7 +73,7 @@ def generate_font_data_for_each_config(fontYaml, output_dir):
         base_font_name = font_config.get('codeName', 'Default')
 
         font_name = ttf_path
-        # 判断ttf path是文件
+
         if not os.path.isfile(ttf_path):
             ttf_path = f"{output_dir}/{font_name}"
             if not os.path.exists(ttf_path):
