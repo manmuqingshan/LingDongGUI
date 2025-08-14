@@ -38,12 +38,17 @@
 int app_2d_main_thread (void *argument)
 {
     while(1) {
-        if (arm_fsm_rt_cpl == disp_adapter0_task()) {
-            vtSdlFlush(1);
+        if (VT_is_request_quit()) {
+            break;
         }
+        disp_adapter0_task();
     }
-
     return 0;
+}
+
+static bool __lcd_sync_handler(void *pTarget)
+{
+    return VT_sdl_flush(1);
 }
 
 int main (void) 
@@ -65,7 +70,7 @@ int main (void)
     LOG_INFO("Info");
     LOG_DEBUG("Debug");
     LOG_NORMAL("====================\n");
-    vtInit();
+    VT_init();
 
     xBtnInit(KEY_NUM_UP,vtIsKeyPress);
     xBtnInit(KEY_NUM_DOWN,vtIsKeyPress);
@@ -83,18 +88,28 @@ int main (void)
     ldGuiInit((ldPageFuncGroup_t *)&LD_DEMO_GUI_FUNC);
 #endif
 
+    do {
+        arm_2d_helper_pfb_dependency_t tDependency = {
+            .evtOnLowLevelSyncUp = {
+                .fnHandler = &__lcd_sync_handler,
+            },
+        };
+        arm_2d_helper_pfb_update_dependency(&DISP0_ADAPTER.use_as__arm_2d_helper_pfb_t,
+                                            ARM_2D_PFB_DEPEND_ON_LOW_LEVEL_SYNC_UP,
+                                            &tDependency);
+    } while(0);
+
     SDL_CreateThread(app_2d_main_thread, "arm-2d thread", NULL);
 
     while (1)
     {
-        vtSdlRefreshTask();
-        if(vtIsRequestQuit())
+        if(!VT_sdl_refresh_task())
         {
             break;
         }
     }
 
-    vtDeinit();
+    VT_deinit();
     return 0;
 }
 

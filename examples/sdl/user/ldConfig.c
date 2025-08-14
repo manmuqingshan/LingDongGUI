@@ -16,32 +16,31 @@
 bool ldCfgTouchGetPoint(int16_t *x,int16_t *y)
 {
     bool touchState=false;
-    int16_t rx;
-    int16_t ry;
+    arm_2d_location_t loc;
     
     //添加触摸函数
-    touchState=vtMouseGetPoint(&rx,&ry);
+    touchState=VT_mouse_get_location(&loc);
 
-    if((touchState!=0)&&(((rx!=-1)&&(ry!=-1))||((rx!=0)&&(ry!=0))))
+    if((touchState!=0)&&(((loc.iX!=-1)&&(loc.iY!=-1))||((loc.iX!=0)&&(loc.iY!=0))))
     {
-        if(rx<0)
+        if(loc.iX<0)
         {
-            rx=0;
+            loc.iX=0;
         }
-        if(ry<0)
+        if(loc.iY<0)
         {
-            ry=0;
+            loc.iY=0;
         }
-        if(rx>LD_CFG_SCEEN_WIDTH)
+        if(loc.iX>LD_CFG_SCEEN_WIDTH)
         {
-            rx=LD_CFG_SCEEN_WIDTH;
+            loc.iX=LD_CFG_SCEEN_WIDTH;
         }
-        if(ry>LD_CFG_SCEEN_HEIGHT)
+        if(loc.iY>LD_CFG_SCEEN_HEIGHT)
         {
-            ry=LD_CFG_SCEEN_HEIGHT;
+            loc.iY=LD_CFG_SCEEN_HEIGHT;
         }
-        *x=rx;
-        *y=ry;
+        *x=loc.iX;
+        *y=loc.iY;
         touchState=true;
     }
     else
@@ -81,7 +80,7 @@ void Disp0_DrawBitmap (uint32_t x,uint32_t y,uint32_t width,uint32_t height,cons
     //参考2
     //函数原型 void lcd_colorFill(uint16_t x,uint16_t y,uint16_t width,uint16_t height,uint16_t *color)
     //填写 lcd_colorFill(x,y,width,height,(uint16_t *)bitmap);
-    vtFillMultipleColors(x, y, x + width - 1, y + height - 1, (color_typedef *)bitmap);
+    VT_Fill_Multiple_Colors(x, y, x + width - 1, y + height - 1, (color_typedef *)bitmap);
 }
 
 #if 0
