@@ -190,7 +190,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
             };
             arm_2d_tile_t tileInnerSlot;
             arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-            ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile);
+            ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile,ptWidget->use_as__ldBase_t.opacity);
         }while(0);
     }
     else
@@ -207,7 +207,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
             };
             arm_2d_tile_t tileInnerSlot;
             arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-            ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile);
+            ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile,ptWidget->use_as__ldBase_t.opacity);
         }while(0);
     }
 
@@ -231,7 +231,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
 
                 arm_2d_tile_t tileInnerSlot;
                 arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-                ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptFgImgTile,ptWidget->ptFgMaskTile);
+                ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptFgImgTile,ptWidget->ptFgMaskTile,ptWidget->use_as__ldBase_t.opacity);
             }while(0);
         }
         else
@@ -252,7 +252,7 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
 
                 arm_2d_tile_t tileInnerSlot;
                 arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-                ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptFgImgTile,ptWidget->ptFgMaskTile);
+                ldBaseImageFill(&tileInnerSlot,&tInnerRegion,ptWidget->ptFgImgTile,ptWidget->ptFgMaskTile,ptWidget->use_as__ldBase_t.opacity);
             }while(0);
         }
     }
