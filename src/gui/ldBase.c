@@ -282,10 +282,11 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
         }
         else
         {
-            arm_2d_tile_copy_with_src_mask_only(ptImgTile,
-                                                ptMaskTile,
-                                                ptTile,
-                                                ptRegion);
+            arm_2d_tile_copy_with_src_mask_and_opacity_only(ptImgTile,
+                                                            ptMaskTile,
+                                                            ptTile,
+                                                            ptRegion,
+                                                            opacity);
         }
     }
 }
