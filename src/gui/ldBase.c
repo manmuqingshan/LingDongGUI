@@ -291,36 +291,38 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
     }
 }
 
-void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile,float scale,arm_2d_op_trans_msk_opa_t *ptOP,bool bIsNewFrame)
+void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile,float scale,arm_2d_op_trans_msk_opa_t *ptOP,uint8_t opacity,bool bIsNewFrame)
 {
-    arm_2d_location_t tCentre = {
-                    .iX = ptImgTile->tRegion.tSize.iWidth >> 1,
-                    .iY = ptImgTile->tRegion.tSize.iHeight >> 1,
-                };
+    arm_2d_point_float_t tCentre = {
+        .fX = ptImgTile->tRegion.tSize.iWidth >> 1,
+        .fY = ptImgTile->tRegion.tSize.iHeight >> 1,
+    };
 
     if (ptMaskTile != NULL)
     {
-        arm_2dp_tile_transform_with_src_mask_and_opacity(
-                    ptOP,         //!< control block
-                    ptImgTile,        //!< source tile
-                    ptMaskTile,          //!< source mask
-                    ptTile,             //!< target tile
-                    ptRegion,               //!< target region
-                    tCentre,            //!< pivot on source
-                    0,           //!< rotation angle
-                    scale,           //!< zoom scale
-                    255         //!< opacity
-                    );
+        arm_2dp_tile_transform_xy_with_src_mask_and_opacity(ptOP,
+                                                            ptImgTile,
+                                                            ptMaskTile,
+                                                            ptTile,
+                                                            ptRegion,
+                                                            tCentre,
+                                                            0,
+                                                            scale,
+                                                            scale,
+                                                            opacity);
     }
     else
     {
-            arm_2dp_tile_transform_only((arm_2d_op_trans_t*)ptOP,
-                                        ptImgTile,
-                                        ptTile,
-                                        ptRegion,
-                                        tCentre,
-                                        0,
-                                        scale);
+        arm_2dp_tile_transform_xy_only_with_opacity((arm_2d_op_trans_opa_t*)ptOP,
+                                                    ptImgTile,
+                                                    ptTile,
+                                                    ptRegion,
+                                                    tCentre,
+                                                    0,
+                                                    scale,
+                                                    scale,
+                                                    opacity);
+
     }
 }
 
