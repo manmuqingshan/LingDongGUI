@@ -71,7 +71,6 @@ void ldLabelSetTextColor(ldLabel_t* ptWidget,ldColor textColor);
 void ldLabelSetAlign(ldLabel_t *ptWidget,arm_2d_align_t tAlign);
 void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
 void ldLabelSetBgColor(ldLabel_t *ptWidget, ldColor bgColor);
-void ldLabelSetOpacity(ldLabel_t *ptWidget, uint8_t opacity);
 
 #define ldLabelInit(nameId,parentNameId,x,y,width,height,ptFont) \
         ldLabel_init(ptScene,NULL,nameId,parentNameId,x,y,width,height,ptFont)
