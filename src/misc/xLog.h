@@ -119,11 +119,13 @@ extern "C" {
                                                   "               bVirtualResource = %d\n" \
                                                   "               bVirtualScreen = %d\n" \
                                                   "               u3ExtensionID = %d\n" \
+                                                  "      [COLOUR] chScheme = %d\n" \
                                                   "      [REGION] %d,%d,%d,%d\n" \
                                                   "      [ADDR]   %d" \
                                                   LOG_END, \
                                                   str, \
                                                   (tile).tInfo.bIsRoot,(tile).tInfo.bHasEnforcedColour,(tile).tInfo.bDerivedResource,(tile).tInfo.bVirtualResource,(tile).tInfo.bVirtualScreen,(tile).tInfo.u3ExtensionID, \
+                                                  (tile).tColourInfo.chScheme, \
                                                   (tile).tRegion.tLocation.iX,(tile).tRegion.tLocation.iY,(tile).tRegion.tSize.iWidth,(tile).tRegion.tSize.iHeight), \
                                                   (tile).nAddress;
 #else

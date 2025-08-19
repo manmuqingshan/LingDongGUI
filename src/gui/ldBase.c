@@ -273,20 +273,13 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
     }
     else
     {
-        if (ptMaskTile == NULL)
+        if(ptMaskTile==NULL)
         {
-            arm_2d_tile_copy_with_opacity(ptImgTile,
-                                          ptTile,
-                                          ptRegion,
-                                          opacity);
+            arm_2d_tile_fill_with_opacity_only(ptImgTile,ptTile,ptRegion,opacity);
         }
         else
         {
-            arm_2d_tile_copy_with_src_mask_and_opacity_only(ptImgTile,
-                                                            ptMaskTile,
-                                                            ptTile,
-                                                            ptRegion,
-                                                            opacity);
+            arm_2d_tile_fill_with_src_mask_and_opacity_only(ptImgTile,ptMaskTile,ptTile,ptRegion,opacity);
         }
     }
 }
@@ -323,18 +316,6 @@ void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_t
                                                     scale,
                                                     opacity);
 
-    }
-}
-
-void ldBaseImageFill(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile, uint8_t opacity)
-{
-    if(ptMaskTile==NULL)
-    {
-        arm_2d_tile_fill_only(ptImgTile,ptTile,ptRegion);
-    }
-    else
-    {
-        arm_2d_tile_fill_with_src_mask_and_opacity_only(ptImgTile,ptMaskTile,ptTile,ptRegion,opacity);
     }
 }
 
