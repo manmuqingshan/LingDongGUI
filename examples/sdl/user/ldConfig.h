@@ -215,6 +215,10 @@ extern "C" {
 #endif
 #define __GLCD_CFG_COLOUR_DEPTH__                 LD_CFG_COLOR_DEPTH
 
+#define __ARM_2D_CFG_SUPPORT_COLOUR_CHANNEL_ACCESS__                  0
+#define __ARM_2D_CFG_SUPPORT_CCCA8888_IMPLICIT_CONVERSION__           0
+#define __ARM_2D_CFG_SUPPORT_TRANSFORM_FOR_NON_A8_FONTS__             0
+
 bool ldCfgTouchGetPoint(int16_t *x,int16_t *y);
 
 // user key num

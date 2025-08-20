@@ -19,8 +19,6 @@ const ldPageFuncGroup_t uiWidgetFunc={
 
 static bool slotTest(ld_scene_t *ptScene,ldMsg_t msg)
 {
-   LOG_DEBUG("test 1111");
-
 //   ldButton_t* btn=(ldButton_t *)msg.ptSender;
 
 //   ldButtonSetText(btn,"222");

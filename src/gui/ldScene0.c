@@ -26,8 +26,6 @@
 
 #define __USER_SCENE0_IMPLEMENT__
 #include "ldScene0.h"
-#include "arm_2d_helper.h"
-#include "arm_2d_example_controls.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -82,6 +80,13 @@ static void __on_scene0_load(arm_2d_scene_t *ptScene)
     ldGuiLoad(ptThis);
 }
 
+static void __after_scene0_switching(arm_2d_scene_t *ptScene)
+{
+    ld_scene_t *ptThis = (ld_scene_t *)ptScene;
+    ARM_2D_UNUSED(ptThis);
+
+}
+
 static void __on_scene0_depose(arm_2d_scene_t *ptScene)
 {
     ld_scene_t *ptThis = (ld_scene_t *)ptScene;
@@ -104,6 +109,7 @@ static void __on_scene0_depose(arm_2d_scene_t *ptScene)
  * Scene 0                                                                    *
  *----------------------------------------------------------------------------*/
 
+#if 0 /* deprecated */
 static void __on_scene0_background_start(arm_2d_scene_t *ptScene)
 {
     ld_scene_t *ptThis = (ld_scene_t *)ptScene;
@@ -115,6 +121,7 @@ static void __on_scene0_background_complete(arm_2d_scene_t *ptScene)
     ld_scene_t *ptThis = (ld_scene_t *)ptScene;
     ARM_2D_UNUSED(ptThis);
 }
+#endif
 
 static void __on_scene0_frame_start(arm_2d_scene_t *ptScene)
 {
@@ -321,9 +328,13 @@ ld_scene_t *__arm_2d_scene0_init(   arm_2d_scene_player_t *ptDispAdapter,
              */
             .fnOnLoad       = &__on_scene0_load,
             .fnScene        = &__pfb_draw_scene0_handler,
+            //.fnAfterSwitch  = &__after_scene0_switching,
 
-            //.fnOnBGStart    = &__on_scene0_background_start,
-            //.fnOnBGComplete = &__on_scene0_background_complete,
+            /* if you want to use predefined dirty region list, please uncomment the following code */
+            //.ptDirtyRegion  = (arm_2d_region_list_item_t *)s_tDirtyRegions,
+            
+            //.fnOnBGStart    = &__on_scene0_background_start,         /* deprecated */
+            //.fnOnBGComplete = &__on_scene0_background_complete,      /* deprecated */
             .fnOnFrameStart = &__on_scene0_frame_start,
             //.fnBeforeSwitchOut = &__before_scene0_switching_out,
             .fnOnFrameCPL   = &__on_scene0_frame_complete,
