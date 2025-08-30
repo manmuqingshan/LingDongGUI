@@ -36,7 +36,7 @@ def merge_txt_files(input_dir):
 
     fonts_txt_path = os.path.join(script_dir, 'fonts', 'fonts.txt')
     images_txt_path = os.path.join(script_dir, 'images', 'images.txt')
-    output_txt_path = os.path.join(script_dir, 'output', 'data.txt')
+    output_header_path = os.path.join(script_dir, 'binData.h')
 
     fonts_bin_path = os.path.join(script_dir, 'fonts', 'fonts.bin')
     fonts_bin_size = os.path.getsize(fonts_bin_path) if os.path.exists(fonts_bin_path) else 0
@@ -67,7 +67,7 @@ def merge_txt_files(input_dir):
                             offset = int(offset_str, 16) 
                         
                         new_offset = offset + fonts_bin_size
-                        processed_images_lines.append(f"{name}:0x{new_offset:08X}\n")
+                        processed_images_lines.append(f"#define {name} (arm_2d_tile_t*)ldBaseGetVresImage(0x{new_offset:08X})\n")
                     except ValueError:
                         processed_images_lines.append(line)
                 else:
@@ -78,11 +78,30 @@ def merge_txt_files(input_dir):
     else:
         print(f"警告: {images_txt_path} 文件不存在，将使用空数据")
 
-    with open(output_txt_path, 'w', encoding='utf-8') as f:
-        f.writelines(fonts_lines)
+    with open(output_header_path, 'w', encoding='utf-8') as f:
+        f.write("#ifndef _DATA_H_\n")
+        f.write("#define _DATA_H_\n\n")
+        f.write("#include \"arm_2d.h\"\n\n")
+
+        for line in fonts_lines:
+            if line.strip():
+                parts = line.strip().split(':')
+                if len(parts) >= 2:
+                    name = parts[0]
+                    offset_str = parts[1]
+                    if offset_str.startswith('0x') or offset_str.startswith('0X'):
+                        offset = int(offset_str, 16)
+                    else:
+                        offset = int(offset_str, 16)
+                    f.write(f"#define {name} (arm_2d_font_t*)ldBaseGetVresFont(0x{offset:08X})\n")
+
         if processed_images_lines:
             f.write('\n')
-        f.writelines(processed_images_lines)
+        for line in processed_images_lines:
+            f.write(line)
+
+        f.write("\n#endif // _DATA_H_\n")
+
 
 
 
