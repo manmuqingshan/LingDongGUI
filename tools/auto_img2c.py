@@ -5,7 +5,15 @@ import sys
 from PIL import Image
 import shutil
 
-def process_image(output_dir, image_path, output_path, output_name, has_alpha):
+def process_image(output_dir, image_path, output_path, output_name, depth):
+    if depth == 8:
+        format_arg = 'gray8'
+    elif depth == 16:
+        format_arg = 'rgb565'
+    elif depth == 32:
+        format_arg = 'rgb32'
+    else:
+        format_arg = 'all'
 
     command = [
         sys.executable,
@@ -13,11 +21,8 @@ def process_image(output_dir, image_path, output_path, output_name, has_alpha):
         '-i', image_path,
         '-o', output_path,
         '--name', output_name,
-        '--format', 'all'
+        '--format', format_arg
     ]
-
-    if has_alpha:
-        command += ['--a1', '--a2', '--a4']
 
     try:
         result = subprocess.run(
@@ -54,11 +59,15 @@ header_content_end = """
 
 def generate_image_data_for_each_config(imageYaml, output_dir):
     header_parts = []
-    
+    imagePathList = []
+    imageDepthList = []
     for image_entry in imageYaml:
-        image_path = image_entry.get("path")
-        if image_path:
+            image_info = image_entry["image"]
+            image_path = image_info.get("path")
+            depth = image_info.get("depth", 0)
+            imageDepthList.append(depth)
             dest_path = os.path.join(output_dir, os.path.basename(image_path))
+            imagePathList.append(dest_path)
             if dest_path != image_path:
                 os.makedirs(os.path.dirname(dest_path), exist_ok=True)
                 shutil.copyfile(image_path, dest_path)
@@ -72,7 +81,8 @@ def generate_image_data_for_each_config(imageYaml, output_dir):
     bin_offsets = {}
     current_offset = 0
 
-    for filename in os.listdir(output_dir):
+    for filename, depth in zip(imagePathList, imageDepthList):
+        filename = os.path.basename(filename)
         if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
             base_name, _ = os.path.splitext(filename)
             image_path = os.path.join(output_dir, filename)
@@ -86,7 +96,7 @@ def generate_image_data_for_each_config(imageYaml, output_dir):
 
             new_filename = f"{base_name}.c"
             output_path = os.path.join(output_dir, new_filename)
-            process_image(thisPyDirPath, image_path, output_path, output_name, has_alpha)
+            process_image(thisPyDirPath, image_path, output_path, output_name, depth)
 
             bin_filename = f"{base_name}.bin"
             bin_filepath = os.path.join(output_dir, bin_filename)
@@ -118,21 +128,27 @@ extern const arm_2d_tile_t c_tile_{text_file_name}_CCCN888;
 #define IMAGE_{text_file_name.upper()}          (arm_2d_tile_t*)&c_tile_{text_file_name}_CCCN888
 #endif""")
 
-            if has_alpha:
+            if depth == 0:
                 header_parts.append(f"""
 extern const arm_2d_tile_t c_tile_{text_file_name}_A1Mask;
 #define IMAGE_{text_file_name.upper()}_A1_MASK   (arm_2d_tile_t*)&c_tile_{text_file_name}_A1Mask
 extern const arm_2d_tile_t c_tile_{text_file_name}_A2Mask;
 #define IMAGE_{text_file_name.upper()}_A2_MASK   (arm_2d_tile_t*)&c_tile_{text_file_name}_A2Mask
 extern const arm_2d_tile_t c_tile_{text_file_name}_A4Mask;
-#define IMAGE_{text_file_name.upper()}_A4_MASK   (arm_2d_tile_t*)&c_tile_{text_file_name}_A4Mask
+#define IMAGE_{text_file_name.upper()}_A4_MASK   (arm_2d_tile_t*)&c_tile_{text_file_name}_A4Mask""")
+
+            if has_alpha:
+                header_parts.append(f"""
 extern const arm_2d_tile_t c_tile_{text_file_name}_Mask;
 #define IMAGE_{text_file_name.upper()}_MASK     (arm_2d_tile_t*)&c_tile_{text_file_name}_Mask""")
             else:
                 header_parts.append(f"""
 #define IMAGE_{text_file_name.upper()}_MASK     NULL""")
-            os.remove(image_path)
             header_parts.append("\n")
+
+    for imagePath in imagePathList:
+        if os.path.exists(imagePath):
+            os.remove(imagePath)
 
     images_bin_path = os.path.join(output_dir, "images.bin")
     with open(images_bin_path, 'wb') as images_bin:
@@ -185,7 +201,7 @@ def main(argv):
         for filename in os.listdir(output_dir):
             if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
                 full_path = os.path.abspath(os.path.join(output_dir, filename))
-                image_entries.append({"path": full_path})
+                image_entries.append({"image": {"path": full_path, "depth": 16}})
 
         if image_entries:
             with open(image_yaml_path, 'w') as file:

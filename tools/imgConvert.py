@@ -373,8 +373,8 @@ def main(argv):
     if args.i == None or args.i == "" :
         parser.print_help()
         exit(1)
-    inputfile = args.i;
-    basename = os.path.basename(inputfile).split('.')[0];
+    inputfile = args.i
+    basename = os.path.basename(inputfile).split('.')[0]
 
 
     outputfile = args.o
