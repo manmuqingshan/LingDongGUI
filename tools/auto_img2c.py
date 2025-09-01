@@ -201,7 +201,7 @@ def main(argv):
         for filename in os.listdir(output_dir):
             if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
                 full_path = os.path.abspath(os.path.join(output_dir, filename))
-                image_entries.append({"image": {"path": full_path, "depth": 16}})
+                image_entries.append({"image": {"path": full_path}})
 
         if image_entries:
             with open(image_yaml_path, 'w') as file:
