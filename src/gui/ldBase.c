@@ -228,12 +228,17 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
 {
     if (ptImgTile == NULL)
     {
+        if(ptMaskTile==NULL)
+        {
+            return;
+        }
+
         switch (ptMaskTile->tInfo.tColourInfo.chScheme)
         {
         case ARM_2D_COLOUR_1BIT:
         {
             arm_2d_fill_colour_with_a1_mask_and_opacity(ptTile,
-                                                        &ptMaskTile->tRegion,
+                                                        ptRegion,
                                                         ptMaskTile,
                                                         (__arm_2d_color_t){color},
                                                         opacity);
@@ -243,7 +248,7 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
         case ARM_2D_COLOUR_MASK_A2:
         {
             arm_2d_fill_colour_with_a2_mask_and_opacity(ptTile,
-                                                        &ptMaskTile->tRegion,
+                                                        ptRegion,
                                                         ptMaskTile,
                                                         (__arm_2d_color_t){color},
                                                         opacity);
@@ -252,7 +257,7 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
         case ARM_2D_COLOUR_MASK_A4:
         {
             arm_2d_fill_colour_with_a4_mask_and_opacity(ptTile,
-                                                        &ptMaskTile->tRegion,
+                                                        ptRegion,
                                                         ptMaskTile,
                                                         (__arm_2d_color_t){color},
                                                         opacity);
@@ -261,7 +266,7 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
         case ARM_2D_COLOUR_MASK_A8:
         {
             arm_2d_fill_colour_with_mask_and_opacity(ptTile,
-                                                     &ptMaskTile->tRegion,
+                                                     ptRegion,
                                                      ptMaskTile,
                                                      (__arm_2d_color_t){color},
                                                      opacity);
@@ -286,6 +291,8 @@ void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t
 
 void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile,float scale,arm_2d_op_trans_msk_opa_t *ptOP,uint8_t opacity,bool bIsNewFrame)
 {
+    assert(NULL != ptImgTile);
+
     arm_2d_point_float_t tCentre = {
         .fX = ptImgTile->tRegion.tSize.iWidth >> 1,
         .fY = ptImgTile->tRegion.tSize.iHeight >> 1,
