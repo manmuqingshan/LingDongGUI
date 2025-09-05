@@ -77,7 +77,9 @@ extern "C" {
 
 #ifndef USE_SCENE_SWITCHING
 // <q>scene switcing support
-// <i> 1:More effects 0:Less ram
+// <i> 0:only one scene,user manually clean widget
+// <i> 1:Less ram,fast switching(default)
+// <i> 2:More effects
 #define USE_SCENE_SWITCHING                       (1)
 #endif
 
@@ -115,84 +117,6 @@ extern "C" {
 
 #define __DISP0_CFG_DEBUG_DIRTY_REGIONS__         (0)
 #define __ARM_2D_CFG_ENABLE_LOG__                 (0)
-
-#ifndef USE_DEMO
-// <o> choose demo to test
-//     <0=> None
-//     <1=> Startup
-//     <2=> Show all widget
-//     <3=> Printer
-#define USE_DEMO                                  (0)
-#endif
-
-#if USE_DEMO == 0
-#ifndef LD_CFG_COLOR_DEPTH
-#define LD_CFG_COLOR_DEPTH                        (16)
-#endif
-#ifndef LD_CFG_SCEEN_WIDTH
-#define LD_CFG_SCEEN_WIDTH                        (320)
-#endif
-#ifndef LD_CFG_SCEEN_HEIGHT
-#define LD_CFG_SCEEN_HEIGHT                       (240)
-#endif
-#ifndef LD_CFG_PFB_WIDTH
-#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH/4)
-#endif
-#ifndef LD_CFG_PFB_HEIGHT
-#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
-#endif
-#ifndef LD_DEMO_GUI_INCLUDE
-#define LD_DEMO_GUI_INCLUDE                       "stdint.h"
-#endif
-#ifndef LD_DEMO_GUI_FUNC
-#define LD_DEMO_GUI_FUNC                          (*(void*)0)
-#endif
-#endif
-
-#if USE_DEMO == 1
-#undef LD_CFG_COLOR_DEPTH
-#define LD_CFG_COLOR_DEPTH                        (16)
-#undef LD_CFG_SCEEN_WIDTH
-#define LD_CFG_SCEEN_WIDTH                        (320)
-#undef LD_CFG_SCEEN_HEIGHT
-#define LD_CFG_SCEEN_HEIGHT                       (240)
-#undef LD_CFG_PFB_WIDTH
-#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH/4)
-#undef LD_CFG_PFB_HEIGHT
-#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
-#define LD_DEMO_GUI_INCLUDE                       "uiStartup.h"
-#define LD_DEMO_GUI_FUNC                          uiStartupFunc
-#endif
-
-#if USE_DEMO == 2
-#undef LD_CFG_COLOR_DEPTH
-#define LD_CFG_COLOR_DEPTH                        (16)
-#undef LD_CFG_SCEEN_WIDTH
-#define LD_CFG_SCEEN_WIDTH                        (1024)
-#undef LD_CFG_SCEEN_HEIGHT
-#define LD_CFG_SCEEN_HEIGHT                       (600)
-#undef LD_CFG_PFB_WIDTH
-#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH)
-#undef LD_CFG_PFB_HEIGHT
-#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
-#define LD_DEMO_GUI_INCLUDE                       "uiWidget.h"
-#define LD_DEMO_GUI_FUNC                          uiWidgetFunc
-#endif
-
-#if USE_DEMO == 3
-#undef LD_CFG_COLOR_DEPTH
-#define LD_CFG_COLOR_DEPTH                        (16)
-#undef LD_CFG_SCEEN_WIDTH
-#define LD_CFG_SCEEN_WIDTH                        (480)
-#undef LD_CFG_SCEEN_HEIGHT
-#define LD_CFG_SCEEN_HEIGHT                       (272)
-#undef LD_CFG_PFB_WIDTH
-#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH)
-#undef LD_CFG_PFB_HEIGHT
-#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
-#define LD_DEMO_GUI_INCLUDE                       "uiLogo.h"
-#define LD_DEMO_GUI_FUNC                          uiLogoFunc
-#endif
 
 // <<< end of configuration section >>>
 

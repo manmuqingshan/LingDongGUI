@@ -77,7 +77,9 @@ extern "C" {
 
 #ifndef USE_SCENE_SWITCHING
 // <q>scene switcing support
-// <i> 1:More effects 0:Less ram
+// <i> 0:only one scene,user manually clean widget
+// <i> 1:Less ram,fast switching(default)
+// <i> 2:More effects
 #define USE_SCENE_SWITCHING                       (1)
 #endif
 

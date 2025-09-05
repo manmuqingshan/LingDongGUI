@@ -72,11 +72,15 @@ void ldGuiSceneInit(ld_scene_t *ptScene);
 
 void __ldGuiJumpPage(ldPageFuncGroup_t *ptFuncGroup,arm_2d_scene_switch_mode_t *ptMode,uint16_t switchTimeMs);
 
+#if USE_SCENE_SWITCHING == 2
 #define ldGuiJumpPage(pageFuncGroupName,mode,ms)           ({extern const ldPageFuncGroup_t pageFuncGroupName; \
                                                             __ldGuiJumpPage((ldPageFuncGroup_t *)&pageFuncGroupName,&mode,ms);})
-
-#define ldGuiJumpPageFast(pageFuncGroupName)           ({extern const ldPageFuncGroup_t pageFuncGroupName; \
+#elif USE_SCENE_SWITCHING == 1
+#define ldGuiJumpPage(pageFuncGroupName)                   ({extern const ldPageFuncGroup_t pageFuncGroupName; \
                                                             __ldGuiJumpPage((ldPageFuncGroup_t *)&pageFuncGroupName,&ARM_2D_SCENE_SWITCH_MODE_NONE,0);})
+#else
+#define ldGuiJumpPage()                                    ({__ldGuiJumpPage((ldPageFuncGroup_t *)NULL,&ARM_2D_SCENE_SWITCH_MODE_NONE,0);})
+#endif
 
 void ldGuiUpdateScene(void);
 
