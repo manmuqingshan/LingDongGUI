@@ -1,6 +1,6 @@
 <p class="lang-switch">
   <a class="active">中文</a>
-  <a href="README_en.md">EN</a>
+  <a href="README.en.md">EN</a>
 </p>
 <style>
 .lang-switch{position:absolute;top:12px;left:24px;display:flex;gap:6px;font-size:20;z-index:999;}
