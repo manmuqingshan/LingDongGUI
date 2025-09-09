@@ -215,8 +215,7 @@ void ldBaseNodeTreePrint(arm_2d_control_node_t *ptNodeRoot, int depth);
 void* ldBaseGetWidget(arm_2d_control_node_t *ptNodeRoot, uint16_t nameId);
 void ldBaseColor(arm_2d_tile_t* ptTile, arm_2d_region_t* ptRegion, ldColor color, uint8_t opacity);
 void ldBaseImage(arm_2d_tile_t* ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t* ptImgTile, arm_2d_tile_t* ptMaskTile, ldColor color, uint8_t opacity);
-void ldBaseImageFill(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
-void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile,float scale,arm_2d_op_trans_msk_opa_t *ptOP,bool bIsNewFrame);
+void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile,float scale,arm_2d_op_trans_msk_opa_t *ptOP,uint8_t opacity,bool bIsNewFrame);
 void ldBaseLabel(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, uint8_t *pStr, arm_2d_font_t *ptFont, arm_2d_align_t tAlign, ldColor textColor, uint8_t opacity);
 void arm_lcd_text_puts(arm_2d_region_t* ptRegion,arm_2d_font_t *ptFont,uint8_t *pStr,uint8_t opacity);
 arm_2d_size_t arm_lcd_text_get_box(uint8_t *pStr, arm_2d_font_t *ptFont);
@@ -235,6 +234,19 @@ int16_t ldBaseAutoVerticalGridAlign(arm_2d_region_t widgetRegion, int16_t curren
 void ldBaseSetCenter(ldBase_t *ptWidget);
 
 #define ldBaseGetWidgetById(nameId)     ldBaseGetWidget(ptScene->ptNodeRoot, nameId)
+
+#if USE_VIRTUAL_RESOURCE == 1
+
+struct arm_2d_vres_font_t {
+    implement(arm_2d_font_t);
+    uint32_t startAddr;
+    arm_2d_vres_t childTileMask;
+};
+typedef struct arm_2d_vres_font_t arm_2d_vres_font_t;
+arm_2d_vres_t *ldBaseGetVresImage(uint32_t addr);
+arm_2d_vres_font_t* ldBaseGetVresFont(uint32_t addr);
+
+#endif
 
 #ifdef __cplusplus
 }

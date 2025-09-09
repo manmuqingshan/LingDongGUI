@@ -21,8 +21,8 @@
 
 #include "arm_2d.h"
 
-#include "arm_2d_helper_scene.h"
-#include "arm_2d_helper_control.h"
+#include "arm_2d_helper.h"
+#include "arm_2d_example_controls.h"
 #include "ldBase.h"
 #ifdef   __cplusplus
 extern "C" {
@@ -46,8 +46,10 @@ extern "C" {
 
 /* OOC header, please DO NOT modify  */
 #ifdef __USER_SCENE1_IMPLEMENT__
-#   undef __USER_SCENE1_IMPLEMENT__
 #   define __ARM_2D_IMPL__
+#endif
+#ifdef __USER_SCENE1_INHERIT__
+#   define __ARM_2D_INHERIT__
 #endif
 #include "arm_2d_utils.h"
 
@@ -101,8 +103,11 @@ ld_scene_t *__arm_2d_scene1_init(   arm_2d_scene_player_t *ptDispAdapter,
 #   pragma GCC diagnostic pop
 #endif
 
+#undef __USER_SCENE1_IMPLEMENT__
+#undef __USER_SCENE1_INHERIT__
+
 #ifdef   __cplusplus
 }
 #endif
 
-#endif //__LD_SCENE0_H__
+#endif //__LD_SCENE1_H__

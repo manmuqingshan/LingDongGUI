@@ -292,7 +292,7 @@ void ldScrollSelecter_show(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget, co
                 }
                 else
                 {
-                    ldBaseImage(&tTarget,NULL,ptWidget->ptImgTile,NULL,0,ptWidget->use_as__ldBase_t.opacity);
+                    ldBaseImage(&tTarget,NULL,ptWidget->ptImgTile,ptWidget->ptMaskTile,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
                 }
                 arm_2d_op_wait_async(NULL);
             }
@@ -385,7 +385,7 @@ void ldScrollSelecterSetBgColor(ldScrollSelecter_t* ptWidget,ldColor bgColor)
     ptWidget->isTransparent=false;
 }
 
-void ldScrollSelecterSetBgImage(ldScrollSelecter_t* ptWidget,arm_2d_tile_t *ptImgTile)
+void ldScrollSelecterSetBgImage(ldScrollSelecter_t* ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
 {
     assert(NULL != ptWidget);
     if(ptWidget==NULL)
@@ -394,6 +394,7 @@ void ldScrollSelecterSetBgImage(ldScrollSelecter_t* ptWidget,arm_2d_tile_t *ptIm
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ptImgTile=ptImgTile;
+    ptWidget->ptMaskTile=ptMaskTile;
     ptWidget->isTransparent=false;
 }
 

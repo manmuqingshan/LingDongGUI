@@ -28,6 +28,7 @@ SOURCES = \
     user/Virtual_TFT_Port.c \
     user/arm_2d_disp_adapter_0.c \
     $(wildcard ../common/Arm-2D/examples/common/controls/*.c) \
+    $(wildcard ../common/Arm-2D/examples/common/controls/qrcode_box/*.c) \
 	$(wildcard ../common/Arm-2D/examples/common/asset/*.c) \
     $(wildcard ../common/Arm-2D/Library/Source/*.c) \
     $(wildcard ../common/Arm-2D/Helper/Source/*.c) \
@@ -69,6 +70,7 @@ INCLUDEPATH = \
     -I$(CURDIR)/../common/Arm-2D/Library/Include \
 	-I$(CURDIR)/../common/Arm-2D/Library/Source \
     -I$(CURDIR)/../common/Arm-2D/examples/common/controls \
+    -I$(CURDIR)/../common/Arm-2D/examples/common/controls/qrcode_box \
     -I$(CURDIR)/../common/math \
     -I$(CURDIR)/../../src/gui \
     -I$(CURDIR)/../../src/misc \

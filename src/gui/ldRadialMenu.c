@@ -438,7 +438,7 @@ void ldRadialMenu_show(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget, const arm_
                         }
                         else
                         {
-                            ldBaseImageScale(&tChildTile,NULL,(ptWidget->ptItemInfoList[ptWidget->pShowList[i]]).ptImgTile,(ptWidget->ptItemInfoList[ptWidget->pShowList[i]]).ptMaskTile,(ptWidget->ptItemInfoList[i]).scalePercent/100.0,&(ptWidget->ptItemInfoList[i]).op,bIsNewFrame);
+                            ldBaseImageScale(&tChildTile,NULL,(ptWidget->ptItemInfoList[ptWidget->pShowList[i]]).ptImgTile,(ptWidget->ptItemInfoList[ptWidget->pShowList[i]]).ptMaskTile,(ptWidget->ptItemInfoList[i]).scalePercent/100.0,&(ptWidget->ptItemInfoList[i]).op,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
                         }
 #else
                         ldBaseImage(&tChildTile,NULL,ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptImgTile,ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptMaskTile,0,ptWidget->use_as__ldBase_t.opacity);

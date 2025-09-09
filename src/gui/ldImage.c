@@ -220,10 +220,10 @@ void ldImage_show( ld_scene_t *ptScene,ldImage_t *ptWidget,const arm_2d_tile_t *
             else
             {
                 ldBaseImage(&tTarget,
-                            &ptWidget->ptImgTile->tRegion,
+                            NULL,
                             ptWidget->ptImgTile,
                             ptWidget->ptMaskTile,
-                            ptWidget->fgColor,
+                            ptWidget->bgColor,
                             ptWidget->use_as__ldBase_t.opacity);
             }
         }
@@ -240,8 +240,6 @@ void ldImageSetBgColor(ldImage_t *ptWidget,ldColor bgColor)
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->isTransparent=false;
-    ptWidget->ptImgTile=NULL;
-    ptWidget->ptMaskTile=NULL;
     ptWidget->bgColor=bgColor;
 }
 

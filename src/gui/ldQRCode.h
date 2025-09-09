@@ -43,7 +43,6 @@ extern "C"
 #endif
 #include "arm_2d_utils.h"
 #include "ldBase.h"
-#include "qrcodegen.h"
 
 #define QR_ECC_7                        0
 #define QR_ECC_15                       1

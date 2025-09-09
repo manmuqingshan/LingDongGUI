@@ -284,15 +284,6 @@ void ldArc_show(ld_scene_t *ptScene, ldArc_t *ptWidget, const arm_2d_tile_t *ptT
                 break;
             }
 
-//            ((arm_2d_tile_t*)&tempRes)->pchBuffer = (uint8_t *)ptWidget->srcAddr;
-//#if USE_VIRTUAL_RESOURCE == 1
-//            ((arm_2d_vres_t*)(&tempRes))->pTarget=ptWidget->srcAddr;
-//#endif
-//            ((arm_2d_tile_t*)&tempRes)->tInfo.tColourInfo.chScheme=ARM_2D_COLOUR_MASK_A8;
-
-//            ((arm_2d_tile_t*)&tempRes)->tRegion.tSize.iWidth=(((arm_2d_tile_t*)&tempRes)->tRegion.tSize.iWidth>>1)+1;
-//            ((arm_2d_tile_t*)&tempRes)->tRegion.tSize.iHeight=(((arm_2d_tile_t*)&tempRes)->tRegion.tSize.iHeight>>1)+1;
-
             center.iX=ptWidget->ptImgTile->tRegion.tSize.iWidth-1;
             center.iY=ptWidget->ptImgTile->tRegion.tSize.iHeight-1;
 

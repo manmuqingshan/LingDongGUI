@@ -1,3 +1,14 @@
+<p class="lang-switch">
+  <a class="active">中文</a>
+  <a href="README.en.md">EN</a>
+</p>
+<style>
+.lang-switch{position:absolute;top:12px;left:24px;display:flex;gap:6px;font-size:20;z-index:999;}
+.lang-switch a{display:inline-block;padding:6px 12px;border-radius:6px;text-decoration:none;color:#656d76;transition:.15s}
+.lang-switch a:hover{background:#d0d7de;color:#24292f}
+.lang-switch a.active{background:#24292f;color:#fff;pointer-events:none}
+</style>
+
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">灵动GUI</h1>
 <h4 align="center">一个基于ARM-2D的GUI</h4>
 <p align="center">
@@ -18,7 +29,7 @@
     * 事件触发使用信号槽模式，轻松实现多对多触发
     * 界面代码和功能代码分离，逻辑清晰
 
-3. **支持原生API**
+3. **支持ARM-2D原生API**
     * 可使用ARM-2D原生API进行开发
     * LDGUI和ARM-2D混合编程，灵活性高
 
@@ -34,11 +45,18 @@
     * 队列
     * 彩色log打印
 
+7. **上位机**
+    * 配套免费的通用上位机
+
 ## 源码
 
-🏠️主仓库: https://gitee.com/gzbkey/LingDongGUI
+🏠️Gitee主仓库: https://gitee.com/gzbkey/LingDongGUI
 
-🏠️镜像仓库: https://github.com/gzbkey/LingDongGUI
+🏠️Github镜像仓库: https://github.com/gzbkey/LingDongGUI
+
+## 上位机
+
+🚀上位机仓库: https://gitee.com/gzbkey/GuiEasyEditor
 
 ## 演示效果
 
@@ -94,6 +112,7 @@ widget demo sdl
 ## 技术交流
 
 🐧 QQ群：187033407
+📧 电子邮箱: 59935554@qq.com
 
 
 

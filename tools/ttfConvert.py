@@ -382,6 +382,39 @@ def write_c_code(glyphs_data, output_file, name, char_max_width, char_max_height
                                     char_max_height*len(glyphs_data),
                                     font_bit_size), file=f)
 
+color_type_array = {
+    1: 0x60,  # ARM_2D_COLOUR_1BIT
+    2: 0x02,  # ARM_2D_COLOUR_2BIT
+    4: 0x04,  # ARM_2D_COLOUR_4BIT
+    8: 0x06   # ARM_2D_COLOUR_8BIT
+}
+
+def write_bin_header(glyphs_data, bin_tracker, name, char_max_width, char_max_height, font_bit_size):
+    header_size = 13 + len(glyphs_data) * 17
+    bin_tracker.write(char_max_width.to_bytes(2, byteorder='little'))
+    total_height = char_max_height * len(glyphs_data)
+    bin_tracker.write(total_height.to_bytes(2, byteorder='little'))
+    bin_tracker.write(color_type_array[font_bit_size].to_bytes(1, byteorder='little'))
+    bin_tracker.write(header_size.to_bytes(2, byteorder='little'))
+    bin_tracker.write(char_max_width.to_bytes(2, byteorder='little'))
+    bin_tracker.write(char_max_height.to_bytes(2, byteorder='little'))
+    char_count = len(glyphs_data)
+    bin_tracker.write(char_count.to_bytes(2, byteorder='little'))
+
+    for char, data, width, height, index, advance_width, bearing_x, bearing_y, utf8_encoding in glyphs_data:
+        bin_tracker.write(round(index / char_max_width).to_bytes(2, byteorder='little'))
+        bin_tracker.write(width.to_bytes(2, byteorder='little'))
+        bin_tracker.write(height.to_bytes(2, byteorder='little'))
+        bin_tracker.write(advance_width.to_bytes(2, byteorder='little'))
+        bin_tracker.write(bearing_x.to_bytes(2, byteorder='little', signed=True))
+        bin_tracker.write(bearing_y.to_bytes(2, byteorder='little', signed=True))
+        bin_tracker.write(len(utf8_encoding).to_bytes(1, byteorder='little'))
+        bin_tracker.write(utf8_encoding)
+        for _ in range(4 - len(utf8_encoding)):
+            bin_tracker.write((0).to_bytes(1, byteorder='little'))
+
+    for char, data, width, height, index, advance_width, bearing_x, bearing_y, utf8_encoding in glyphs_data:
+        bin_tracker.write(data.tobytes())
 
 def main():
     parser = argparse.ArgumentParser(description='TrueTypeFont to C array converter (v2.2.0)')
@@ -415,6 +448,11 @@ def main():
             glyphs_data, char_max_width, char_max_height = generate_glyphs_data(args.input, text, args.pixelsize, args.fontbitsize, args.index)
             write_c_code(glyphs_data, args.output, args.name, char_max_width, char_max_height, args.fontbitsize)
 
+            headerfile = os.path.splitext(args.output)[0] + '_A' + str(args.fontbitsize)+".bin"
+            headerfile_handle = open(headerfile, 'wb')
+            write_bin_header(glyphs_data, headerfile_handle, args.name, char_max_width, char_max_height, args.fontbitsize)
+            headerfile_handle.close()
+
     else:
         with open(args.text, 'r', encoding='utf-8') as f:
             text = f.read()
@@ -422,26 +460,40 @@ def main():
             glyphs_data, char_max_width, char_max_height = generate_glyphs_data(args.input, text, args.pixelsize, 1, args.index)
             write_c_code(glyphs_data, args.output, args.name, char_max_width, char_max_height, 1)
 
+            headerfile = os.path.splitext(args.output)[0] + "_A1.bin"
+            headerfile_handle = open(headerfile, 'wb')
+            write_bin_header(glyphs_data, headerfile_handle, args.name, char_max_width, char_max_height, 1)
+            headerfile_handle.close()
 
         with open(args.text, 'r', encoding='utf-8') as f:
             text = f.read()
 
             glyphs_data, char_max_width, char_max_height = generate_glyphs_data(args.input, text, args.pixelsize, 2, args.index)
             write_c_code(glyphs_data, args.output, args.name, char_max_width, char_max_height, 2)
-
+            headerfile = os.path.splitext(args.output)[0] + "_A2.bin"
+            headerfile_handle = open(headerfile, 'wb')
+            write_bin_header(glyphs_data, headerfile_handle, args.name, char_max_width, char_max_height, 2)
+            headerfile_handle.close()
 
         with open(args.text, 'r', encoding='utf-8') as f:
             text = f.read()
 
             glyphs_data, char_max_width, char_max_height = generate_glyphs_data(args.input, text, args.pixelsize, 4, args.index)
             write_c_code(glyphs_data, args.output, args.name, char_max_width, char_max_height, 4)
-
+            headerfile = os.path.splitext(args.output)[0] + "_A4.bin"
+            headerfile_handle = open(headerfile, 'wb')
+            write_bin_header(glyphs_data, headerfile_handle, args.name, char_max_width, char_max_height, 4)
+            headerfile_handle.close()
 
         with open(args.text, 'r', encoding='utf-8') as f:
             text = f.read()
 
             glyphs_data, char_max_width, char_max_height = generate_glyphs_data(args.input, text, args.pixelsize, 8, args.index)
             write_c_code(glyphs_data, args.output, args.name, char_max_width, char_max_height, 8)
+            headerfile = os.path.splitext(args.output)[0] + "_A8.bin"
+            headerfile_handle = open(headerfile, 'wb')
+            write_bin_header(glyphs_data, headerfile_handle, args.name, char_max_width, char_max_height, 8)
+            headerfile_handle.close()
 
     with open(args.output, "a") as outputfile:
         print(c_tail_string, file=outputfile)

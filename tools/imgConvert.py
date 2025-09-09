@@ -66,8 +66,9 @@ class BinaryTracker:
     def write_header_file(self, header_path, prefix):
         with open(header_path, 'w') as f:
             for name, offset in sorted(self.offsets.items()):
-                full_name = f"{prefix}_{name}" if prefix else name
-                print(f'{full_name}:0x{offset:08x}', file=f)
+                name=name.replace('__', '_')
+                name=name.strip('_').upper()
+                print(f'{name}:0x{offset:08x}', file=f)
                 
     def __init__(self, binfile):
         self.offset = 0
@@ -93,8 +94,9 @@ class BinaryTracker:
                 self.offset += pad
         
         if isinstance(data, np.ndarray):
-            data.tofile(self.binfile)
-            self.offset += data.nbytes
+            data_le = data.astype(data.dtype.newbyteorder('<'))
+            data_le.tofile(self.binfile)
+            self.offset += data_le.nbytes
         else:
             self.binfile.write(data)
             self.offset += len(data)
@@ -371,8 +373,8 @@ def main(argv):
     if args.i == None or args.i == "" :
         parser.print_help()
         exit(1)
-    inputfile = args.i;
-    basename = os.path.basename(inputfile).split('.')[0];
+    inputfile = args.i
+    basename = os.path.basename(inputfile).split('.')[0]
 
 
     outputfile = args.o

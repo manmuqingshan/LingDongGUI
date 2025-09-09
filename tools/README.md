@@ -2,9 +2,6 @@
 
 基于arm-2d的工具脚本，进一步简化操作
 
-## 一、项目页面文件自动复制脚本
-    generate.bat运行后，自动生成user文件夹。文件夹内包含ldgui的用户文件生成脚本和移植配置文件。文件夹中的包含readme.txt说明文件。
-
 ## 二、图片数据生成脚本
 
 ### 依赖
@@ -17,7 +14,8 @@ pip install numpy
 ### 如何使用
 
 #### 图片和脚本同一目录下
-    python ./auto_img2c.py
+    python ./auto_img2c.py 或直接运行auto_img2c.bat，选择2
+
 #### 图片在特定文件夹中(如./img)
     python ./auto_img2c.py ./img
 
@@ -89,11 +87,11 @@ pip install pyyaml
 
 #### 输出文件和脚本同一目录下
 1. 自动生成yml文件
-    python ./auto_ttf2c.py
+    python ./auto_ttf2c.py 或直接运行auto_ttf2c.bat，选择2
 
 2. 修改yml文件
 
-3. python ./auto_ttf2c.py
+3. python ./auto_ttf2c.py 或直接运行auto_ttf2c.bat，选择2
     
 #### 输出文件指定文件夹(如./font)
 1. 自动生成yml文件

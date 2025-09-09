@@ -25,6 +25,7 @@ HEADERS += \
     user/ldConfig.h
 
 HEADERS += $$files(../common/Arm-2D/examples/common/controls/*.h) \
+           $$files(../common/Arm-2D/examples/common/controls/qrcode_box/*.h) \
            $$files(../common/Arm-2D/Library/Source/*.inc) \
            $$files(../common/Arm-2D/Library/Include/*.h) \
            $$files(../common/Arm-2D/Helper/Include/*.h) \
@@ -33,6 +34,7 @@ HEADERS += $$files(../common/Arm-2D/examples/common/controls/*.h) \
            $$files(../../src/misc/*.h)
 
 SOURCES += $$files(../common/Arm-2D/examples/common/controls/*.c) \
+           $$files(../common/Arm-2D/examples/common/controls/qrcode_box/*.c) \
            $$files(../common/Arm-2D/examples/common/asset/*.c) \
            $$files(../common/Arm-2D/Library/Source/*.c) \
            $$files(../common/Arm-2D/Helper/Source/*.c) \

@@ -23,7 +23,7 @@
 #include "arm_2d_helper.h"
 #include <assert.h>
 #include <string.h>
-
+#include "qrcode_box/qrcodegen.h"
 #include "ldQRCode.h"
 
 #if defined(__clang__)
