@@ -1,13 +1,7 @@
-<p class="lang-switch">
-  <a class="active">中文</a>
-  <a href="README.en.md">EN</a>
-</p>
-<style>
-.lang-switch{position:absolute;top:12px;left:24px;display:flex;gap:6px;font-size:20;z-index:999;}
-.lang-switch a{display:inline-block;padding:6px 12px;border-radius:6px;text-decoration:none;color:#656d76;transition:.15s}
-.lang-switch a:hover{background:#d0d7de;color:#24292f}
-.lang-switch a.active{background:#24292f;color:#fff;pointer-events:none}
-</style>
+<h4>
+  <a>中文</a> |
+  <a href="README.en.md">English</a>
+</h4>
 
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">灵动GUI</h1>
 <h4 align="center">一个基于ARM-2D的GUI</h4>
