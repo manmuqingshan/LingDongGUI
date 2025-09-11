@@ -140,7 +140,7 @@ ldSlider_t* ldSlider_init( ld_scene_t *ptScene,ldSlider_t *ptWidget, uint16_t na
     ldMsgConnect(ptWidget, SIGNAL_PRESS, slotSliderMove);
     ldMsgConnect(ptWidget, SIGNAL_HOLD_DOWN, slotSliderMove);
 
-    LOG_INFO("[init][slider] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][slider] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
