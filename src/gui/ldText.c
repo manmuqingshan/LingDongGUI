@@ -328,7 +328,7 @@ void ldText_show(ld_scene_t *ptScene, ldText_t *ptWidget, const arm_2d_tile_t *p
                 text_box_show(  &ptWidget->tTextPanel,
                                 &tTarget,
                                 NULL,
-                                (__arm_2d_color_t) ptWidget->textColor,
+                                (__arm_2d_color_t) {ptWidget->textColor},
                                 ptWidget->use_as__ldBase_t.opacity,
                                 bIsNewFrame);
 

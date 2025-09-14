@@ -221,7 +221,7 @@ void *ldBaseGetWidget(arm_2d_control_node_t *ptNodeRoot,uint16_t nameId)
 
 void ldBaseColor(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, ldColor color, uint8_t opacity)
 {
-    arm_2d_fill_colour_with_opacity(ptTile, ptRegion, (__arm_2d_color_t)color, opacity);
+    arm_2d_fill_colour_with_opacity(ptTile, ptRegion, (__arm_2d_color_t){color}, opacity);
 }
 
 void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile, ldColor color, uint8_t opacity)

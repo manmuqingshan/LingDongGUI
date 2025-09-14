@@ -218,25 +218,25 @@ static void _ldArcDrawQuarter(arm_2d_tile_t *pTarget,arm_2d_region_t canvas,arm_
             case 0:
             {
                 maskRegion.tLocation.iX+=canvas.tSize.iWidth>>1;
-                arm_2d_fill_colour_with_mask_x_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t)color,opacity);
+                arm_2d_fill_colour_with_mask_x_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t){color},opacity);
                 break;
             }
             case 1:
             {
                 maskRegion.tLocation.iX+=canvas.tSize.iWidth>>1;
                 maskRegion.tLocation.iY+=canvas.tSize.iHeight>>1;
-                arm_2d_fill_colour_with_mask_xy_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t)color,opacity);
+                arm_2d_fill_colour_with_mask_xy_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t){color},opacity);
                 break;
             }
             case 2:
             {
                 maskRegion.tLocation.iY+=canvas.tSize.iHeight>>1;
-                arm_2d_fill_colour_with_mask_y_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t)color,opacity);
+                arm_2d_fill_colour_with_mask_y_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t){color},opacity);
                 break;
             }
             case 3:
             {
-                arm_2d_fill_colour_with_mask_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t)color,opacity);
+                arm_2d_fill_colour_with_mask_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t){color},opacity);
                 break;
             }
             }
