@@ -50,6 +50,9 @@ extern "C" {
 #define ldWindowSetHidden               ldBaseSetHidden
 #define ldWindowMove                    ldBaseMove
 #define ldWindowSetOpacity              ldBaseSetOpacity
+#define ldWindowSetSelectable           ldBaseSetSelectable
+#define ldWindowSetSelect               ldBaseSetSelect
+#define ldWindowSetCorner               ldBaseSetCorner
 
 #if defined(__clang__)
 #   pragma clang diagnostic pop

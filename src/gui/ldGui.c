@@ -211,6 +211,7 @@ void ldGuiSceneInit(ld_scene_t *ptScene)
 #if USE_SCENE_SWITCHING == 2
     isGuiSwthcnScene=false;
 #endif
+    ldBaseFocusNavigateInit();
     LOG_INFO("[sys] page %s init",ptScene->ldGuiFuncGroup->pageName);
 }
 

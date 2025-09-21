@@ -118,7 +118,26 @@ typedef enum{
 #define MEM_MODE_STDLIB                 (2)
 #define MEM_MODE_USER                   (3)
 
-#define ANGLE_2_RADIAN(angle)                   ((float)(angle)*0.0174533f)
+#define ANGLE_2_RADIAN(angle)           ((float)(angle)*0.0174533f)
+
+#ifndef LD_SELECT_COLOR
+#define LD_SELECT_COLOR                 __RGB(255, 0, 0)
+#endif
+
+#ifndef LD_SELECT_OPACITY
+#define LD_SELECT_OPACITY               (ptWidget->use_as__ldBase_t.opacity/4)
+#endif
+
+#define LD_BASE_WIDGET_SELECT \
+do{ \
+    if(ptWidget->use_as__ldBase_t.isSelected&&ptWidget->use_as__ldBase_t.isSelectable){ \
+        if(ptWidget->use_as__ldBase_t.isCorner){ \
+            draw_round_corner_border(&tTarget,NULL,LD_SELECT_COLOR,(arm_2d_border_opacity_t){LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY},(arm_2d_corner_opacity_t){LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY}); \
+        }else{ \
+            arm_2d_draw_box(&tTarget,NULL,2,LD_SELECT_COLOR,LD_SELECT_OPACITY); \
+        } \
+    } \
+}while(0)
 
 typedef struct ld_scene_t ld_scene_t;
 typedef void (*ldPageFunc_t)(ld_scene_t*);
@@ -183,6 +202,9 @@ typedef struct {
     bool isDirtyRegionUpdate:1;
     bool isDirtyRegionAutoReset:1;
     bool isHidden:1;
+    bool isSelected:1;
+    bool isSelectable:1;
+    bool isCorner:1;
 }ldBase_t;
 
 typedef enum{
@@ -247,6 +269,15 @@ arm_2d_vres_t *ldBaseGetVresImage(uint32_t addr);
 arm_2d_vres_font_t* ldBaseGetVresFont(uint32_t addr);
 
 #endif
+
+typedef enum {
+    NAV_UP, NAV_DOWN, NAV_LEFT, NAV_RIGHT, NAV_ENTER, NAV_BACK
+} ldFocusDir_t;
+void ldBaseFocusNavigateInit(void);
+void ldBaseFocusNavigate(ld_scene_t *ptScene, ldFocusDir_t tDir);
+void ldBaseSetSelectable(ldBase_t* ptWidget,bool isSelectable);
+void ldBaseSetSelect(ldBase_t* ptWidget,bool isSelect);
+void ldBaseSetCorner(ldBase_t* ptWidget,bool isCorner);
 
 #ifdef __cplusplus
 }

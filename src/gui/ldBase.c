@@ -801,118 +801,6 @@ arm_2d_region_t ldBaseGetAlignRegion(arm_2d_region_t parentRegion,arm_2d_region_
             break;
     }
 
-//    switch (tAlign)
-//    {
-//    case ARM_2D_ALIGN_LEFT:
-//    {
-//        childRegion.tLocation.iX=0;
-//        if(childRegion.tSize.iWidth>parentRegion.tSize.iWidth)
-//        {
-//            childRegion.tSize.iWidth=parentRegion.tSize.iWidth;
-//        }
-
-//        if(childRegion.tSize.iHeight<parentRegion.tSize.iHeight)
-//        {
-//            childRegion.tLocation.iY=(parentRegion.tSize.iHeight-childRegion.tSize.iHeight)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iY=0;
-//            childRegion.tSize.iHeight=parentRegion.tSize.iHeight;
-//        }
-//        break;
-//    }
-//    case ARM_2D_ALIGN_RIGHT:
-//    {
-//        if(childRegion.tSize.iWidth<parentRegion.tSize.iWidth)
-//        {
-//            childRegion.tLocation.iX=parentRegion.tSize.iWidth-childRegion.tSize.iWidth;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iX=0;
-//            childRegion.tSize.iWidth=parentRegion.tSize.iWidth;
-//        }
-
-//        if(childRegion.tSize.iHeight<parentRegion.tSize.iHeight)
-//        {
-//            childRegion.tLocation.iY=(parentRegion.tSize.iHeight-childRegion.tSize.iHeight)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iY=0;
-//            childRegion.tSize.iHeight=parentRegion.tSize.iHeight;
-//        }
-//        break;
-//    }
-//    case ARM_2D_ALIGN_TOP:
-//    {
-//        if(childRegion.tSize.iWidth<parentRegion.tSize.iWidth)
-//        {
-//            childRegion.tLocation.iX=(parentRegion.tSize.iWidth-childRegion.tSize.iWidth)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iX=0;
-//            childRegion.tSize.iWidth=parentRegion.tSize.iWidth;
-//        }
-
-//        childRegion.tLocation.iY=0;
-//        if(childRegion.tSize.iHeight>parentRegion.tSize.iHeight)
-//        {
-//            childRegion.tSize.iHeight=parentRegion.tSize.iHeight;
-//        }
-//        break;
-//    }
-//    case ARM_2D_ALIGN_BOTTOM:
-//    {
-//        if(childRegion.tSize.iWidth<parentRegion.tSize.iWidth)
-//        {
-//            childRegion.tLocation.iX=(parentRegion.tSize.iWidth-childRegion.tSize.iWidth)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iX=0;
-//            childRegion.tSize.iWidth=parentRegion.tSize.iWidth;
-//        }
-
-//        if(childRegion.tSize.iHeight<parentRegion.tSize.iHeight)
-//        {
-//            childRegion.tLocation.iY=parentRegion.tSize.iHeight-childRegion.tSize.iHeight;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iY=0;
-//            childRegion.tSize.iHeight=parentRegion.tSize.iHeight;
-//        }
-//        break;
-//    }
-//    case ARM_2D_ALIGN_CENTRE:
-//    {
-//        if(childRegion.tSize.iWidth<parentRegion.tSize.iWidth)
-//        {
-//            childRegion.tLocation.iX=(parentRegion.tSize.iWidth-childRegion.tSize.iWidth)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iX=0;
-//            childRegion.tSize.iWidth=parentRegion.tSize.iWidth;
-//        }
-
-//        if(childRegion.tSize.iHeight<parentRegion.tSize.iHeight)
-//        {
-//            childRegion.tLocation.iY=(parentRegion.tSize.iHeight-childRegion.tSize.iHeight)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iY=0;
-//            childRegion.tSize.iHeight=parentRegion.tSize.iHeight;
-//        }
-//        break;
-//    }
-//    default:
-//        break;
-//    }
     return childRegion;
 }
 
@@ -1114,3 +1002,150 @@ arm_2d_vres_font_t* ldBaseGetVresFont(uint32_t addr)
 }
 
 #endif
+
+static int32_t manhattanDistance(ldBase_t *ptCurrent, ldBase_t *ptNext, ldFocusDir_t tDir)
+{
+    int16_t dx = ptNext->use_as__arm_2d_control_node_t.tRegion.tLocation.iX -
+            ptCurrent->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
+    int16_t dy = ptNext->use_as__arm_2d_control_node_t.tRegion.tLocation.iY -
+            ptCurrent->use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
+
+    switch (tDir)
+    {
+    case NAV_UP:    if (dy >= 0) return INT32_MAX; break;
+    case NAV_DOWN:  if (dy <= 0) return INT32_MAX; break;
+    case NAV_LEFT:  if (dx >= 0) return INT32_MAX; break;
+    case NAV_RIGHT: if (dx <= 0) return INT32_MAX; break;
+    default:        return INT32_MAX;
+    }
+    return abs(dx) + abs(dy);
+}
+
+static ldBase_t* navigatePeer(ldBase_t *ptFirst, ldBase_t *ptCurrent, ldFocusDir_t tDir)
+{
+    if (!ptFirst || !ptCurrent) return ptCurrent;
+
+        ldBase_t *best     = NULL;
+        int32_t   bestDist = INT32_MAX;
+
+        /* 关键修正：从链表头开始，而不是从 ptCurrent 开始 */
+        for (ldBase_t *node = ptFirst; node; node = (ldBase_t *)node->use_as__arm_2d_control_node_t.ptNext)
+        {
+            if (node != ptCurrent && node->isSelectable)
+            {
+                int32_t d = manhattanDistance(ptCurrent, node, tDir);
+                if (d < bestDist)
+                {
+                    bestDist = d;
+                    best     = node;
+                }
+            }
+        }
+
+        return best ? best : ptCurrent;
+}
+
+static ldBase_t *ptFocusParent;
+static ldBase_t *ptCurrentFocus = NULL;
+
+void ldBaseFocusNavigateInit(void)
+{
+    ptCurrentFocus=NULL;
+}
+
+void ldBaseFocusNavigate(ld_scene_t *ptScene, ldFocusDir_t tDir)
+{
+    if (!ptCurrentFocus)
+    {
+        ldBase_t* root=ldBaseGetWidgetById(0);
+        if (root->use_as__arm_2d_control_node_t.ptChildList)
+        {
+            ptCurrentFocus = (ldBase_t*)root->use_as__arm_2d_control_node_t.ptChildList;
+        }
+        else
+        {
+            return ;
+        }
+    }
+
+    ptFocusParent=ldBaseGetParent(ptCurrentFocus);
+
+    switch (tDir)
+    {
+    case NAV_ENTER:
+    {
+        if (ptCurrentFocus->use_as__arm_2d_control_node_t.ptChildList)
+        {
+            ptFocusParent = ptCurrentFocus;
+            ldBase_t *new=(ldBase_t*)ptCurrentFocus->use_as__arm_2d_control_node_t.ptChildList;
+            ldBaseSetSelect(ptCurrentFocus,false);
+            ldBaseSetSelect(new,true);
+            ptCurrentFocus=new;
+        }
+        break;
+    }
+    case NAV_UP:
+    case NAV_DOWN:
+    case NAV_LEFT:
+    case NAV_RIGHT:
+    {
+        ldBase_t *new=(ldBase_t*)navigatePeer((ldBase_t*)ptFocusParent->use_as__arm_2d_control_node_t.ptChildList, ptCurrentFocus, tDir);
+        if(ptCurrentFocus!=new)
+        {
+            ldBaseSetSelect(ptCurrentFocus,false);
+            ldBaseSetSelect(new,true);
+            ptCurrentFocus=new;
+            break;
+        }
+    }
+    case NAV_BACK:
+    {
+        ldBase_t *ptGrandParent = (ldBase_t *)ptFocusParent->use_as__arm_2d_control_node_t.ptParent;
+        if (ptGrandParent)
+        {
+            ptFocusParent = ptGrandParent;
+            ldBase_t *new= (ldBase_t*)ptCurrentFocus->use_as__arm_2d_control_node_t.ptParent;
+            ldBaseSetSelect(ptCurrentFocus,false);
+            ldBaseSetSelect(new,true);
+            ptCurrentFocus=new;
+        }
+        break;
+    }
+    }
+}
+
+void ldBaseSetSelectable(ldBase_t* ptWidget,bool isSelectable)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->isSelectable=isSelectable;
+}
+
+void ldBaseSetSelect(ldBase_t* ptWidget,bool isSelect)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+
+    if(ptWidget->isSelectable)
+    {
+        ptWidget->isDirtyRegionUpdate = true;
+        ptWidget->isSelected=isSelect;
+    }
+}
+
+void ldBaseSetCorner(ldBase_t* ptWidget,bool isCorner)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->isDirtyRegionUpdate = true;
+    ptWidget->isCorner=isCorner;
+}
