@@ -68,6 +68,9 @@ void ldImageSetImage(ldImage_t *ptWidget, arm_2d_tile_t* ptImgTile, arm_2d_tile_
 #define ldImageSetHidden                ldBaseSetHidden
 #define ldImageMove                     ldBaseMove
 #define ldImageSetOpacity               ldBaseSetOpacity
+#define ldImageSetSelectable            ldBaseSetSelectable
+#define ldImageSetSelect                ldBaseSetSelect
+#define ldImageSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #   pragma clang diagnostic pop

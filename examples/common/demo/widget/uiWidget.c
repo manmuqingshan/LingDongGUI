@@ -70,23 +70,29 @@ const uint8_t msgStr[]="12345678abcdefg\n\r99556";
 const uint8_t *pBtnStr[]={"11","22","33"};
 void uiWidgetInit(ld_scene_t* ptScene)
 {
-    void *obj,*win,*list;
+    void *obj,*list;
+
+    ldBaseFocusNavigateInit();
 
     ldWindowInit(0, 0, 0, 0, LD_CFG_SCEEN_WIDTH, LD_CFG_SCEEN_HEIGHT);
 
-    obj= ldImageInit(1, 0, 100, 100, 50, 50, NULL, NULL,false);
-    ldImageSetBgColor(obj,__RGB(0xFF,0xFF,0xFF));
+    obj= ldImageInit(1, 0, 100, 120, 50, 80, NULL, NULL,false);
+    ldImageSetImage(obj,IMAGE_LETTER_PAPER_BMP,NULL);
+    ldImageSetCorner(obj,true);
+    ldImageSetSelectable(obj,true);
 
     obj=ldButtonInit(2, 0, 10,10,79,53);
     ldButtonSetFont(obj,FONT_ARIAL_16_A8);
     ldButtonSetText(obj,(uint8_t*)"123");
     ldButtonSetTextColor(obj,GLCD_COLOR_WHITE);
     ldButtonSetImage(obj,IMAGE_KEYRELEASE_PNG,IMAGE_KEYRELEASE_PNG_Mask,IMAGE_KEYPRESS_PNG,IMAGE_KEYPRESS_PNG_Mask);
+    ldButtonSetSelectable(obj,true);
 
-    win=ldWindowInit(3, 0, 200, 95, 20, 20);
-    ldWindowSetColor(win,GLCD_COLOR_GREEN);
+    obj=ldWindowInit(3, 0, 200, 95, 20, 20);
+    ldWindowSetColor(obj,GLCD_COLOR_GREEN);
+    ldWindowSetCorner(obj,true);
+    ldWindowSetSelectable(obj,true);
 
-//    connect(2,SIGNAL_RELEASE,slotPageJump);
 
     connect(2,SIGNAL_RELEASE,slotTest);
 //    connect(2,SIGNAL_RELEASE,slotTest2);
@@ -196,8 +202,8 @@ void uiWidgetInit(ld_scene_t* ptScene)
 
 
 
-    win=ldWindowInit(23, 0, 850, 450, 100, 100);
-    ldWindowSetColor(win,GLCD_COLOR_GREEN);
+    obj=ldWindowInit(23, 0, 850, 450, 100, 100);
+    ldWindowSetColor(obj,GLCD_COLOR_GREEN);
 
     obj=ldButtonInit(24, 23, 8,3,30,30);
     ldBase_t* pr=ldBaseGetParent(obj);
@@ -240,7 +246,7 @@ void uiWidgetLoop(ld_scene_t* ptScene)
     ldGauge_t *ptGauge=ldBaseGetWidgetById(17);
     if(ldTimeOut(100,true))
     {
-//        ldArcSetRotationAngle(ldBaseGetWidgetById(25),angle);
+        ldArcSetRotationAngle(ldBaseGetWidgetById(25),angle);
 
         ldGaugeSetAngle(ptGauge,angle);
         angle+=1;
@@ -250,6 +256,22 @@ void uiWidgetLoop(ld_scene_t* ptScene)
         }
     }
 
+    if(xBtnGetState(KEY_NUM_UP,BTN_RELEASE))
+    {
+        ldBaseFocusNavigate(ptScene,NAV_UP);
+    }
+    if(xBtnGetState(KEY_NUM_DOWN,BTN_RELEASE))
+    {
+        ldBaseFocusNavigate(ptScene,NAV_DOWN);
+    }
+    if(xBtnGetState(KEY_NUM_LEFT,BTN_RELEASE))
+    {
+        ldBaseFocusNavigate(ptScene,NAV_LEFT);
+    }
+    if(xBtnGetState(KEY_NUM_RIGHT,BTN_RELEASE))
+    {
+        ldBaseFocusNavigate(ptScene,NAV_RIGHT);
+    }
 
 
 }

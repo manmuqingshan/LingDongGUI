@@ -272,9 +272,9 @@ arm_2d_vres_font_t* ldBaseGetVresFont(uint32_t addr);
 
 typedef enum {
     NAV_UP, NAV_DOWN, NAV_LEFT, NAV_RIGHT, NAV_ENTER, NAV_BACK
-} ldFocusDir_t;
+} ldNavDir_t;
 void ldBaseFocusNavigateInit(void);
-void ldBaseFocusNavigate(ld_scene_t *ptScene, ldFocusDir_t tDir);
+void ldBaseFocusNavigate(ld_scene_t *ptScene, ldNavDir_t tDir);
 void ldBaseSetSelectable(ldBase_t* ptWidget,bool isSelectable);
 void ldBaseSetSelect(ldBase_t* ptWidget,bool isSelect);
 void ldBaseSetCorner(ldBase_t* ptWidget,bool isCorner);

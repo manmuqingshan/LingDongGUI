@@ -260,14 +260,16 @@ void ldButton_show(ld_scene_t *ptScene, ldButton_t *ptWidget, const arm_2d_tile_
                             draw_round_corner_image(ptWidget->ptPressImgTile,
                                                     &tTarget,
                                                     NULL,
-                                                    bIsNewFrame);
+                                                    bIsNewFrame,
+                                                    ptWidget->use_as__ldBase_t.opacity);
                         }
                         else
                         {
                             draw_round_corner_image(ptWidget->ptReleaseImgTile,
                                                     &tTarget,
                                                     NULL,
-                                                    bIsNewFrame);
+                                                    bIsNewFrame,
+                                                    ptWidget->use_as__ldBase_t.opacity);
                         }
                     }
                     else

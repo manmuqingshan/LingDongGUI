@@ -212,19 +212,43 @@ void ldImage_show( ld_scene_t *ptScene,ldImage_t *ptWidget,const arm_2d_tile_t *
 
             if((ptWidget->ptImgTile==NULL)&&(ptWidget->ptMaskTile==NULL))
             {
-                ldBaseColor(&tTarget,
-                            NULL,
-                            ptWidget->bgColor,
-                            ptWidget->use_as__ldBase_t.opacity);
+                if(ptWidget->use_as__ldBase_t.isCorner)
+                {
+                    draw_round_corner_box(&tTarget,
+                                          NULL,
+                                          ptWidget->bgColor,
+                                          ptWidget->use_as__ldBase_t.opacity,
+                                          bIsNewFrame);
+                }
+                else
+                {
+                    ldBaseColor(&tTarget,
+                                NULL,
+                                ptWidget->bgColor,
+                                ptWidget->use_as__ldBase_t.opacity);
+                }
+
             }
             else
             {
-                ldBaseImage(&tTarget,
-                            NULL,
-                            ptWidget->ptImgTile,
-                            ptWidget->ptMaskTile,
-                            ptWidget->bgColor,
-                            ptWidget->use_as__ldBase_t.opacity);
+                if(ptWidget->use_as__ldBase_t.isCorner)
+                {
+                    draw_round_corner_image(ptWidget->ptImgTile,
+                                            &tTarget,
+                                            NULL,
+                                            bIsNewFrame,
+                                            ptWidget->use_as__ldBase_t.opacity);
+                }
+                else
+                {
+                    ldBaseImage(&tTarget,
+                                NULL,
+                                ptWidget->ptImgTile,
+                                ptWidget->ptMaskTile,
+                                ptWidget->bgColor,
+                                ptWidget->use_as__ldBase_t.opacity);
+                }
+
             }
 
             LD_BASE_WIDGET_SELECT;

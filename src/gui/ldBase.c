@@ -1003,7 +1003,7 @@ arm_2d_vres_font_t* ldBaseGetVresFont(uint32_t addr)
 
 #endif
 
-static int32_t manhattanDistance(ldBase_t *ptCurrent, ldBase_t *ptNext, ldFocusDir_t tDir)
+static int32_t manhattanDistance(ldBase_t *ptCurrent, ldBase_t *ptNext, ldNavDir_t tDir)
 {
     int16_t dx = ptNext->use_as__arm_2d_control_node_t.tRegion.tLocation.iX -
             ptCurrent->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
@@ -1021,7 +1021,7 @@ static int32_t manhattanDistance(ldBase_t *ptCurrent, ldBase_t *ptNext, ldFocusD
     return abs(dx) + abs(dy);
 }
 
-static ldBase_t* navigatePeer(ldBase_t *ptFirst, ldBase_t *ptCurrent, ldFocusDir_t tDir)
+static ldBase_t* navigatePeer(ldBase_t *ptFirst, ldBase_t *ptCurrent, ldNavDir_t tDir)
 {
     if (!ptFirst || !ptCurrent) return ptCurrent;
 
@@ -1053,7 +1053,7 @@ void ldBaseFocusNavigateInit(void)
     ptCurrentFocus=NULL;
 }
 
-void ldBaseFocusNavigate(ld_scene_t *ptScene, ldFocusDir_t tDir)
+void ldBaseFocusNavigate(ld_scene_t *ptScene, ldNavDir_t tDir)
 {
     if (!ptCurrentFocus)
     {
