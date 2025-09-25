@@ -331,6 +331,7 @@ void ldBaseLabel(arm_2d_tile_t *ptTile,arm_2d_region_t *ptRegion,uint8_t *pStr,a
     arm_lcd_text_set_target_framebuffer(ptTile);
     arm_lcd_text_set_draw_region(ptRegion);
     arm_lcd_text_set_colour(textColor, GLCD_COLOR_WHITE);
+    arm_lcd_text_set_font(ptFont);
     arm_lcd_text_set_opacity(opacity);
     arm_lcd_text_location(0,0);
 
