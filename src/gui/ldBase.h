@@ -132,9 +132,9 @@ typedef enum{
 do{ \
     if(ptWidget->use_as__ldBase_t.isSelected&&ptWidget->use_as__ldBase_t.isSelectable){ \
         if(ptWidget->use_as__ldBase_t.isCorner){ \
-            draw_round_corner_border(&tTarget,NULL,LD_SELECT_COLOR,(arm_2d_border_opacity_t){LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY},(arm_2d_corner_opacity_t){LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY}); \
+            draw_round_corner_border(&tTarget,&tTarget_canvas,LD_SELECT_COLOR,(arm_2d_border_opacity_t){LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY},(arm_2d_corner_opacity_t){LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY}); \
         }else{ \
-            arm_2d_draw_box(&tTarget,NULL,2,LD_SELECT_COLOR,LD_SELECT_OPACITY); \
+            arm_2d_draw_box(&tTarget,&tTarget_canvas,2,LD_SELECT_COLOR,LD_SELECT_OPACITY); \
         } \
     } \
 }while(0)
@@ -239,8 +239,6 @@ void ldBaseColor(arm_2d_tile_t* ptTile, arm_2d_region_t* ptRegion, ldColor color
 void ldBaseImage(arm_2d_tile_t* ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t* ptImgTile, arm_2d_tile_t* ptMaskTile, ldColor color, uint8_t opacity);
 void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile,float scale,arm_2d_op_trans_msk_opa_t *ptOP,uint8_t opacity,bool bIsNewFrame);
 void ldBaseLabel(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, uint8_t *pStr, arm_2d_font_t *ptFont, arm_2d_align_t tAlign, ldColor textColor, uint8_t opacity);
-void arm_lcd_text_puts(arm_2d_region_t* ptRegion,arm_2d_font_t *ptFont,uint8_t *pStr,uint8_t opacity);
-arm_2d_size_t arm_lcd_text_get_box(uint8_t *pStr, arm_2d_font_t *ptFont);
 void ldBaseMove(ldBase_t* ptWidget,int16_t x,int16_t y);
 void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden);
 void ldBaseSetOpacity(ldBase_t *ptWidget, uint8_t opacity);

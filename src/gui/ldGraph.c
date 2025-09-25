@@ -112,7 +112,7 @@ ldGraph_t* ldGraph_init( ld_scene_t *ptScene,ldGraph_t *ptWidget, uint16_t nameI
     ptWidget->use_as__ldBase_t.tTempRegion=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion;
 
     ptWidget->ptPointMaskTile=&c_tile_graphDefalutDot_Mask;
-    ptWidget->isCorner=true;
+    ptWidget->use_as__ldBase_t.isCorner=true;
     ptWidget->isFrame=true;
     ptWidget->frameSpace=10;
     ptWidget->seriesMax=seriesMax;
@@ -192,7 +192,7 @@ void ldGraph_show(ld_scene_t *ptScene, ldGraph_t *ptWidget, const arm_2d_tile_t 
             // draw frame
             if(ptWidget->isFrame)
             {
-                if(ptWidget->isCorner)
+                if(ptWidget->use_as__ldBase_t.isCorner)
                 {
                     draw_round_corner_box(&tTarget,&tTarget_canvas,GLCD_COLOR_WHITE,255,bIsNewFrame);
                     draw_round_corner_border(&tTarget,&tTarget_canvas,GLCD_COLOR_LIGHT_GREY,(arm_2d_border_opacity_t){255,255,255,255},(arm_2d_corner_opacity_t){255,255,255,255});
@@ -285,10 +285,10 @@ void ldGraph_show(ld_scene_t *ptScene, ldGraph_t *ptWidget, const arm_2d_tile_t 
                 }
                 arm_2d_op_wait_async(NULL);
             }
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldGraphSetPointImageMask(ldGraph_t *ptWidget, arm_2d_tile_t *ptPointMaskTile)
@@ -377,7 +377,7 @@ void ldGraphSetFrameSpace(ldGraph_t *ptWidget,uint8_t frameSpace,bool isCorner)
 
     ptWidget->isFrame=(frameSpace>0)?true:false;
 
-    ptWidget->isCorner=isCorner;
+    ptWidget->use_as__ldBase_t.isCorner=isCorner;
     ptWidget->frameSpace=frameSpace;
 }
 

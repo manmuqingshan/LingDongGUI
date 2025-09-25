@@ -63,7 +63,6 @@ struct ldComboBox_t
     ldColor frameColor;
     ldColor selectColor;
     bool isExpand:1;
-    bool isCorner:1;
 };
 
 ldComboBox_t* ldComboBox_init(ld_scene_t *ptScene, ldComboBox_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont);
@@ -81,13 +80,15 @@ void ldComboBoxSetBackgroundColor(ldComboBox_t* ptWidget, ldColor backgroundColo
 void ldComboBoxSetFrameColor(ldComboBox_t* ptWidget, ldColor frameColor);
 void ldComboBoxSetSelectColor(ldComboBox_t* ptWidget, ldColor selectColor);
 void ldComboBoxSetSelectItem(ldComboBox_t* ptWidget, uint8_t itemIndex);
-void ldComboBoxSetCorner(ldComboBox_t* ptWidget,bool isCorner);
 void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize);
 void ldComboBoxSetDropdownImage(ldComboBox_t* ptWidget,arm_2d_tile_t* ptDropdownImgTile,arm_2d_tile_t* ptDropdownMaskTile);
 
 #define ldComboBoxSetHidden                ldBaseSetHidden
 #define ldComboBoxMove                     ldBaseMove
 #define ldComboBoxSetOpacity               ldBaseSetOpacity
+#define ldComboBoxSetSelectable            ldBaseSetSelectable
+#define ldComboBoxSetSelect                ldBaseSetSelect
+#define ldComboBoxSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

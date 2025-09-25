@@ -143,12 +143,12 @@ ldList_t* ldList_init(ld_scene_t *ptScene, ldList_t *ptWidget, uint16_t nameId, 
     ptWidget->use_as__ldBase_t.isDirtyRegionAutoReset = true;
     ptWidget->use_as__ldBase_t.opacity=255;
     ptWidget->use_as__ldBase_t.tTempRegion=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion;
+    ptWidget->use_as__ldBase_t.isCorner=true;
 
     ptWidget->itemHeight=30;
     ptWidget->bgColor=GLCD_COLOR_WHITE;
     ptWidget->textColor=GLCD_COLOR_BLACK;
     ptWidget->selectColor=GLCD_COLOR_DARK_GREY;
-    ptWidget->isCorner=true;
     ptWidget->margin.top=1;
     ptWidget->margin.bottom=1;
     ptWidget->padding.left=5;
@@ -332,7 +332,7 @@ void ldList_show(ld_scene_t *ptScene, ldList_t *ptWidget, const arm_2d_tile_t *p
                         {
                             bgColor=ptWidget->bgColor;
                         }
-                        if(ptWidget->isCorner)
+                        if(ptWidget->use_as__ldBase_t.isCorner)
                         {
                             draw_round_corner_box(&tItemTile,
                                                   NULL,
@@ -359,14 +359,13 @@ void ldList_show(ld_scene_t *ptScene, ldList_t *ptWidget, const arm_2d_tile_t *p
                                     ptWidget->textColor,
                                     ptWidget->use_as__ldBase_t.opacity);
                     }
-
-                        arm_2d_op_wait_async(NULL);
+                    arm_2d_op_wait_async(NULL);
                 }
             }
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldListSetItemHeight(ldList_t* ptWidget,uint8_t itemHeight)

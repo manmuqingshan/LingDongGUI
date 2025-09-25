@@ -304,19 +304,41 @@ void ldText_show(ld_scene_t *ptScene, ldText_t *ptWidget, const arm_2d_tile_t *p
             {
                 if (ptWidget->ptImgTile==NULL)//color
                 {
-                    ldBaseColor(&tTarget,
-                                NULL,
-                                ptWidget->bgColor,
-                                ptWidget->use_as__ldBase_t.opacity);
+                    if(ptWidget->use_as__ldBase_t.isCorner)
+                    {
+                        draw_round_corner_box(&tTarget,
+                                              NULL,
+                                              ptWidget->bgColor,
+                                              ptWidget->use_as__ldBase_t.opacity,
+                                              bIsNewFrame);
+                    }
+                    else
+                    {
+                        ldBaseColor(&tTarget,
+                                    NULL,
+                                    ptWidget->bgColor,
+                                    ptWidget->use_as__ldBase_t.opacity);
+                    }
                 }
                 else
                 {
-                    ldBaseImage(&tTarget,
-                                &ptWidget->ptImgTile->tRegion,
-                                ptWidget->ptImgTile,
-                                ptWidget->ptMaskTile,
-                                0,
-                                ptWidget->use_as__ldBase_t.opacity);
+                    if(ptWidget->use_as__ldBase_t.isCorner)
+                    {
+                        draw_round_corner_image(ptWidget->ptImgTile,
+                                                &tTarget,
+                                                &ptWidget->ptImgTile->tRegion,
+                                                bIsNewFrame,
+                                                ptWidget->use_as__ldBase_t.opacity);
+                    }
+                    else
+                    {
+                        ldBaseImage(&tTarget,
+                                    &ptWidget->ptImgTile->tRegion,
+                                    ptWidget->ptImgTile,
+                                    ptWidget->ptMaskTile,
+                                    ptWidget->bgColor,
+                                    ptWidget->use_as__ldBase_t.opacity);
+                    }
                 }
                 arm_2d_op_wait_async(NULL);
             }
@@ -334,10 +356,11 @@ void ldText_show(ld_scene_t *ptScene, ldText_t *ptWidget, const arm_2d_tile_t *p
 
                 arm_2d_op_wait_async(NULL);
             }
+
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldTextSetTransparent(ldText_t* ptWidget,bool isTransparent)

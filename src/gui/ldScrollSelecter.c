@@ -288,11 +288,41 @@ void ldScrollSelecter_show(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget, co
             {
                 if(ptWidget->ptImgTile==NULL)
                 {
-                    ldBaseColor(&tTarget,NULL,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
+                    if(ptWidget->use_as__ldBase_t.isCorner)
+                    {
+                        draw_round_corner_box(&tTarget,
+                                              NULL,
+                                              ptWidget->bgColor,
+                                              ptWidget->use_as__ldBase_t.opacity,
+                                              bIsNewFrame);
+                    }
+                    else
+                    {
+                        ldBaseColor(&tTarget,
+                                    NULL,
+                                    ptWidget->bgColor,
+                                    ptWidget->use_as__ldBase_t.opacity);
+                    }
                 }
                 else
                 {
-                    ldBaseImage(&tTarget,NULL,ptWidget->ptImgTile,ptWidget->ptMaskTile,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
+                    if(ptWidget->use_as__ldBase_t.isCorner)
+                    {
+                        draw_round_corner_image(ptWidget->ptImgTile,
+                                                &tTarget,
+                                                NULL,
+                                                bIsNewFrame,
+                                                ptWidget->use_as__ldBase_t.opacity);
+                    }
+                    else
+                    {
+                        ldBaseImage(&tTarget,
+                                    NULL,
+                                    ptWidget->ptImgTile,
+                                    ptWidget->ptMaskTile,
+                                    ptWidget->bgColor,
+                                    ptWidget->use_as__ldBase_t.opacity);
+                    }
                 }
                 arm_2d_op_wait_async(NULL);
             }
@@ -323,6 +353,7 @@ void ldScrollSelecter_show(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget, co
                             ARM_2D_ALIGN_BOTTOM,
                             ptWidget->charColor,
                             ptWidget->use_as__ldBase_t.opacity);
+                arm_2d_op_wait_async(NULL);
             }
 
             if(ptWidget->is3Row)
@@ -343,10 +374,11 @@ void ldScrollSelecter_show(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget, co
                 }
             }
             arm_2d_op_wait_async(NULL);
+
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldScrollSelecterSetItems(ldScrollSelecter_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize)

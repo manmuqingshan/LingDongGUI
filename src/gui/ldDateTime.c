@@ -227,6 +227,7 @@ void ldDateTime_show(ld_scene_t *ptScene, ldDateTime_t *ptWidget, const arm_2d_t
                 arm_2d_op_wait_async(NULL);
             }
             ldBaseLabel(&tTarget,&tTarget_canvas,ptWidget->formatStrTemp,ptWidget->ptFont,ptWidget->tAlign,ptWidget->textColor,ptWidget->use_as__ldBase_t.opacity);
+            LD_BASE_WIDGET_SELECT;
             arm_2d_op_wait_async(NULL);
         }
     }

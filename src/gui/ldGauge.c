@@ -243,14 +243,12 @@ void ldGauge_show(ld_scene_t *ptScene, ldGauge_t *ptWidget, const arm_2d_tile_t 
                                                              &bgRotationCentre);
                     break;
                 }
-
-
-
-
-
                 arm_2d_op_wait_async(NULL);
 
             } while(0);
+
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
 

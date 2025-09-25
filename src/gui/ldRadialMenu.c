@@ -441,17 +441,33 @@ void ldRadialMenu_show(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget, const arm_
                             ldBaseImageScale(&tChildTile,NULL,(ptWidget->ptItemInfoList[ptWidget->pShowList[i]]).ptImgTile,(ptWidget->ptItemInfoList[ptWidget->pShowList[i]]).ptMaskTile,(ptWidget->ptItemInfoList[i]).scalePercent/100.0,&(ptWidget->ptItemInfoList[i]).op,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
                         }
 #else
-                        ldBaseImage(&tChildTile,NULL,ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptImgTile,ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptMaskTile,0,ptWidget->use_as__ldBase_t.opacity);
+                        if(ptWidget->use_as__ldBase_t.isCorner)
+                        {
+                            draw_round_corner_image(ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptImgTile,
+                                                    &tChildTile,
+                                                    NULL,
+                                                    bIsNewFrame,
+                                                    ptWidget->use_as__ldBase_t.opacity);
+                        }
+                        else
+                        {
+                            ldBaseImage(&tChildTile,
+                                        NULL,
+                                        ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptImgTile,
+                                        ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptMaskTile,
+                                        0,
+                                        ptWidget->use_as__ldBase_t.opacity);
+                        }
+
 #endif
                         arm_2d_op_wait_async(NULL);
                     } while (0);
                 }
             }
-
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldRadialMenuAddItem(ldRadialMenu_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)

@@ -119,6 +119,9 @@ void ldTableSetAlignGrid(ldTable_t *ptWidget,bool isAlignGrid);
 #define ldTableSetHidden                ldBaseSetHidden
 #define ldTableMove                     ldBaseMove
 #define ldTableSetOpacity               ldBaseSetOpacity
+#define ldTableSetSelectable            ldBaseSetSelectable
+#define ldTableSetSelect                ldBaseSetSelect
+#define ldTableSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

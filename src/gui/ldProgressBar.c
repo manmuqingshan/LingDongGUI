@@ -131,7 +131,21 @@ void ldProgressBar_on_frame_complete(ld_scene_t *ptScene, ldProgressBar_t *ptWid
 
 static void _progressBarColorShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTarget)
 {
-    ldBaseColor(ptTarget, NULL, ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
+    if (ptWidget->use_as__ldBase_t.isCorner)
+    {
+        draw_round_corner_box(ptTarget,
+                              NULL,
+                              ptWidget->bgColor,
+                              ptWidget->use_as__ldBase_t.opacity,
+                              bIsNewFrame);
+    }
+    else
+    {
+        ldBaseColor(ptTarget,
+                    NULL,
+                    ptWidget->bgColor,
+                    ptWidget->use_as__ldBase_t.opacity);
+    }
 
     if (ptWidget->permille > 0)
     {
@@ -156,12 +170,43 @@ static void _progressBarColorShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
             tBarRegion.tLocation.iY += temp;
             tBarRegion.tSize.iHeight -= temp;
         }
-        ldBaseColor( ptTarget,&tBarRegion,ptWidget->fgColor,ptWidget->use_as__ldBase_t.opacity);
+
+
+        if (ptWidget->use_as__ldBase_t.isCorner)
+        {
+            draw_round_corner_box(ptTarget,
+                                  &tBarRegion,
+                                  ptWidget->fgColor,
+                                  ptWidget->use_as__ldBase_t.opacity,
+                                  bIsNewFrame);
+        }
+        else
+        {
+            ldBaseColor(ptTarget,
+                        &tBarRegion,
+                        ptWidget->fgColor,
+                        ptWidget->use_as__ldBase_t.opacity);
+        }
     }
 
     if(ptWidget->frameColorSize)
     {
-        arm_2d_draw_box(ptTarget,NULL,ptWidget->frameColorSize,ptWidget->frameColor,ptWidget->use_as__ldBase_t.opacity);
+        if (ptWidget->use_as__ldBase_t.isCorner)
+        {
+            draw_round_corner_border(ptTarget,
+                                     NULL,
+                                     ptWidget->frameColor,
+                                     (arm_2d_border_opacity_t){ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity},
+                                     (arm_2d_corner_opacity_t){ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity,ptWidget->use_as__ldBase_t.opacity});
+        }
+        else
+        {
+            arm_2d_draw_box(ptTarget,
+                            NULL,
+                            ptWidget->frameColorSize,
+                            ptWidget->frameColor,
+                            ptWidget->use_as__ldBase_t.opacity);
+        }
     }
 }
 
@@ -351,9 +396,10 @@ void ldProgressBar_show(ld_scene_t *ptScene, ldProgressBar_t *ptWidget, const ar
                 _progressBarImageShow(ptWidget,&tTarget,bIsNewFrame);
                 ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
             }
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldProgressBarSetPercent(ldProgressBar_t *ptWidget,float percent)

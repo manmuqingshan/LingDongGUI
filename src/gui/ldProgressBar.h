@@ -88,6 +88,9 @@ void ldProgressBarSetHorizontal(ldProgressBar_t *ptWidget,bool isHorizontal);
 #define ldProgressBarSetHidden                ldBaseSetHidden
 #define ldProgressBarMove                     ldBaseMove
 #define ldProgressBarSetOpacity               ldBaseSetOpacity
+#define ldProgressBarSetSelectable           ldBaseSetSelectable
+#define ldProgressBarSetSelect               ldBaseSetSelect
+#define ldProgressBarSetCorner               ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

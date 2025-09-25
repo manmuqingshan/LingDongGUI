@@ -90,6 +90,9 @@ void ldDateTimeSetTime(ldDateTime_t *ptWidget, uint8_t hour, uint8_t minute, uin
 #define ldDateTimeSetHidden                ldBaseSetHidden
 #define ldDateTimeMove                     ldBaseMove
 #define ldDateTimeSetOpacity               ldBaseSetOpacity
+#define ldDateTimeSetSelectable            ldBaseSetSelectable
+#define ldDateTimeSetSelect                ldBaseSetSelect
+#define ldDateTimeSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

@@ -90,6 +90,9 @@ void lldScrollSelecterSetOneRowMode(ldScrollSelecter_t *ptWidget, bool isOneRow)
 #define ldScrollSelecterSetHidden                ldBaseSetHidden
 #define ldScrollSelecterMove                     ldBaseMove
 #define ldScrollSelecterSetOpacity               ldBaseSetOpacity
+#define ldScrollSelecterSetSelectable            ldBaseSetSelectable
+#define ldScrollSelecterSetSelect                ldBaseSetSelect
+#define ldScrollSelecterSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

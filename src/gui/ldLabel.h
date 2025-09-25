@@ -78,6 +78,9 @@ void ldLabelSetBgColor(ldLabel_t *ptWidget, ldColor bgColor);
 #define ldLabelSetHidden                ldBaseSetHidden
 #define ldLabelMove                     ldBaseMove
 #define ldLabelSetOpacity               ldBaseSetOpacity
+#define ldLabelSetSelectable            ldBaseSetSelectable
+#define ldLabelSetSelect                ldBaseSetSelect
+#define ldLabelSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

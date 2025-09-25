@@ -207,7 +207,6 @@ void ldSlider_show(ld_scene_t *ptScene, ldSlider_t *ptWidget, const arm_2d_tile_
                 break;
             }
 
-
             arm_2d_region_t tIndicatorRegion;
             if((ptWidget->ptBgImgTile==NULL)&&(ptWidget->ptIndicImgTile==NULL))//color
             {
@@ -265,10 +264,10 @@ void ldSlider_show(ld_scene_t *ptScene, ldSlider_t *ptWidget, const arm_2d_tile_
                 }
                 ldBaseImage(&tTarget,&tIndicatorRegion,ptWidget->ptIndicImgTile,ptWidget->ptIndicMaskTile,0,ptWidget->use_as__ldBase_t.opacity);
             }
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldSliderSetPercent(ldSlider_t *ptWidget,float percent)

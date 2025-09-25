@@ -553,12 +553,23 @@ void ldIconSlider_show(ld_scene_t *ptScene, ldIconSlider_t *ptWidget, const arm_
                             }
                         };
 
-                        ldBaseImage(&tTarget,
-                                    &imgRegion,
-                                    ptWidget->ptIconInfoList[showCount].ptImgTile,
-                                    ptWidget->ptIconInfoList[showCount].ptMaskTile,
-                                    0,
-                                    ptWidget->use_as__ldBase_t.opacity);
+                        if (ptWidget->use_as__ldBase_t.isCorner)
+                        {
+                            draw_round_corner_image(ptWidget->ptIconInfoList[showCount].ptImgTile,
+                                                    &tTarget,
+                                                    &imgRegion,
+                                                    bIsNewFrame,
+                                                    ptWidget->use_as__ldBase_t.opacity);
+                        }
+                        else
+                        {
+                            ldBaseImage(&tTarget,
+                                        &imgRegion,
+                                        ptWidget->ptIconInfoList[showCount].ptImgTile,
+                                        ptWidget->ptIconInfoList[showCount].ptMaskTile,
+                                        0,
+                                        ptWidget->use_as__ldBase_t.opacity);
+                        }
 
                         arm_2d_op_wait_async(NULL);
 
@@ -591,10 +602,10 @@ void ldIconSlider_show(ld_scene_t *ptScene, ldIconSlider_t *ptWidget, const arm_
                 }
             }
 
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldIconSliderAddIcon(ldIconSlider_t *ptWidget,arm_2d_tile_t *ptImgTile,arm_2d_tile_t *ptMaskTile,const uint8_t* pNameStr)

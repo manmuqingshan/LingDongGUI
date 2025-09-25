@@ -98,6 +98,9 @@ void ldRadialMenuOffsetItem(ldRadialMenu_t *ptWidget,int8_t offset);
 #define ldRadialMenuSetHidden                ldBaseSetHidden
 #define ldRadialMenuMove                     ldBaseMove
 #define ldRadialMenuSetOpacity               ldBaseSetOpacity
+#define ldRadialMenuSetSelectable            ldBaseSetSelectable
+#define ldRadialMenuSetSelect                ldBaseSetSelect
+#define ldRadialMenuSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

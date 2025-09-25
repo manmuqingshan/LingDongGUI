@@ -218,7 +218,7 @@ void ldLineEdit_show(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, const arm_2d_t
             {
                 break;
             }
-            if(ptWidget->isCorner)
+            if(ptWidget->use_as__ldBase_t.isCorner)
             {
                 draw_round_corner_box(&tTarget,&tTarget_canvas,ptWidget->backgroundColor,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
                 draw_round_corner_border(&tTarget,
@@ -251,7 +251,7 @@ void ldLineEdit_show(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, const arm_2d_t
                 tempRegion.tSize.iWidth-=CURSOR_WIDTH;
             }
 
-            arm_2d_size_t strSize=arm_lcd_text_get_box(ptWidget->pText, ptWidget->ptFont);
+            arm_2d_size_t strSize=arm_lcd_printf_to_buffer(ptWidget->ptFont,"%s",ptWidget->pText);
             if(ptWidget->pText!=NULL)
             {
                 arm_2d_align_t tAlign=ptWidget->tAlign;
@@ -287,10 +287,13 @@ void ldLineEdit_show(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, const arm_2d_t
                                 ptWidget->textColor,
                                 ptWidget->use_as__ldBase_t.opacity);
             }
+
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
 
-    arm_2d_op_wait_async(NULL);
+
 }
 
 void ldLineEditSetText(ldLineEdit_t* ptWidget,uint8_t *pText)
@@ -344,16 +347,6 @@ void ldLineEditSetAlign(ldLineEdit_t *ptWidget,arm_2d_align_t tAlign)
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->tAlign=tAlign;
-}
-
-void ldLineEditSetCorner(ldLineEdit_t *ptWidget, bool isCorner)
-{
-    if(ptWidget==NULL)
-    {
-        return;
-    }
-    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
-    ptWidget->isCorner=isCorner;
 }
 
 void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backgroundColor, ldColor frameColor)

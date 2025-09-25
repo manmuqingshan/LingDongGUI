@@ -78,7 +78,6 @@ void ldButton_show(ld_scene_t *ptScene, ldButton_t *ptWidget, const arm_2d_tile_
 void ldButtonSetColor(ldButton_t* ptWidget, ldColor releaseColor, ldColor pressColor);
 void ldButtonSetImage(ldButton_t* ptWidget,arm_2d_tile_t* ptReleaseImgTile,arm_2d_tile_t* ptReleaseMaskTile,arm_2d_tile_t* ptPressImgTile,arm_2d_tile_t* ptPressMaskTile);
 void ldButtonSetTransparent(ldButton_t* ptWidget,bool isTransparent);
-void ldButtonSetRoundCorner(ldButton_t* ptWidget,bool isCorner);
 void ldButtonSetFont(ldButton_t *ptWidget, arm_2d_font_t *ptFont);
 void ldButtonSetText(ldButton_t* ptWidget,uint8_t *pStr);
 void ldButtonSetTextColor(ldButton_t* ptWidget,ldColor charColor);

@@ -68,7 +68,6 @@ struct ldGraph_t
     uint8_t gridOffset;
     ldGraphSeries_t *pSeries;
     bool isFrame:1;
-    bool isCorner:1;
 };
 
 ldGraph_t* ldGraph_init(ld_scene_t *ptScene, ldGraph_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, uint8_t seriesMax);
@@ -93,6 +92,9 @@ void ldGraphMoveAdd(ldGraph_t *ptWidget,uint8_t seriesNum,uint16_t newValue);
 #define ldGraphSetHidden                ldBaseSetHidden
 #define ldGraphMove                     ldBaseMove
 #define ldGraphSetOpacity               ldBaseSetOpacity
+#define ldGraphSetSelectable            ldBaseSetSelectable
+#define ldGraphSetSelect                ldBaseSetSelect
+#define ldGraphSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

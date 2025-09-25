@@ -172,12 +172,12 @@ ldMessageBox_t* ldMessageBox_init( ld_scene_t *ptScene,ldMessageBox_t *ptWidget,
         ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY = y;
     }
     ptWidget->use_as__ldBase_t.tTempRegion=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion;
+    ptWidget->use_as__ldBase_t.isCorner=true;
 
     ptWidget->padding.top=10;
     ptWidget->padding.bottom=10;
     ptWidget->padding.left=10;
     ptWidget->padding.right=10;
-    ptWidget->isCorner=true;
     ptWidget->bgColor=GLCD_COLOR_WHITE;
     ptWidget->ptFont=ptFont;
     ptWidget->titleHeight=(height-ptWidget->padding.top-ptWidget->padding.bottom)/5;
@@ -272,7 +272,7 @@ void ldMessageBox_show(ld_scene_t *ptScene, ldMessageBox_t *ptWidget, const arm_
             }
 
             //bg
-            if(ptWidget->isCorner)
+            if(ptWidget->use_as__ldBase_t.isCorner)
             {
                 draw_round_corner_box(&tTarget,
                                       NULL,
@@ -319,7 +319,37 @@ void ldMessageBox_show(ld_scene_t *ptScene, ldMessageBox_t *ptWidget, const arm_
                     },
                 };
 
-                ldBaseLabel(&tTarget,&region,(uint8_t*)ptWidget->pMsgStr,ptWidget->ptFont,ARM_2D_ALIGN_CENTRE,ptWidget->msgStrColor,ptWidget->use_as__ldBase_t.opacity);
+                arm_lcd_text_set_target_framebuffer(&tTarget);
+                arm_lcd_text_set_colour(ptWidget->msgStrColor, GLCD_COLOR_WHITE);
+
+                arm_2d_size_t tLabelSize = arm_lcd_printf_to_buffer(ptWidget->ptFont,"%s",ptWidget->pMsgStr);
+
+                arm_2d_region_t tLabelRegion = {
+                    .tLocation = region.tLocation,
+                    .tSize = tLabelSize,
+                };
+
+                tLabelRegion= ldBaseGetAlignRegion(region,tLabelRegion,ARM_2D_ALIGN_CENTRE);
+
+                int16_t x = tLabelRegion.tLocation.iX; // 初始X坐标
+                int16_t y = tLabelRegion.tLocation.iY; // 初始Y坐标
+                arm_2d_size_t tCharBox = arm_lcd_text_get_actual_char_box(); // 获取字符的实际高度
+
+                for (int i = 0; ptWidget->pMsgStr[i] != '\0'; i++)
+                {
+                    if (ptWidget->pMsgStr[i] == '\n')
+                    {
+                        y += tCharBox.iHeight;
+                        x = tLabelRegion.tLocation.iX;
+                    }
+                    else
+                    {
+                        uint8_t *pChar = (uint8_t *)(&ptWidget->pMsgStr[i]);
+                        int16_t move_distance = lcd_draw_char(x, y, &pChar,ptWidget->use_as__ldBase_t.opacity);
+                        x += move_distance;
+                    }
+                }
+
                 arm_2d_op_wait_async(NULL);
             } while (false);
 
@@ -342,7 +372,7 @@ void ldMessageBox_show(ld_scene_t *ptScene, ldMessageBox_t *ptWidget, const arm_
                         color=ptWidget->releaseColor;
                     }
 
-                    if(ptWidget->isCorner)
+                    if(ptWidget->use_as__ldBase_t.isCorner)
                     {
                         draw_round_corner_box(&tTarget,
                                               &btnRegion,
@@ -425,6 +455,42 @@ void ldMessageBoxSetCallback(ldMessageBox_t* ptWidget,ldMsgBoxFunc_t ptFunc)
         return;
     }
     ptWidget->ptFunc=ptFunc;
+}
+
+void ldMessageBoxSetStringColor(ldMessageBox_t* ptWidget, ldColor titleStrColor, ldColor msgStrColor, ldColor btnStrColor)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->titleStrColor=titleStrColor;
+    ptWidget->msgStrColor=msgStrColor;
+    ptWidget->btnStrColor=btnStrColor;
+}
+
+void ldMessageBoxSetButtonColor(ldMessageBox_t* ptWidget, ldColor releaseColor, ldColor pressColor)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->releaseColor=releaseColor;
+    ptWidget->pressColor=pressColor;
+}
+
+void ldMessageBoxSetBgColor(ldMessageBox_t* ptWidget, ldColor bgColor)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+    ptWidget->bgColor=bgColor;
 }
 
 #if defined(__clang__)

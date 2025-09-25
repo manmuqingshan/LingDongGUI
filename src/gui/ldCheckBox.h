@@ -59,7 +59,6 @@ struct ldCheckBox_t
     uint16_t boxWidth;
     uint8_t radioButtonGroup;
     bool isChecked:1;
-    bool isCorner:1;
     bool isRadioButton:1;
 };
 
@@ -74,7 +73,6 @@ void ldCheckBoxSetColor(ldCheckBox_t* ptWidget,ldColor bgColor,ldColor fgColor);
 void ldCheckBoxSetImage(ldCheckBox_t* ptWidget,arm_2d_tile_t* ptUncheckedImgTile,arm_2d_tile_t* ptUncheckedMaskTile,arm_2d_tile_t* ptCheckedImgTile,arm_2d_tile_t* ptCheckedMaskTile);
 void ldCheckBoxSetText(ldCheckBox_t* ptWidget,arm_2d_font_t *ptFont,uint8_t *pStr);
 void ldCheckBoxSetRadioButtonGroup(ldCheckBox_t* ptWidget,uint8_t num);
-void ldCheckBoxSetCorner(ldCheckBox_t* ptWidget,bool isCorner);
 void ldCheckBoxSetTextColor(ldCheckBox_t* ptWidget,ldColor textColor);
 void ldCheckBoxSetChecked(ldCheckBox_t* ptWidget,bool isChecked);
 void ldCheckBoxSetStringLeftSpace(ldCheckBox_t* ptWidget,uint16_t space);//only for image mode
@@ -85,6 +83,9 @@ void ldCheckBoxSetStringLeftSpace(ldCheckBox_t* ptWidget,uint16_t space);//only 
 #define ldCheckBoxSetHidden                ldBaseSetHidden
 #define ldCheckBoxMove                     ldBaseMove
 #define ldCheckBoxSetOpacity               ldBaseSetOpacity
+#define ldCheckBoxSetSelectable            ldBaseSetSelectable
+#define ldCheckBoxSetSelect                ldBaseSetSelect
+#define ldCheckBoxSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

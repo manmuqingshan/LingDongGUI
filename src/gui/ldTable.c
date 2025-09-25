@@ -668,20 +668,20 @@ void ldTable_show(ld_scene_t *ptScene, ldTable_t *ptWidget, const arm_2d_tile_t 
 
                         if(cursorBlinkFlag&&item->isEditing)
                         {
-                            arm_2d_size_t strSize=arm_lcd_text_get_box(item->pText, item->ptFont);
+                            arm_2d_size_t strSize=arm_lcd_printf_to_buffer(item->ptFont,"%s",item->pText);
                             arm_2d_region_t srtRegion={
                                 .tLocation={0,0},
                                 .tSize=strSize,
                             };
-                               srtRegion=ldBaseGetAlignRegion(tItemTile.tRegion,srtRegion,item->tAlign);
-                                arm_2d_draw_box(&tItemTile,
-                                                &((arm_2d_region_t){srtRegion.tLocation.iX+srtRegion.tSize.iWidth,
-                                                                    srtRegion.tLocation.iY,
-                                                                    CURSOR_WIDTH,
-                                                                    item->ptFont->tCharSize.iHeight}),
-                                                1,
-                                                0,
-                                                ptWidget->use_as__ldBase_t.opacity);
+                            srtRegion=ldBaseGetAlignRegion(tItemTile.tRegion,srtRegion,item->tAlign);
+                            arm_2d_draw_box(&tItemTile,
+                                            &((arm_2d_region_t){srtRegion.tLocation.iX+srtRegion.tSize.iWidth,
+                                                                srtRegion.tLocation.iY,
+                                                                CURSOR_WIDTH,
+                                                                item->ptFont->tCharSize.iHeight}),
+                                            1,
+                                            0,
+                                            ptWidget->use_as__ldBase_t.opacity);
                         }
 
                         tItemTile.tRegion.tSize.iWidth+=CURSOR_WIDTH;
@@ -735,10 +735,10 @@ void ldTable_show(ld_scene_t *ptScene, ldTable_t *ptWidget, const arm_2d_tile_t 
                     arm_2d_op_wait_async(NULL);
                 }
             }
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldTableSetItemWidth(ldTable_t *ptWidget,uint8_t column,int16_t width)

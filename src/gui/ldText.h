@@ -92,6 +92,9 @@ void ldTextScrollMove(ldText_t *ptWidget, int8_t moveValue);
 #define ldTextSetHidden                ldBaseSetHidden
 #define ldTextMove                     ldBaseMove
 #define ldTextSetOpacity               ldBaseSetOpacity
+#define ldTextSetSelectable            ldBaseSetSelectable
+#define ldTextSetSelect                ldBaseSetSelect
+#define ldTextSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

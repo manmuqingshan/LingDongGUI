@@ -207,11 +207,15 @@ void ldQRCode_show(ld_scene_t *ptScene, ldQRCode_t *ptWidget, const arm_2d_tile_
                     }
                 }
             }
+            arm_2d_op_wait_async(NULL);
             ldFree(qr0);
             ldFree(tempBuffer);
+
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-    arm_2d_op_wait_async(NULL);
+
 }
 
 void ldQRCodeSetText(ldQRCode_t *ptWidget, uint8_t *pStr)

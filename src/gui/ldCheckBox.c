@@ -313,7 +313,7 @@ void ldCheckBox_show(ld_scene_t *ptScene, ldCheckBox_t *ptWidget, const arm_2d_t
             if ((ptWidget->ptCheckedImgTile==NULL)&&(ptWidget->ptUncheckedImgTile==NULL)&&(ptWidget->ptCheckedMaskTile==NULL)&&(ptWidget->ptUncheckedMaskTile==NULL))//color
             {
 
-                    if((ptWidget->isCorner)&&(!ptWidget->isRadioButton))
+                    if((ptWidget->use_as__ldBase_t.isCorner)&&(!ptWidget->isRadioButton))
                     {
                         draw_round_corner_box(&tTarget,
                                               &tChildTile.tRegion,
@@ -436,6 +436,9 @@ void ldCheckBox_show(ld_scene_t *ptScene, ldCheckBox_t *ptWidget, const arm_2d_t
                     arm_2d_op_wait_async(NULL);
                 }
             }
+
+            LD_BASE_WIDGET_SELECT;
+
             arm_2d_op_wait_async(NULL);
 
 
@@ -502,17 +505,6 @@ void ldCheckBoxSetRadioButtonGroup(ldCheckBox_t* ptWidget,uint8_t num)
     }
     ptWidget->isRadioButton=true;
     ptWidget->radioButtonGroup=num;
-}
-
-void ldCheckBoxSetCorner(ldCheckBox_t* ptWidget,bool isCorner)
-{
-    assert(NULL != ptWidget);
-    if(ptWidget==NULL)
-    {
-        return;
-    }
-    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
-    ptWidget->isCorner=isCorner;
 }
 
 void ldCheckBoxSetTextColor(ldCheckBox_t* ptWidget, ldColor textColor)

@@ -66,7 +66,6 @@ struct ldList_t
     ldBody_t margin;// 边框以外的区域
     bool isMoveReset:1;
     bool isHoldMove:1;
-    bool isCorner:1;
     bool isTransparent:1;
 };
 
@@ -96,6 +95,9 @@ void ldListSetMargin(ldList_t* ptWidget,uint8_t top,uint8_t bottom,uint8_t left,
 #define ldListSetHidden                ldBaseSetHidden
 #define ldListMove                     ldBaseMove
 #define ldListSetOpacity               ldBaseSetOpacity
+#define ldListSetSelectable            ldBaseSetSelectable
+#define ldListSetSelect                ldBaseSetSelect
+#define ldListSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
