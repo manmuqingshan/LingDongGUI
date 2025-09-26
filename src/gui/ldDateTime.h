@@ -80,7 +80,7 @@ void ldDateTimeSetTransparent(ldDateTime_t* ptWidget,bool isTransparent);
 void ldDateTimeSetFormat(ldDateTime_t* ptWidget,const uint8_t *pStr);
 void ldDateTimeSetTextColor(ldDateTime_t* ptWidget,ldColor textColor);
 void ldDateTimeSetAlign(ldDateTime_t *ptWidget,arm_2d_align_t tAlign);
-void ldDateTimeSetBgColor(ldDateTime_t *ptWidget, ldColor bgColor);
+void ldDateTimeSetBackgroundColor(ldDateTime_t *ptWidget, ldColor bgColor);
 void ldDateTimeSetDate(ldDateTime_t *ptWidget, uint16_t year, uint8_t month, uint8_t day);
 void ldDateTimeSetTime(ldDateTime_t *ptWidget, uint8_t hour, uint8_t minute, uint8_t second);
 

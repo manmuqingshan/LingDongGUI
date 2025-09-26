@@ -86,7 +86,7 @@ void ldMessageBoxSetBtn(ldMessageBox_t* ptWidget,const uint8_t *pStrArray[],uint
 void ldMessageBoxSetCallback(ldMessageBox_t* ptWidget,ldMsgBoxFunc_t ptFunc);
 void ldMessageBoxSetStringColor(ldMessageBox_t* ptWidget, ldColor titleStrColor, ldColor msgStrColor, ldColor btnStrColor);
 void ldMessageBoxSetButtonColor(ldMessageBox_t* ptWidget, ldColor releaseColor, ldColor pressColor);
-void ldMessageBoxSetBgColor(ldMessageBox_t* ptWidget, ldColor bgColor);
+void ldMessageBoxSetBackgroundColor(ldMessageBox_t* ptWidget, ldColor bgColor);
 #define ldMessageBoxInit(nameId,parentNameId,width,height,ptFont) \
         ldMessageBox_init(ptScene,NULL,nameId,parentNameId,-1,-1,width,height,ptFont)
 

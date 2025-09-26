@@ -404,7 +404,7 @@ void ldScrollSelecterSetTextColor(ldScrollSelecter_t* ptWidget,ldColor charColor
     ptWidget->charColor=charColor;
 }
 
-void ldScrollSelecterSetBgColor(ldScrollSelecter_t* ptWidget,ldColor bgColor)
+void ldScrollSelecterSetBackgroundColor(ldScrollSelecter_t* ptWidget,ldColor bgColor)
 {
     assert(NULL != ptWidget);
     if(ptWidget==NULL)
@@ -417,7 +417,7 @@ void ldScrollSelecterSetBgColor(ldScrollSelecter_t* ptWidget,ldColor bgColor)
     ptWidget->isTransparent=false;
 }
 
-void ldScrollSelecterSetBgImage(ldScrollSelecter_t* ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
+void ldScrollSelecterSetBackgroundImage(ldScrollSelecter_t* ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
 {
     assert(NULL != ptWidget);
     if(ptWidget==NULL)

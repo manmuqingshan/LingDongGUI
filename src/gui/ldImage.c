@@ -255,7 +255,7 @@ void ldImage_show( ld_scene_t *ptScene,ldImage_t *ptWidget,const arm_2d_tile_t *
     }
 }
 
-void ldImageSetBgColor(ldImage_t *ptWidget,ldColor bgColor)
+void ldImageSetBackgroundColor(ldImage_t *ptWidget,ldColor bgColor)
 {
     assert(NULL!= ptWidget);
     if(ptWidget == NULL)

@@ -81,8 +81,8 @@ void ldTextSetTransparent(ldText_t* ptWidget,bool isTransparent);
 void ldTextSetText(ldText_t* ptWidget,uint8_t *pStr);
 void ldTextSetStaticText(ldText_t* ptWidget,const uint8_t *pStr);
 void ldTextSetTextColor(ldText_t* ptWidget,ldColor charColor);
-void ldTextSetBgImage(ldText_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
-void ldTextSetBgColor(ldText_t *ptWidget, ldColor bgColor);
+void ldTextSetBackgroundImage(ldText_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
+void ldTextSetBackgroundColor(ldText_t *ptWidget, ldColor bgColor);
 void ldTextScrollSeek(ldText_t *ptWidget,int16_t offset);
 void ldTextScrollMove(ldText_t *ptWidget, int8_t moveValue);
 

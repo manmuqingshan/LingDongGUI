@@ -183,10 +183,12 @@ void ldAnimation_show(ld_scene_t *ptScene, ldAnimation_t *ptWidget, const arm_2d
                                           &tTarget_canvas,
                                           ptWidget->use_as__ldBase_t.opacity);
 
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
 
-    arm_2d_op_wait_async(NULL);
+
 }
 
 #if defined(__clang__)

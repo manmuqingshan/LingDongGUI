@@ -109,7 +109,7 @@ void uiSetInit(ld_scene_t* ptScene)
     ldListSetMargin(obj,5,5,10,10);
     ldListSetSelectColor(obj,__RGB(244,139,0));
     ldListSetTextColor(obj,GLCD_COLOR_WHITE);
-    ldListSetBgColor(obj,__RGB(50,50,50));
+    ldListSetBackgroundColor(obj,__RGB(50,50,50));
     ldListSetHidden(obj,true);
 
     tabSelect=0;

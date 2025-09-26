@@ -77,8 +77,8 @@ void ldScrollSelecter_show(ld_scene_t *pScene, ldScrollSelecter_t *ptWidget, con
 
 void ldScrollSelecterSetItems(ldScrollSelecter_t* ptWidget, const uint8_t *pStrArray[], uint8_t arraySize);
 void ldScrollSelecterSetTextColor(ldScrollSelecter_t* ptWidget,ldColor charColor);
-void ldScrollSelecterSetBgColor(ldScrollSelecter_t* pWidget,ldColor bgColor);
-void ldScrollSelecterSetBgImage(ldScrollSelecter_t* pWidget,arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
+void ldScrollSelecterSetBackgroundColor(ldScrollSelecter_t* pWidget,ldColor bgColor);
+void ldScrollSelecterSetBackgroundImage(ldScrollSelecter_t* pWidget,arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
 void ldScrollSelecterSetTransparent(ldScrollSelecter_t* pWidget,bool isTransparent);
 void ldScrollSelecterSetSpeed(ldScrollSelecter_t *pWidget, uint8_t speed);
 void ldScrollSelecterSelectItem(ldScrollSelecter_t *pWidget, uint8_t itemNum);

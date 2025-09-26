@@ -263,7 +263,7 @@ void ldLabelSetAlign(ldLabel_t *ptWidget,arm_2d_align_t tAlign)
     ptWidget->tAlign=tAlign;
 }
 
-void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
+void ldLabelSetBackgroundImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
 {
     if(ptWidget==NULL)
     {
@@ -275,7 +275,7 @@ void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_til
     ptWidget->isTransparent=false;
 }
 
-void ldLabelSetBgColor(ldLabel_t *ptWidget, ldColor bgColor)
+void ldLabelSetBackgroundColor(ldLabel_t *ptWidget, ldColor bgColor)
 {
     if(ptWidget==NULL)
     {

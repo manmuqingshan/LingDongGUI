@@ -429,7 +429,7 @@ void ldTextSetTextColor(ldText_t* ptWidget,ldColor charColor)
     ptWidget->textColor=charColor;
 }
 
-void ldTextSetBgImage(ldText_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
+void ldTextSetBackgroundImage(ldText_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -442,7 +442,7 @@ void ldTextSetBgImage(ldText_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_
     ptWidget->isTransparent=false;
 }
 
-void ldTextSetBgColor(ldText_t *ptWidget, ldColor bgColor)
+void ldTextSetBackgroundColor(ldText_t *ptWidget, ldColor bgColor)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)

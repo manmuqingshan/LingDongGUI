@@ -81,7 +81,7 @@ void ldListSetText(ldList_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySi
 
 void ldListSetTextColor(ldList_t* ptWidget,ldColor textColor);
 void ldListSetAlign(ldList_t *ptWidget,arm_2d_align_t tAlign);
-void ldListSetBgColor(ldList_t *ptWidget, ldColor bgColor);
+void ldListSetBackgroundColor(ldList_t *ptWidget, ldColor bgColor);
 void ldListSetSelectColor(ldList_t* ptWidget,ldColor selectColor);
 void ldListSetItemWidget(ldList_t* ptWidget,uint8_t itemNum,ldBase_t* childWidget);
 int8_t ldListGetSelectItem(ldList_t* ptWidget);

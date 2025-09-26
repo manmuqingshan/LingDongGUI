@@ -69,6 +69,9 @@ void ldAnimation_show(ld_scene_t *pScene, ldAnimation_t *ptWidget, const arm_2d_
 #define ldAnimationSetHidden                ldBaseSetHidden
 #define ldAnimationMove                     ldBaseMove
 #define ldAnimationSetOpacity               ldBaseSetOpacity
+#define ldAnimationSetSelectable            ldBaseSetSelectable
+#define ldAnimationSetSelect                ldBaseSetSelect
+#define ldAnimationSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

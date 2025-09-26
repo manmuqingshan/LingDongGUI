@@ -99,7 +99,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
 
     obj=ldLabelInit(4,0,100,50, 100,50,FONT_ARIAL_12);
     ldLabelSetText(obj,(uint8_t*)"123");
-    ldLabelSetBgColor(obj,GLCD_COLOR_LIGHT_GREY);
+    ldLabelSetBackgroundColor(obj,GLCD_COLOR_LIGHT_GREY);
     ldLabelSetAlign(obj,ARM_2D_ALIGN_BOTTOM_LEFT);
     ldLabelSetSelectable(obj,true);
     ldLabelSetCorner(obj,true);
@@ -126,7 +126,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
     ldProgressBarSetSelectable(obj,true);
 
     obj=ldTextInit(9,0,300,10,150,200,FONT_ARIAL_12,TEXT_BOX_LINE_ALIGN_LEFT,true);
-    ldTextSetBgImage(obj,IMAGE_LETTER_PAPER_BMP,NULL);
+    ldTextSetBackgroundImage(obj,IMAGE_LETTER_PAPER_BMP,NULL);
     ldTextSetText(obj,"123\n12333");
     ldTextSetSelectable(obj,true);
     ldTextSetCorner(obj,true);
@@ -170,7 +170,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
 
     obj=ldScrollSelecterInit(16,0,700,200,30,50,FONT_ARIAL_12);
     ldScrollSelecterSetItems(obj,pStrGroup,5);
-    ldScrollSelecterSetBgColor(obj,GLCD_COLOR_WHITE);
+    ldScrollSelecterSetBackgroundColor(obj,GLCD_COLOR_WHITE);
     ldScrollSelecterSetSelectable(obj,true);
     ldScrollSelecterSetCorner(obj,true);
 
@@ -238,8 +238,8 @@ void uiWidgetInit(ld_scene_t* ptScene)
     ldKeyboardInit(ID_KB,0,FONT_ARIAL_12);
 
     obj=ldArcInit(25,0,450,450,101,101,IMAGE_ARC_QUARTER_PNG_Mask,IMAGE_ARC_QUARTER_MASK_PNG_Mask,__RGB(240,240,240));
-    ldArcSetBgAngle(obj,0,350);
-    ldArcSetFgAngle(obj,30);
+    ldArcSetBackgroundAngle(obj,0,350);
+    ldArcSetForegroundAngle(obj,30);
     ldArcSetColor(obj,__RGB(173, 216, 230),__RGB(144, 238, 144));
 
     list=ldListInit(26,0,850,280,100,100);

@@ -828,7 +828,7 @@ void ldTableSetItemColor(ldTable_t *ptWidget,uint8_t row,uint8_t column,ldColor 
     }
 }
 
-void ldTableSetBgColor(ldTable_t *ptWidget,ldColor bgColor)
+void ldTableSetBackgroundColor(ldTable_t *ptWidget,ldColor bgColor)
 {
     if (ptWidget == NULL)
     {
@@ -934,7 +934,7 @@ void ldTableSetExcelType(ldTable_t *ptWidget,arm_2d_font_t* ptFont)
 
     ldTableSetEditable(ptWidget,0,0,false,0);
 
-    ldTableSetBgColor(ptWidget,__RGB(219,219,219));
+    ldTableSetBackgroundColor(ptWidget,__RGB(219,219,219));
     strBuf[0]='1';
     for(uint8_t i=0;i<ptWidget->rowCount;i++)
     {

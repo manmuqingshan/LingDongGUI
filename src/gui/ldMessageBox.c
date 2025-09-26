@@ -482,7 +482,7 @@ void ldMessageBoxSetButtonColor(ldMessageBox_t* ptWidget, ldColor releaseColor, 
     ptWidget->pressColor=pressColor;
 }
 
-void ldMessageBoxSetBgColor(ldMessageBox_t* ptWidget, ldColor bgColor)
+void ldMessageBoxSetBackgroundColor(ldMessageBox_t* ptWidget, ldColor bgColor)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)

@@ -274,7 +274,7 @@ void ldDateTimeSetAlign(ldDateTime_t *ptWidget,arm_2d_align_t tAlign)
     ptWidget->tAlign=tAlign;
 }
 
-void ldDateTimeSetBgColor(ldDateTime_t *ptWidget, ldColor bgColor)
+void ldDateTimeSetBackgroundColor(ldDateTime_t *ptWidget, ldColor bgColor)
 {
     if(ptWidget==NULL)
     {

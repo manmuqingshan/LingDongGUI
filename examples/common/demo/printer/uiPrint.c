@@ -65,7 +65,7 @@ void uiPrintInit(ld_scene_t* ptScene)
     ldListSetItemHeight(obj,40);
     ldListSetAlign(obj,ARM_2D_ALIGN_LEFT);
     ((ldList_t*)obj)->padding.left=20;
-    ldListSetBgColor(obj,GLCD_COLOR_BLACK);
+    ldListSetBackgroundColor(obj,GLCD_COLOR_BLACK);
     ldListSetTextColor(obj,GLCD_COLOR_WHITE);
     ldListSetSelectColor(obj,__RGB(0xF4,0xA4,0x60));
     ldListSetSelectItem(obj,gPrintImgNum);

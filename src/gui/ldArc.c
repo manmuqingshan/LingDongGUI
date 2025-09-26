@@ -459,13 +459,13 @@ void ldArc_show(ld_scene_t *ptScene, ldArc_t *ptWidget, const arm_2d_tile_t *ptT
 
             _ldArcDrawQuarter(&tTarget,tTarget_canvas,ptWidget->ptImgTile,quarterDrawFlag[1],ptWidget->color[1],ptWidget->use_as__ldBase_t.opacity);
 
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
-void ldArcSetBgAngle(ldArc_t *ptWidget,float bgStart,float bgEnd)
+void ldArcSetBackgroundAngle(ldArc_t *ptWidget,float bgStart,float bgEnd)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -479,7 +479,7 @@ void ldArcSetBgAngle(ldArc_t *ptWidget,float bgStart,float bgEnd)
     ptWidget->startAngle_x10[1]=ptWidget->startAngle_x10[0];
 }
 
-void ldArcSetFgAngle(ldArc_t *ptWidget,float fgEnd)
+void ldArcSetForegroundAngle(ldArc_t *ptWidget,float fgEnd)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)

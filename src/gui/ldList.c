@@ -414,18 +414,7 @@ void ldListSetAlign(ldList_t *ptWidget,arm_2d_align_t tAlign)
     ptWidget->tAlign=tAlign;
 }
 
-//void ldListSetBgImage(ldList_t *ptWidget, arm_2d_tile_t *ptImgTile)
-//{
-//    if(ptWidget==NULL)
-//    {
-//        return;
-//    }
-//    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
-//    ptWidget->ptImgTile=ptImgTile;
-//    ptWidget->isTransparent=false;
-//}
-
-void ldListSetBgColor(ldList_t *ptWidget, ldColor bgColor)
+void ldListSetBackgroundColor(ldList_t *ptWidget, ldColor bgColor)
 {
     assert(NULL != ptWidget);
     if(ptWidget==NULL)
@@ -435,7 +424,6 @@ void ldListSetBgColor(ldList_t *ptWidget, ldColor bgColor)
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->bgColor=bgColor;
     ptWidget->isTransparent=false;
-//    ptWidget->ptImgTile=NULL;
 }
 
 void ldListSetSelectColor(ldList_t* ptWidget,ldColor selectColor)
