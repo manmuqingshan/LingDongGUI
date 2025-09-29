@@ -310,6 +310,7 @@ void ldGuiFrameComplete(ld_scene_t *ptScene)
     {
         isGuiSwthcnScene=false;
         arm_2d_scene_player_switch_to_next_scene(ptScene->use_as__arm_2d_scene_t.ptPlayer);
+        prevWidget=NULL;
     }
 #elif USE_SCENE_SWITCHING == 1
     if(ptSysGuiFuncGroup[0]!=ptSysGuiFuncGroup[1])
@@ -319,6 +320,7 @@ void ldGuiFrameComplete(ld_scene_t *ptScene)
         ptScene->ldGuiFuncGroup=ptSysGuiFuncGroup[0];
         arm_2d_scene_player_update_scene_background(ptScene->use_as__arm_2d_scene_t.ptPlayer);
         ldGuiSceneInit(ptScene);
+        prevWidget=NULL;
     }
 #else
     if(ptSysGuiFuncGroup[0]!=ptSysGuiFuncGroup[1])
@@ -327,6 +329,7 @@ void ldGuiFrameComplete(ld_scene_t *ptScene)
         ptSysGuiFuncGroup[1]=ptSysGuiFuncGroup[0];
         arm_2d_scene_player_update_scene_background(ptScene->use_as__arm_2d_scene_t.ptPlayer);
         ldGuiSceneInit(ptScene);
+        prevWidget=NULL;
     }
 #endif
 }
