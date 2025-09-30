@@ -382,7 +382,7 @@ void ldProgressBar_show(ld_scene_t *ptScene, ldProgressBar_t *ptWidget, const ar
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }

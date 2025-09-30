@@ -124,6 +124,7 @@ extern "C" {
 //     <1=> Startup
 //     <2=> Show all widget
 //     <3=> Printer
+//     <4=> Serial Tool
 #define USE_DEMO                                  (0)
 #endif
 
@@ -194,6 +195,21 @@ extern "C" {
 #define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
 #define LD_DEMO_GUI_INCLUDE                       "uiLogo.h"
 #define LD_DEMO_GUI_FUNC                          uiLogoFunc
+#endif
+
+#if USE_DEMO == 4
+#undef LD_CFG_COLOR_DEPTH
+#define LD_CFG_COLOR_DEPTH                        (16)
+#undef LD_CFG_SCEEN_WIDTH
+#define LD_CFG_SCEEN_WIDTH                        (480)
+#undef LD_CFG_SCEEN_HEIGHT
+#define LD_CFG_SCEEN_HEIGHT                       (320)
+#undef LD_CFG_PFB_WIDTH
+#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH)
+#undef LD_CFG_PFB_HEIGHT
+#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
+#define LD_DEMO_GUI_INCLUDE                       "home.h"
+#define LD_DEMO_GUI_FUNC                          homeFunc
 #endif
 
 // <<< end of configuration section >>>

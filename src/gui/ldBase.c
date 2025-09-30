@@ -366,6 +366,24 @@ void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
 #endif
 }
 
+bool ldBaseIsHidden(ldBase_t* ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return false;
+    }
+
+    for(ldBase_t *ptNode=ptWidget;ptNode!=NULL;ptNode=(ldBase_t*)ptNode->use_as__arm_2d_control_node_t.ptParent)
+    {
+        if(ptNode->isHidden)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 void ldBaseMove(ldBase_t* ptWidget,int16_t x,int16_t y)
 {
     assert(NULL != ptWidget);

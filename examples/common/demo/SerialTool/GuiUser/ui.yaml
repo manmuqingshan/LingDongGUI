@@ -1,0 +1,5 @@
+- size:
+    width: 480
+    height: 320
+- ui:
+    - path: E:/temp/LingDongGUI/examples/common/demo/SerialTool/home.ui
