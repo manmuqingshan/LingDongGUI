@@ -51,9 +51,6 @@ typedef struct ldDateTime_t ldDateTime_t;
 struct ldDateTime_t
 {
     implement(ldBase_t);
-//ARM_PRIVATE(
-//    ld_scene_t *ptScene;
-//)
     arm_2d_align_t tAlign;
     uint8_t month;
     uint8_t day;
@@ -61,7 +58,7 @@ struct ldDateTime_t
     uint8_t minute;
     uint8_t second;
     uint16_t year;
-    const uint8_t *pFormatStr;
+    uint8_t formatStr[DATE_TIME_BUFFER_SIZE];
     uint8_t formatStrTemp[DATE_TIME_BUFFER_SIZE];
     ldColor bgColor;
     ldColor textColor;
