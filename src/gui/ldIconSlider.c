@@ -410,6 +410,9 @@ void ldIconSlider_depose(ld_scene_t *ptScene, ldIconSlider_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptFont);
+#endif
     ldFree(ptWidget->ptIconInfoList);
     ldFree(ptWidget);
 }

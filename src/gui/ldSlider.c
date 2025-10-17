@@ -160,7 +160,12 @@ void ldSlider_depose(ld_scene_t *ptScene, ldSlider_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptBgImgTile);
+    ldFree(ptWidget->ptBgMaskTile);
+    ldFree(ptWidget->ptIndicImgTile);
+    ldFree(ptWidget->ptIndicMaskTile);
+#endif
     ldFree(ptWidget);
 }
 

@@ -114,7 +114,7 @@ void ldQRCode_depose(ld_scene_t *ptScene, ldQRCode_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+    ldFree(ptWidget->pStr);
     ldFree(ptWidget);
 }
 

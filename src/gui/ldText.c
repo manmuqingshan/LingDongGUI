@@ -214,6 +214,11 @@ void ldText_depose(ld_scene_t *ptScene, ldText_t *ptWidget)
     {
         ldFree(ptWidget->pStr);
     }
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptImgTile);
+    ldFree(ptWidget->ptMaskTile);
+    ldFree(ptWidget->ptFont);
+#endif
     ldFree(ptWidget);
 }
 

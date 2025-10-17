@@ -235,9 +235,17 @@ void ldRadialMenu_depose(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
+#if USE_VIRTUAL_RESOURCE == 1
+    for(uint8_t i=0;i<ptWidget->use_as__ldBase_t.itemCount;i++)
+    {
+        ldFree(ptWidget->ptItemInfoList[i].ptImgTile);
+        ldFree(ptWidget->ptItemInfoList[i].ptMaskTile);
+    }
+#endif
     ldFree(ptWidget->ptItemInfoList);
     ldFree(ptWidget->use_as__ldBase_t.ptItemRegionList);
     ldFree(ptWidget->pShowList);
+
     ldFree(ptWidget);
 }
 

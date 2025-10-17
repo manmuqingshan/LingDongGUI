@@ -119,6 +119,12 @@ void ldGauge_depose(ld_scene_t *pScene, ldGauge_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptBgImgTile);
+    ldFree(ptWidget->ptBgMaskTile);
+    ldFree(ptWidget->ptPointerImgTile);
+    ldFree(ptWidget->ptPointerMaskTile);
+#endif
     ldFree(ptWidget->use_as__ldBase_t.ptItemRegionList);
     ldFree(ptWidget);
 }

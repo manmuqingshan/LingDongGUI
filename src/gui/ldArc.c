@@ -118,7 +118,10 @@ void ldArc_depose(ld_scene_t *ptScene, ldArc_t *ptWidget)
     ldMsgDelConnect(ptWidget);
 
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptImgTile);
+    ldFree(ptWidget->ptMaskTile);
+#endif
     ldFree(ptWidget);
 }
 

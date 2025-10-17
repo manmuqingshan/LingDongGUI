@@ -108,7 +108,14 @@ void ldProgressBar_depose(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptBgImgTile);
+    ldFree(ptWidget->ptBgMaskTile);
+    ldFree(ptWidget->ptFgImgTile);
+    ldFree(ptWidget->ptFgMaskTile);
+    ldFree(ptWidget->ptFrameImgTile);
+    ldFree(ptWidget->ptFrameMaskTile);
+#endif
     ldFree(ptWidget);
 }
 
