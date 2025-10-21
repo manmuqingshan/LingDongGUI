@@ -115,6 +115,16 @@ __WEAK void *ldRealloc(void *ptr, uint32_t newSize)
     return p;
 }
 
+__WEAK size_t ldGetFreeMemory(void)
+{
+#if LD_MEM_MODE == MEM_MODE_FREERTOS_HEAP4
+    extern size_t xPortGetFreeHeapSize( void );
+    return xPortGetFreeHeapSize();
+#else
+    return 0;
+#endif
+}
+
 bool __ldTimeOut(uint16_t ms, bool isReset, ldTimer_t *pTimer)
 {
     int64_t lPeriod;

@@ -64,6 +64,7 @@ struct ldProgressBar_t
     uint8_t frameColorSize;
     int64_t timer;
     bool isHorizontal:1;
+    bool isInverted:1;
 };
 
 #define PROGRESS_BAR_SPEED              10
@@ -81,6 +82,7 @@ void ldProgressBarSetFrameImage(ldProgressBar_t *ptWidget, arm_2d_tile_t *ptFram
 void ldProgressBarSetColor(ldProgressBar_t *ptWidget, ldColor bgColor, ldColor fgColor);
 void ldProgressBarSetFrameColor(ldProgressBar_t *ptWidget, ldColor frameColor, uint8_t frameColorSize);
 void ldProgressBarSetHorizontal(ldProgressBar_t *ptWidget,bool isHorizontal);
+void ldProgressBarSetInverted(ldProgressBar_t *ptWidget,bool isInverted);
 
 #define ldProgressBarInit(nameId,parentNameId,x,y,width,height) \
         ldProgressBar_init(ptScene,NULL,nameId,parentNameId,x,y,width,height)

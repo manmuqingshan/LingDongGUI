@@ -87,6 +87,7 @@ ldProgressBar_t* ldProgressBar_init( ld_scene_t *ptScene,ldProgressBar_t *ptWidg
     ptWidget->frameColorSize=0;
     ptWidget->isHorizontal=true;
     ptWidget->timer=0;
+    ptWidget->isInverted=false;
 
     LOG_INFO("[init][progressBar] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
@@ -122,13 +123,13 @@ void ldProgressBar_depose(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
 void ldProgressBar_on_load(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
 {
     assert(NULL != ptWidget);
-    
+
 }
 
 void ldProgressBar_on_frame_start(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
 {
     assert(NULL != ptWidget);
-    
+
 }
 
 void ldProgressBar_on_frame_complete(ld_scene_t *ptScene, ldProgressBar_t *ptWidget)
@@ -169,13 +170,31 @@ static void _progressBarColorShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
 
         if(ptWidget->isHorizontal)
         {
-            tBarRegion.tSize.iWidth = tBarRegion.tSize.iWidth * ptWidget->permille / 1000;
+            if (ptWidget->isInverted)
+            {
+                // right -> left
+                tBarRegion.tSize.iWidth = tBarRegion.tSize.iWidth * ptWidget->permille / 1000;
+                tBarRegion.tLocation.iX = ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth - tBarRegion.tSize.iWidth;
+            }
+            else
+            {
+                // left -> right
+                tBarRegion.tSize.iWidth = tBarRegion.tSize.iWidth * ptWidget->permille / 1000;
+            }
         }
         else
         {
-            int16_t temp=tBarRegion.tSize.iHeight*(1000 - ptWidget->permille) / 1000;;
-            tBarRegion.tLocation.iY += temp;
-            tBarRegion.tSize.iHeight -= temp;
+            if (ptWidget->isInverted)
+            {
+                // top -> bottom
+                tBarRegion.tSize.iHeight = tBarRegion.tSize.iHeight * ptWidget->permille / 1000;
+            }
+            else
+            {
+                // bottom -> top
+                tBarRegion.tSize.iHeight = tBarRegion.tSize.iHeight * ptWidget->permille / 1000;
+                tBarRegion.tLocation.iY = ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight - tBarRegion.tSize.iHeight;
+            }
         }
 
 
@@ -227,86 +246,174 @@ static void _progressBarImageShow(ldProgressBar_t *ptWidget,arm_2d_tile_t *ptTar
         .tSize = ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize,
     };
 
-    // bg image
-    if(ptWidget->isHorizontal)
-    {
-        do{
-            arm_2d_region_t tInnerRegion = {
-                .tSize = {
-                    .iWidth = tBarRegion.tSize.iWidth + ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth,
-                    .iHeight = tBarRegion.tSize.iHeight,
-                },
-                .tLocation = {
-                    .iX = -ptWidget->ptBgImgTile->tRegion.tSize.iWidth + ptWidget->bgOffset,
-                },
-            };
-            arm_2d_tile_t tileInnerSlot;
-            arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-            ldBaseImage(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
-        }while(0);
-    }
-    else
-    {
-        do{
-            arm_2d_region_t tInnerRegion = {
-                .tSize = {
-                    .iWidth = tBarRegion.tSize.iWidth,
-                    .iHeight = tBarRegion.tSize.iHeight + ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight,
-                },
-                .tLocation = {
-                    .iY = -ptWidget->ptBgImgTile->tRegion.tSize.iHeight - ptWidget->bgOffset,
-                },
-            };
-            arm_2d_tile_t tileInnerSlot;
-            arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-            ldBaseImage(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
-        }while(0);
-    }
-
-
-    if (ptWidget->permille > 0)
-    {
-        // fg image
-        if(ptWidget->isHorizontal)
+    do {
+        if((ptWidget->ptBgImgTile->tRegion.tSize.iWidth==ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth)&&
+           (ptWidget->ptBgImgTile->tRegion.tSize.iHeight==ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight))
         {
-            do{
-                arm_2d_region_t tInnerRegion = {
-                    .tSize = {
-                        .iWidth = tBarRegion.tSize.iWidth + ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth,
-                        .iHeight = tBarRegion.tSize.iHeight,
-                    },
-                    .tLocation = {
-                        .iX = -ptWidget->ptFgImgTile->tRegion.tSize.iWidth + ptWidget->fgOffset,
-                    },
-                };
-                tBarRegion.tSize.iWidth = tBarRegion.tSize.iWidth * ptWidget->permille / 1000;
-
-                arm_2d_tile_t tileInnerSlot;
-                arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
-                ldBaseImage(&tileInnerSlot,&tInnerRegion,ptWidget->ptFgImgTile,ptWidget->ptFgMaskTile,ptWidget->fgColor,ptWidget->use_as__ldBase_t.opacity);
-            }while(0);
+            if(ptWidget->use_as__ldBase_t.isCorner)
+            {
+                draw_round_corner_image(ptWidget->ptBgImgTile,
+                                        ptTarget,
+                                        NULL,
+                                        bIsNewFrame,
+                                        ptWidget->use_as__ldBase_t.opacity);
+            }
+            else
+            {
+                ldBaseImage(ptTarget,
+                            NULL,
+                            ptWidget->ptBgImgTile,
+                            ptWidget->ptBgMaskTile,
+                            ptWidget->bgColor,
+                            ptWidget->use_as__ldBase_t.opacity);
+            }
         }
         else
         {
-            do{
-                arm_2d_region_t tInnerRegion = {
-                    .tSize = {
-                        .iWidth = tBarRegion.tSize.iWidth,
-                        .iHeight = tBarRegion.tSize.iHeight + ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight,
-                    },
-                    .tLocation = {
-                        .iY = -ptWidget->ptFgImgTile->tRegion.tSize.iHeight - ptWidget->fgOffset,
-                    },
-                };
-                int16_t temp=tBarRegion.tSize.iHeight*(1000 - ptWidget->permille) / 1000;;
-                tBarRegion.tLocation.iY += temp;
-                tBarRegion.tSize.iHeight -= temp;
+            arm_2d_region_t tInnerRegion = {0};
+            arm_2d_tile_t tileInnerSlot;
 
+            if(ptWidget->isHorizontal)
+            {
+                tInnerRegion.tSize.iWidth = tBarRegion.tSize.iWidth + ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth;
+                tInnerRegion.tSize.iHeight = tBarRegion.tSize.iHeight;
+                tInnerRegion.tLocation.iX = -ptWidget->ptBgImgTile->tRegion.tSize.iWidth + ptWidget->bgOffset;
+            }
+            else
+            {
+                tInnerRegion.tSize.iWidth = tBarRegion.tSize.iWidth;
+                tInnerRegion.tSize.iHeight = tBarRegion.tSize.iHeight + ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight;
+                tInnerRegion.tLocation.iY = -ptWidget->ptBgImgTile->tRegion.tSize.iHeight - ptWidget->bgOffset;
+            }
+
+            arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
+            ldBaseImage(&tileInnerSlot,&tInnerRegion,ptWidget->ptBgImgTile,ptWidget->ptBgMaskTile,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
+        }
+    } while(0);
+
+    if (ptWidget->permille > 0)
+    {
+        do {
+            if((ptWidget->ptFgImgTile->tRegion.tSize.iWidth==ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth)&&
+               (ptWidget->ptFgImgTile->tRegion.tSize.iHeight==ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight))
+            {
+                arm_2d_tile_t fgImg,fgMask,*pFgMask=NULL;
+                arm_2d_region_t cutRegion = {0};
+
+                if(ptWidget->isHorizontal)
+                {
+                    cutRegion.tSize = ptWidget->ptFgImgTile->tRegion.tSize;
+                    if (ptWidget->isInverted)
+                    {
+                        // right -> left
+                        cutRegion.tSize.iWidth = tBarRegion.tSize.iWidth * ptWidget->permille / 1000;
+                        tBarRegion.tLocation.iX = ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth - cutRegion.tSize.iWidth;
+                        tBarRegion.tSize.iWidth = cutRegion.tSize.iWidth;
+                    }
+                    else
+                    {
+                        // left -> right
+                        tBarRegion.tSize.iWidth = tBarRegion.tSize.iWidth * ptWidget->permille / 1000;
+                        cutRegion.tLocation.iX = ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth - tBarRegion.tSize.iWidth;
+                    }
+
+                    arm_2d_tile_generate_child(ptWidget->ptFgImgTile,&cutRegion,&fgImg,false);
+                    if(ptWidget->ptFgMaskTile!=NULL)
+                    {
+                        arm_2d_tile_generate_child(ptWidget->ptFgMaskTile,&cutRegion,&fgMask,false);
+                        pFgMask=&fgMask;
+                    }
+                }
+                else
+                {
+                    cutRegion.tSize = ptWidget->ptFgImgTile->tRegion.tSize;
+                    if (ptWidget->isInverted)
+                    {
+                        // top -> bottom
+                        tBarRegion.tSize.iHeight = tBarRegion.tSize.iHeight * ptWidget->permille / 1000;
+                        cutRegion.tLocation.iY = ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight - tBarRegion.tSize.iHeight;
+
+                    }
+                    else
+                    {
+                        // bottom -> top
+                        cutRegion.tSize.iHeight = tBarRegion.tSize.iHeight * ptWidget->permille / 1000;
+                        tBarRegion.tLocation.iY = ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight - cutRegion.tSize.iHeight;
+                        tBarRegion.tSize.iHeight = cutRegion.tSize.iHeight;
+                    }
+
+                    arm_2d_tile_generate_child(ptWidget->ptFgImgTile,&cutRegion,&fgImg,false);
+                    if(ptWidget->ptFgMaskTile!=NULL)
+                    {
+                        arm_2d_tile_generate_child(ptWidget->ptFgMaskTile,&cutRegion,&fgMask,false);
+                        pFgMask=&fgMask;
+                    }
+                }
+
+                if(ptWidget->use_as__ldBase_t.isCorner)
+                {
+                    draw_round_corner_image(&fgImg,
+                                            ptTarget,
+                                            &tBarRegion,
+                                            bIsNewFrame,
+                                            ptWidget->use_as__ldBase_t.opacity);
+                }
+                else
+                {
+                    ldBaseImage(ptTarget,
+                                &tBarRegion,
+                                &fgImg,
+                                pFgMask,
+                                ptWidget->bgColor,
+                                ptWidget->use_as__ldBase_t.opacity);
+                }
+            }
+            else
+            {
                 arm_2d_tile_t tileInnerSlot;
+                arm_2d_region_t tInnerRegion = {0};
+
+                if(ptWidget->isHorizontal)
+                {
+                    tInnerRegion.tSize.iWidth = tBarRegion.tSize.iWidth + ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth;
+                    tInnerRegion.tSize.iHeight = tBarRegion.tSize.iHeight;
+                    if (ptWidget->isInverted)
+                    {
+                        // right -> left
+                        tInnerRegion.tLocation.iX = -ptWidget->ptFgImgTile->tRegion.tSize.iWidth - ptWidget->fgOffset;
+                        tBarRegion.tSize.iWidth = tBarRegion.tSize.iWidth * ptWidget->permille / 1000;
+                        tBarRegion.tLocation.iX = ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth - tBarRegion.tSize.iWidth;
+                    }
+                    else
+                    {
+                        // left -> right
+                        tInnerRegion.tLocation.iX = -ptWidget->ptFgImgTile->tRegion.tSize.iWidth + ptWidget->fgOffset;
+                        tBarRegion.tSize.iWidth = tBarRegion.tSize.iWidth * ptWidget->permille / 1000;
+                    }
+                }
+                else
+                {
+                    tInnerRegion.tSize.iWidth = tBarRegion.tSize.iWidth;
+                    tInnerRegion.tSize.iHeight = tBarRegion.tSize.iHeight + ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight;
+                    if (ptWidget->isInverted)
+                    {
+                        // top -> bottom
+                        tInnerRegion.tLocation.iY = -ptWidget->ptFgImgTile->tRegion.tSize.iHeight + ptWidget->fgOffset;
+                        tBarRegion.tSize.iHeight = tBarRegion.tSize.iHeight * ptWidget->permille / 1000;
+                    }
+                    else
+                    {
+                        // bottom -> top
+                        tInnerRegion.tLocation.iY = -ptWidget->ptFgImgTile->tRegion.tSize.iHeight - ptWidget->fgOffset;
+                        tBarRegion.tSize.iHeight = tBarRegion.tSize.iHeight*ptWidget->permille / 1000;
+                        tBarRegion.tLocation.iY = ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight - tBarRegion.tSize.iHeight;
+                    }
+                }
+
                 arm_2d_tile_generate_child(ptTarget, &tBarRegion, &tileInnerSlot, false);
                 ldBaseImage(&tileInnerSlot,&tInnerRegion,ptWidget->ptFgImgTile,ptWidget->ptFgMaskTile,ptWidget->fgColor,ptWidget->use_as__ldBase_t.opacity);
-            }while(0);
-        }
+            }
+        } while(0);
     }
 
     if(ptWidget->ptFrameImgTile!=NULL)
@@ -378,7 +485,7 @@ void ldProgressBar_show(ld_scene_t *ptScene, ldProgressBar_t *ptWidget, const ar
 
 #if 0
     if (bIsNewFrame) {
-        
+
     }
 #endif
 
@@ -496,6 +603,16 @@ void ldProgressBarSetHorizontal(ldProgressBar_t *ptWidget,bool isHorizontal)
         return;
     }
     ptWidget->isHorizontal=isHorizontal;
+}
+
+void ldProgressBarSetInverted(ldProgressBar_t *ptWidget,bool isInverted)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->isInverted=isInverted;
 }
 
 #if defined(__clang__)

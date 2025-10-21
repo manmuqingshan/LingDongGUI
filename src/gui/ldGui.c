@@ -213,6 +213,7 @@ void ldGuiSceneInit(ld_scene_t *ptScene)
 #endif
     ldBaseFocusNavigateInit();
     LOG_INFO("[sys] page %s init",ptScene->ldGuiFuncGroup->pageName);
+    LOG_DEBUG("[sys] after init free memory:%zu",ldGetFreeMemory());
 }
 
 void ldGuiUpdateScene(void)
@@ -290,6 +291,7 @@ void ldGuiDespose(ld_scene_t *ptScene)
     }
 
     LOG_INFO("[sys] page %s quit",ptScene->ldGuiFuncGroup->pageName);
+    LOG_DEBUG("[sys] after despose free memory:%zu",ldGetFreeMemory());
 }
 
 void ldGuiFrameComplete(ld_scene_t *ptScene)
@@ -383,6 +385,7 @@ void before_scene_switching_handler(void *pTarget,arm_2d_scene_player_t *ptPlaye
 
 void ldGuiInit(ldPageFuncGroup_t *ptFuncGroup)
 {
+    LOG_DEBUG("[sys] free memory:%zu",ldGetFreeMemory());
     if(ptFuncGroup==NULL)
     {
         return;
@@ -397,4 +400,5 @@ void ldGuiInit(ldPageFuncGroup_t *ptFuncGroup)
 #elif USE_SCENE_SWITCHING == 1 || USE_SCENE_SWITCHING == 0
     __arm_2d_scene0_init(&DISP0_ADAPTER,NULL,ptSysGuiFuncGroup[0]);
 #endif
+
 }
