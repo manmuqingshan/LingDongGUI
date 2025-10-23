@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -201,6 +201,7 @@ ldComboBox_t* ldComboBox_init(ld_scene_t *ptScene,ldComboBox_t *ptWidget, uint16
     ptWidget->bgColor=GLCD_COLOR_WHITE;
     ptWidget->frameColor=GLCD_COLOR_LIGHT_GREY;
     ptWidget->selectColor=__RGB( 0x7F, 0xB0, 0xEF );
+    ptWidget->isStatic=true;
 
     ldMsgConnect(ptWidget,SIGNAL_PRESS,slotComboBoxProcess);
     ldMsgConnect(ptWidget,SIGNAL_RELEASE,slotComboBoxProcess);
@@ -224,6 +225,14 @@ void ldComboBox_depose(ld_scene_t *ptScene, ldComboBox_t *ptWidget)
 
     LOG_INFO("[depose][comboBox] id:%d", ptWidget->use_as__ldBase_t.nameId);
 
+    if(ptWidget->isStatic==false)
+    {
+        for (uint8_t i = 0; i < ptWidget->itemCount; ++i)
+        {
+            ldFree(ptWidget->ppItemStrGroup[i]);
+        }
+        ldFree(ptWidget->ppItemStrGroup);
+    }
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
 #if USE_VIRTUAL_RESOURCE == 1
@@ -419,15 +428,55 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
     arm_2d_op_wait_async(NULL);
 }
 
-void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize)
+void ldComboBoxSetStaticItems(ldComboBox_t* ptWidget,uint8_t *pStrArray[],uint8_t arraySize)
 {
+    assert(NULL != ptWidget);
     if(ptWidget==NULL)
+    {
+        return;
+    }
+    if(ptWidget->isStatic==false)//只要使用了动态就不能再使用静态
     {
         return;
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ppItemStrGroup=pStrArray;
     ptWidget->itemCount=arraySize;
+}
+
+void ldComboBoxSetItemMax(ldComboBox_t *ptWidget, uint8_t itemMax)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    if (ptWidget->isStatic == false)
+    {
+        return;
+    }
+    ptWidget->ppItemStrGroup = malloc(sizeof(uint8_t*) * itemMax);
+    ptWidget->itemMax         = itemMax;
+    ptWidget->itemCount      = 0;
+}
+
+void ldComboBoxAddItem(ldComboBox_t* ptWidget,uint8_t *pStr)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    if(ptWidget->itemMax==ptWidget->itemCount)
+    {
+        return;
+    }
+    ptWidget->isStatic=false;
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+
+    uint8_t *dup = ldMalloc(strlen((char*)pStr) + 1);
+    strcpy((char*)dup, (char*)pStr);
+    ptWidget->ppItemStrGroup[ptWidget->itemCount++] = dup;
 }
 
 void ldComboBoxSetTextColor(ldComboBox_t* ptWidget, ldColor textColor)

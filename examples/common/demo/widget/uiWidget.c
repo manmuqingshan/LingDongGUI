@@ -182,7 +182,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
 
     obj=ldComboBoxInit(18,0,700,420,100,30,FONT_ARIAL_12);
 
-    ldComboBoxSetItems(obj,pComboBoxStrGroup,3);
+    ldComboBoxSetStaticItems(obj,pComboBoxStrGroup,3);
     ldComboBoxSetSelectable(obj,true);
 
     obj=ldGraphInit(19,0,830,10,100,100,2);
