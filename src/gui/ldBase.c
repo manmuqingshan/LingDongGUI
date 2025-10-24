@@ -418,6 +418,7 @@ void ldBaseMove(ldBase_t* ptWidget,int16_t x,int16_t y)
 
 void ldBaseSetOpacity(ldBase_t *ptWidget, uint8_t opacity)
 {
+    assert(NULL != ptWidget);
     if (ptWidget == NULL)
     {
         return;
@@ -426,6 +427,67 @@ void ldBaseSetOpacity(ldBase_t *ptWidget, uint8_t opacity)
     ptWidget->isDirtyRegionUpdate = true;
     ptWidget->opacity=opacity;
 }
+
+ldWidgetType_t ldBaseGetWidgetType(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->widgetType;
+}
+
+uint16_t ldBaseGetNameId(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->nameId;
+}
+
+uint16_t ldBaseGetOpacity(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->opacity;
+}
+
+bool ldBaseIsSelected(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->isSelected;
+}
+
+bool ldBaseIsSelectable(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->isSelectable;
+}
+
+bool ldBaseIsCorner(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->isCorner;
+}
+
 
 arm_2d_location_t ldBaseGetRelativeLocation(ldBase_t *ptWidget,arm_2d_location_t tLocation)
 {

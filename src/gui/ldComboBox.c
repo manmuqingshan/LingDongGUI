@@ -551,6 +551,30 @@ void ldComboBoxSetDropdownImage(ldComboBox_t* ptWidget,arm_2d_tile_t* ptDropdown
     ptWidget->ptDropdownMaskTile=ptDropdownMaskTile;
 }
 
+uint8_t ldComboBoxGetSelectItem(ldComboBox_t* ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->itemSelect;
+}
+
+uint8_t* ldComboBoxGetText(ldComboBox_t* ptWidget, uint8_t num)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return 0;
+    }
+    if(num<ptWidget->itemCount)
+    {
+        return ptWidget->ppItemStrGroup[num];
+    }
+    return NULL;
+}
+
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif

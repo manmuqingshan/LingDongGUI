@@ -586,6 +586,26 @@ void ldCheckBoxSetStringLeftSpace(ldCheckBox_t* ptWidget,uint16_t space)
     ptWidget->boxWidth=space;
 }
 
+uint8_t* ldCheckBoxGetText(ldCheckBox_t* ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return NULL;
+    }
+    return ptWidget->pStr;
+}
+
+bool ldCheckBoxIsChecked(ldCheckBox_t* ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return NULL;
+    }
+    return ptWidget->isChecked;
+}
+
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif

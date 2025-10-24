@@ -78,6 +78,8 @@ ldCheckBox_t* ldCheckBoxGetRadioSelected(ld_scene_t *ptScene, uint8_t groupNum);
 void ldCheckBoxSetTextColor(ldCheckBox_t* ptWidget,ldColor textColor);
 void ldCheckBoxSetChecked(ldCheckBox_t* ptWidget,bool isChecked);
 void ldCheckBoxSetStringLeftSpace(ldCheckBox_t* ptWidget,uint16_t space);//only for image mode
+uint8_t* ldCheckBoxGetText(ldCheckBox_t* ptWidget);
+bool ldCheckBoxIsChecked(ldCheckBox_t* ptWidget);
 
 #define ldCheckBoxInit(nameId,parentNameId,x,y,width,height) \
         ldCheckBox_init(ptScene,NULL,nameId,parentNameId,x,y,width,height)

@@ -344,6 +344,7 @@ void ldLineEditSetType(ldLineEdit_t* ptWidget,ldEditType_t editType)
 
 void ldLineEditSetAlign(ldLineEdit_t *ptWidget,arm_2d_align_t tAlign)
 {
+    assert(NULL != ptWidget);
     if(ptWidget==NULL)
     {
         return;
@@ -354,6 +355,7 @@ void ldLineEditSetAlign(ldLineEdit_t *ptWidget,arm_2d_align_t tAlign)
 
 void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backgroundColor, ldColor frameColor)
 {
+    assert(NULL != ptWidget);
     if(ptWidget==NULL)
     {
         return;
@@ -362,6 +364,16 @@ void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backg
     ptWidget->textColor=textColor;
     ptWidget->backgroundColor=backgroundColor;
     ptWidget->frameColor=frameColor;
+}
+
+uint8_t *ldLineEditGetText(ldLineEdit_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return NULL;
+    }
+    return ptWidget->pText;
 }
 
 #if defined(__clang__)

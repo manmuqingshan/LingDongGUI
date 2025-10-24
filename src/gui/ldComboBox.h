@@ -85,6 +85,8 @@ void ldComboBoxSetStaticItems(ldComboBox_t* ptWidget, uint8_t *pStrArray[], uint
 void ldComboBoxSetItemMax(ldComboBox_t *ptWidget, uint8_t itemMax);
 void ldComboBoxAddItem(ldComboBox_t* ptWidget,uint8_t *pStr);
 void ldComboBoxSetDropdownImage(ldComboBox_t* ptWidget,arm_2d_tile_t* ptDropdownImgTile,arm_2d_tile_t* ptDropdownMaskTile);
+uint8_t* ldComboBoxGetText(ldComboBox_t* ptWidget, uint8_t num);
+uint8_t ldComboBoxGetSelectItem(ldComboBox_t* ptWidget);
 
 #define ldComboBoxSetHidden                ldBaseSetHidden
 #define ldComboBoxMove                     ldBaseMove

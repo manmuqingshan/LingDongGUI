@@ -74,6 +74,7 @@ void ldLineEditSetKeyboard(ldLineEdit_t* ptWidget,uint16_t kbNameId);
 void ldLineEditSetType(ldLineEdit_t* ptWidget,ldEditType_t editType);
 void ldLineEditSetAlign(ldLineEdit_t *ptWidget,arm_2d_align_t tAlign);
 void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backgroundColor, ldColor frameColor);
+uint8_t *ldLineEditGetText(ldLineEdit_t *ptWidget);
 
 #define ldLineEditInit(nameId,parentNameId,x,y,width,height,ptFont,textMax) \
         ldLineEdit_init(ptScene,NULL,nameId,parentNameId,x,y,width,height,ptFont,textMax)

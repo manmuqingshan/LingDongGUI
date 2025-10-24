@@ -241,8 +241,17 @@ void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_t
 void ldBaseLabel(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, uint8_t *pStr, arm_2d_font_t *ptFont, arm_2d_align_t tAlign, ldColor textColor, uint8_t opacity);
 void ldBaseMove(ldBase_t* ptWidget,int16_t x,int16_t y);
 void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden);
-bool ldBaseIsHidden(ldBase_t* ptWidget);
 void ldBaseSetOpacity(ldBase_t *ptWidget, uint8_t opacity);
+void ldBaseSetSelectable(ldBase_t* ptWidget,bool isSelectable);
+void ldBaseSetSelect(ldBase_t* ptWidget,bool isSelect);
+void ldBaseSetCorner(ldBase_t* ptWidget,bool isCorner);
+ldWidgetType_t ldBaseGetWidgetType(ldBase_t *ptWidget);
+uint16_t ldBaseGetNameId(ldBase_t *ptWidget);
+uint16_t ldBaseGetOpacity(ldBase_t *ptWidget);
+bool ldBaseIsHidden(ldBase_t* ptWidget);
+bool ldBaseIsSelected(ldBase_t *ptWidget);
+bool ldBaseIsSelectable(ldBase_t *ptWidget);
+bool ldBaseIsCorner(ldBase_t *ptWidget);
 arm_2d_location_t ldBaseGetRelativeLocation(ldBase_t *ptWidget,arm_2d_location_t tLocation);
 arm_2d_location_t ldBaseGetAbsoluteLocation(ldBase_t *ptWidget,arm_2d_location_t tLocation);
 void ldBaseDrawLine(arm_2d_tile_t *pTile,int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t lineSize, ldColor color,uint8_t opacityMax, uint8_t opacityMin);
@@ -274,9 +283,6 @@ typedef enum {
 } ldNavDir_t;
 void ldBaseFocusNavigateInit(void);
 void ldBaseFocusNavigate(ld_scene_t *ptScene, ldNavDir_t tDir);
-void ldBaseSetSelectable(ldBase_t* ptWidget,bool isSelectable);
-void ldBaseSetSelect(ldBase_t* ptWidget,bool isSelect);
-void ldBaseSetCorner(ldBase_t* ptWidget,bool isCorner);
 
 #ifdef __cplusplus
 }
