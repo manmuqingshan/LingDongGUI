@@ -43,6 +43,9 @@
 #pragma clang diagnostic ignored "-Wmissing-variable-declarations"
 #endif
 
+#define SLIDER_W           10
+#define SLIDER_H           20
+
 const ldBaseWidgetFunc_t ldTextFunc = {
     .depose = (ldDeposeFunc_t)ldText_depose,
     .load = (ldLoadFunc_t)ldText_on_load,
@@ -63,8 +66,6 @@ static bool slotTextVerticalScroll(ld_scene_t *ptScene,ldMsg_t msg)
         ptWidget->_scrollOffset=ptWidget->scrollOffset;
         ptWidget->_isTopScroll=false;
         ptWidget->_isBottomScroll=false;
-        ptWidget->lastLineNum=-1;
-        ptWidget->strHeight=-1;
         ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
         text_box_update(&ptWidget->tTextPanel);
         break;
@@ -74,23 +75,36 @@ static bool slotTextVerticalScroll(ld_scene_t *ptScene,ldMsg_t msg)
         ptWidget->scrollOffset=ptWidget->_scrollOffset+(int16_t)GET_SIGNAL_OFFSET_Y(msg.value);
         ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
 
-        if(text_box_has_end_of_stream_been_reached(&ptWidget->tTextPanel))
+        //计算滑块位置
+        int strMove=ptWidget->strHeight-ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight;
+        if(strMove>0)
         {
-            int16_t lineCount=text_box_get_current_line_count(&ptWidget->tTextPanel)+1;
+            int percent256=(ptWidget->scrollOffset<<8)/strMove;
 
-            if(lineCount<ptWidget->lastLineNum)
+            int32_t trackLen = ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight - SLIDER_H;
+
+            ptWidget->sliderPos = (-percent256 * trackLen) >> 8;
+
+            if(ptWidget->sliderPos<0)
             {
-                ptWidget->lastLineNum=lineCount;
-                int16_t lineHeight=text_box_get_line_height(&ptWidget->tTextPanel);
-                ptWidget->strHeight=ptWidget->lastLineNum*lineHeight;
+                ptWidget->sliderPos=0;
+            }
+            if(ptWidget->sliderPos>trackLen)
+            {
+                ptWidget->sliderPos=trackLen;
             }
         }
+        else
+        {
+            ptWidget->sliderPos=-1;
+        }
+
         break;
     }
     case SIGNAL_RELEASE:
     {
+        ptWidget->sliderPos=-1;
         ptWidget->isMoveReset=true;
-
         ptWidget->_scrollOffset=ptWidget->scrollOffset;
 
         if(ptWidget->scrollOffset>0)
@@ -161,6 +175,8 @@ ldText_t* ldText_init(ld_scene_t *ptScene,ldText_t *ptWidget, uint16_t nameId, u
 
     ptWidget->bgColor=__RGB(255,255,255);
     ptWidget->ptFont=ptFont;
+    ptWidget->strHeight=-1;
+    ptWidget->sliderPos=-1;
 
     text_box_cfg_t tCFG = {
         .ptFont = ptFont,
@@ -240,10 +256,9 @@ void ldText_on_frame_start(ld_scene_t *ptScene, ldText_t *ptWidget)
         int16_t iResult;
         bool isPiEnd;
 
-        isPiEnd=arm_2d_helper_pi_slider(&ptWidget->tPISlider, ptWidget->_scrollOffset, &iResult);
-
         if(ptWidget->_isTopScroll)
         {
+            isPiEnd=arm_2d_helper_pi_slider(&ptWidget->tPISlider, ptWidget->_scrollOffset, &iResult);
             if(isPiEnd)
             {
                 ptWidget->isMoveReset=false;
@@ -255,8 +270,9 @@ void ldText_on_frame_start(ld_scene_t *ptScene, ldText_t *ptWidget)
                 ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
             }
         }
-        if(ptWidget->_isBottomScroll)
+        else if(ptWidget->_isBottomScroll)
         {
+            isPiEnd=arm_2d_helper_pi_slider(&ptWidget->tPISlider, ptWidget->_scrollOffset, &iResult);
             if(isPiEnd)
             {
                 ptWidget->isMoveReset=false;
@@ -267,6 +283,10 @@ void ldText_on_frame_start(ld_scene_t *ptScene, ldText_t *ptWidget)
                 ptWidget->scrollOffset=(ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight-ptWidget->strHeight)-(ptWidget->_scrollOffset-iResult);
                 ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
             }
+        }
+        else
+        {
+            ptWidget->isMoveReset=false;
         }
     }
 
@@ -359,7 +379,45 @@ void ldText_show(ld_scene_t *ptScene, ldText_t *ptWidget, const arm_2d_tile_t *p
                                 ptWidget->use_as__ldBase_t.opacity,
                                 bIsNewFrame);
 
+                if(ptWidget->strHeight==-1)
+                {
+                    ptWidget->strHeight=text_box_get_line_height(&ptWidget->tTextPanel)*text_box_get_line_count(&ptWidget->tTextPanel,0);
+                }
                 arm_2d_op_wait_async(NULL);
+            }
+
+            if(ptWidget->sliderPos>=0)
+            {
+                arm_2d_region_t sliderBgRegion={
+                    .tLocation={
+                        .iX=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth-SLIDER_W,
+                        .iY=0,
+                    },
+                    .tSize={
+                        .iWidth=SLIDER_W,
+                        .iHeight=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight,
+                    }
+                };
+
+                ldBaseColor(&tTarget,
+                            &sliderBgRegion,
+                            __RGB(220,220,220),
+                            ptWidget->use_as__ldBase_t.opacity);
+
+                arm_2d_region_t sliderRegion={
+                    .tLocation={
+                        .iX=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth-SLIDER_W+2,
+                        .iY=ptWidget->sliderPos,
+                    },
+                    .tSize={
+                        .iWidth=SLIDER_W-4,
+                        .iHeight=SLIDER_H,
+                    }
+                };
+                ldBaseColor(&tTarget,
+                            &sliderRegion,
+                            __RGB(120,120,120),
+                            ptWidget->use_as__ldBase_t.opacity);
             }
 
             LD_BASE_WIDGET_SELECT;
