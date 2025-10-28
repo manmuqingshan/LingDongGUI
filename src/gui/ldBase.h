@@ -188,9 +188,7 @@ typedef struct {
 
 typedef struct {
     implement(arm_2d_control_node_t);
-//    ARM_PRIVATE(
     arm_2d_region_t tTempRegion;
-//)
     const ldBaseWidgetFunc_t *ptGuiFunc;
     ldAssn_t *ptAssn;
     ldBaseItemRegion_t *ptItemRegionList;

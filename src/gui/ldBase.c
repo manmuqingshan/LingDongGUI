@@ -359,7 +359,7 @@ void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
     {
         return;
     }
-#if 1
+#if 0
     ptWidget->isDirtyRegionUpdate = true;
     ptWidget->isHidden=isHidden;
 #else
@@ -376,6 +376,7 @@ void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
         x=ptNode->tRegion.tLocation.iX+ptNodeRoot->tRegion.tSize.iWidth;
         y=ptNode->tRegion.tLocation.iY+ptNodeRoot->tRegion.tSize.iHeight;
     }
+    ptWidget->isHidden=isHidden;
     ldBaseMove(ptWidget,x,y);
 #endif
 }
