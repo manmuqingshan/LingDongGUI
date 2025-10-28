@@ -110,7 +110,8 @@ static bool slotComboBoxProcess(ld_scene_t *ptScene,ldMsg_t msg)
     }
 
 
-    switch (msg.signal) {
+    switch (msg.signal)
+    {
     case SIGNAL_PRESS:
     {
         if(clickItemNum==SHOW_ITEM_NUM)
@@ -144,6 +145,7 @@ static bool slotComboBoxProcess(ld_scene_t *ptScene,ldMsg_t msg)
                 ldMsgEmit(ptScene->ptMsgQueue,ptWidget,SIGNAL_CLICKED_ITEM,ptWidget->itemSelect);
             }
             ptWidget->isExpand=false;
+            ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight = ptWidget->itemHeight;
         }
         ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
         break;
