@@ -282,7 +282,7 @@ void uiDemoInit(ld_scene_t* ptScene)
     void *obj,*win;
 
     //新建背景
-    obj=ldWindowInit(ID_BG, ID_BG, 0, 0, LD_CFG_SCEEN_WIDTH, LD_CFG_SCEEN_HEIGHT);
+    obj=ldWindowInit(ID_BG, ID_BG, 0, 0, LD_CFG_SCREEN_WIDTH, LD_CFG_SCREEN_HEIGHT);
 
     //新建按键
     obj=ldButtonInit(ID_BTN,ID_BG, 10,10,50,30);

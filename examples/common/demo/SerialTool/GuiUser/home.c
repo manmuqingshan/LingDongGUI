@@ -17,18 +17,23 @@ const ldPageFuncGroup_t homeFunc={
 #endif
 };
 
+#if 1==1
+uint8_t Text_show_staticText[]="";
+#endif
+
 #if 4 != 0
-const uint8_t *COMBOBOX_DATABITS_itemList[4] = {"5","6","7","8",};
+const uint8_t *ComboBox_dataBits_itemList[4] = {"5","6","7","8",};
 #endif
 
 #if 2 != 0
-const uint8_t *COMBOBOX_BAUDRATE_itemList[2] = {"9600","115200",};
+const uint8_t *ComboBox_baudRate_itemList[2] = {"9600","115200",};
 #endif
 
 #if 0 != 0
-const uint8_t *COMBOBOX_PORTNAME_itemList[0] = {};
+const uint8_t *ComboBox_portName_itemList[0] = {};
 #endif
 
+ldTimer_t home_Timer_0=0;
 
 
 __WEAK bool home_action_Button_open_port_press(ld_scene_t *ptScene,ldMsg_t msg)
@@ -56,6 +61,10 @@ __WEAK bool home_action_Button_close_release(ld_scene_t *ptScene,ldMsg_t msg)
    return false;
 }
 
+__WEAK void home_Timer_0_event(ld_scene_t* ptScene)
+{
+}
+
 
 
 void homeInit(ld_scene_t* ptScene)
@@ -69,12 +78,12 @@ void homeInit(ld_scene_t* ptScene)
     ldWindowSetImage(obj, IMAGE_, IMAGE__MASK);
 #endif
 
-    obj=ldTextInit(ID_TEXT_SHOW, ID_BACKGROUND_0, 10, 10, 460, 220, FONT_ARIAL_10, 0, 0);
-#if 0==0
+    obj=ldTextInit(ID_TEXT_SHOW, ID_BACKGROUND_0, 10, 10, 460, 220, FONT_ARIAL_10, 0, 1);
+#if 1==0
     ldTextSetText(obj, (uint8_t*)"");
 #endif
-#if 0==1
-    ldTextSetStaticText(obj, (uint8_t*)"");
+#if 1==1
+    ldTextSetStaticText(obj, Text_show_staticText);
 #endif
     ldTextSetTextColor(obj, __RGB(0x00, 0x00, 0x00));
 #if 1==0
@@ -475,7 +484,7 @@ void homeInit(ld_scene_t* ptScene)
     ldComboBoxSetFrameColor(obj, __RGB(0x00, 0x00, 0x00));
     ldComboBoxSetSelectColor(obj, __RGB(0xC8, 0xC8, 0xC8));
 #if 4 != 0
-    ldComboBoxSetStaticItems(obj, (uint8_t**)COMBOBOX_DATABITS_itemList, 4);
+    ldComboBoxSetStaticItems(obj, (uint8_t**)ComboBox_dataBits_itemList, 4);
     ldComboBoxSetSelectItem(obj, 3);
 #endif
     ldComboBoxSetCorner(obj, 1);
@@ -489,7 +498,7 @@ void homeInit(ld_scene_t* ptScene)
     ldComboBoxSetFrameColor(obj, __RGB(0x00, 0x00, 0x00));
     ldComboBoxSetSelectColor(obj, __RGB(0xC8, 0xC8, 0xC8));
 #if 2 != 0
-    ldComboBoxSetStaticItems(obj, (uint8_t**)COMBOBOX_BAUDRATE_itemList, 2);
+    ldComboBoxSetStaticItems(obj, (uint8_t**)ComboBox_baudRate_itemList, 2);
     ldComboBoxSetSelectItem(obj, 0);
 #endif
     ldComboBoxSetCorner(obj, 1);
@@ -503,7 +512,7 @@ void homeInit(ld_scene_t* ptScene)
     ldComboBoxSetFrameColor(obj, __RGB(0x00, 0x00, 0x00));
     ldComboBoxSetSelectColor(obj, __RGB(0xC8, 0xC8, 0xC8));
 #if 0 != 0
-    ldComboBoxSetStaticItems(obj, (uint8_t**)COMBOBOX_PORTNAME_itemList, 0);
+    ldComboBoxSetStaticItems(obj, (uint8_t**)ComboBox_portName_itemList, 0);
     ldComboBoxSetSelectItem(obj, 0);
 #endif
     ldComboBoxSetCorner(obj, 1);
@@ -528,6 +537,7 @@ void homeInit(ld_scene_t* ptScene)
 
     obj=ldKeyboardInit(ID_KEYBOARD_0, ID_BACKGROUND_0, FONT_ARIAL_10);
 
+    home_Timer_0=0;
     
 
     homeLogicInit(ptScene);
@@ -535,6 +545,11 @@ void homeInit(ld_scene_t* ptScene)
 
 void homeLoop(ld_scene_t* ptScene)
 {
+    if(ldTimeOut(1000,1,&home_Timer_0))
+    {
+        home_Timer_0_event(ptScene);
+    }
+
     
 
     homeLogicLoop(ptScene);

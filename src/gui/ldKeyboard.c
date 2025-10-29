@@ -90,15 +90,15 @@ const uint8_t addSubStr[]="±";
 
 #define NUM_COL_NUM      (4)
 
-#define NUM_BTN_W_SPACE   ((LD_CFG_SCEEN_WIDTH-KB_SPACE)/NUM_COL_NUM)
+#define NUM_BTN_W_SPACE   ((LD_CFG_SCREEN_WIDTH-KB_SPACE)/NUM_COL_NUM)
 
-#define NUM_START      ((LD_CFG_SCEEN_WIDTH-NUM_BTN_W_SPACE*NUM_COL_NUM-KB_SPACE)/2)
+#define NUM_START      ((LD_CFG_SCREEN_WIDTH-NUM_BTN_W_SPACE*NUM_COL_NUM-KB_SPACE)/2)
 
 #define NUM_BTN_W   (NUM_BTN_W_SPACE-KB_SPACE)
-#define NUM_BTN_H   (((LD_CFG_SCEEN_HEIGHT>>1)-KB_SPACE)/4-KB_SPACE)
+#define NUM_BTN_H   (((LD_CFG_SCREEN_HEIGHT>>1)-KB_SPACE)/4-KB_SPACE)
 
 #define NUM_OFFSET_W(num)    (KB_SPACE+(NUM_BTN_W+KB_SPACE)*num)
-#define NUM_OFFSET_H(num)    (KB_SPACE+(NUM_BTN_H+KB_SPACE)*num+(LD_CFG_SCEEN_HEIGHT>>1))
+#define NUM_OFFSET_H(num)    (KB_SPACE+(NUM_BTN_H+KB_SPACE)*num+(LD_CFG_SCREEN_HEIGHT>>1))
 
 const kbBtnInfo_t numBtnInfo[4][4]={
     {
@@ -166,15 +166,15 @@ const uint8_t asciiShiftUpperStr[]="SHIFT";
 
 #define QWERT_COL_NUM      (10)
 
-#define QWERT_BTN_W_SPACE   ((LD_CFG_SCEEN_WIDTH-KB_SPACE)/QWERT_COL_NUM)
+#define QWERT_BTN_W_SPACE   ((LD_CFG_SCREEN_WIDTH-KB_SPACE)/QWERT_COL_NUM)
 
-#define QWERT_START      ((LD_CFG_SCEEN_WIDTH-QWERT_BTN_W_SPACE*QWERT_COL_NUM-KB_SPACE)/2)
+#define QWERT_START      ((LD_CFG_SCREEN_WIDTH-QWERT_BTN_W_SPACE*QWERT_COL_NUM-KB_SPACE)/2)
 
 #define QWERT_BTN_W   (QWERT_BTN_W_SPACE-KB_SPACE)
-#define QWERT_BTN_H   (((LD_CFG_SCEEN_HEIGHT>>1)-KB_SPACE)/4-KB_SPACE)
+#define QWERT_BTN_H   (((LD_CFG_SCREEN_HEIGHT>>1)-KB_SPACE)/4-KB_SPACE)
 
 #define QWERT_OFFSET_W(num)    (QWERT_BTN_W_SPACE*(num/2)+KB_SPACE+QWERT_BTN_W*(num%2)/2) // (KB_SPACE+((QWERT_BTN_W+KB_SPACE)>>1)*num)
-#define QWERT_OFFSET_H(num)    (KB_SPACE+(QWERT_BTN_H+KB_SPACE)*num+(LD_CFG_SCEEN_HEIGHT>>1))
+#define QWERT_OFFSET_H(num)    (KB_SPACE+(QWERT_BTN_H+KB_SPACE)*num+(LD_CFG_SCREEN_HEIGHT>>1))
 
 const kbBtnInfo_t asciiBtnInfo[4][10]={
     {
@@ -301,8 +301,8 @@ static arm_2d_region_t _keyboardGetClickRegion(ldKeyboard_t *ptWidget)
             .iY=0,
         },
         .tSize={
-            .iWidth=LD_CFG_SCEEN_WIDTH,
-            .iHeight=LD_CFG_SCEEN_HEIGHT,
+            .iWidth=LD_CFG_SCREEN_WIDTH,
+            .iHeight=LD_CFG_SCREEN_HEIGHT,
         },
     };
     ptWidget->kbValue=KB_VALUE_NONE;
@@ -380,9 +380,9 @@ static arm_2d_region_t _keyboardGetClickRegion(ldKeyboard_t *ptWidget)
     if(ptWidget->kbValue<=sizeof (kbValueSpecial))
     {
         retRegion.tLocation.iX=0;
-        retRegion.tLocation.iY=LD_CFG_SCEEN_HEIGHT>>1;
-        retRegion.tSize.iWidth=LD_CFG_SCEEN_WIDTH;
-        retRegion.tSize.iHeight=LD_CFG_SCEEN_HEIGHT>>1;
+        retRegion.tLocation.iY=LD_CFG_SCREEN_HEIGHT>>1;
+        retRegion.tSize.iWidth=LD_CFG_SCREEN_WIDTH;
+        retRegion.tSize.iHeight=LD_CFG_SCREEN_HEIGHT>>1;
     }
     return retRegion;
 }
@@ -526,7 +526,7 @@ static bool slotKBProcess(ld_scene_t *ptScene,ldMsg_t msg)
         ptWidget->isClick=true;
         ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
 
-        if((ptWidget->kbValue==KB_VALUE_NONE)&&(clickPos.iX==-1)&&(clickPos.iY==-1)&&((int16_t)GET_SIGNAL_VALUE_Y(msg.value)<(LD_CFG_SCEEN_HEIGHT>>1)))
+        if((ptWidget->kbValue==KB_VALUE_NONE)&&(clickPos.iX==-1)&&(clickPos.iY==-1)&&((int16_t)GET_SIGNAL_VALUE_Y(msg.value)<(LD_CFG_SCREEN_HEIGHT>>1)))
         {
             isExit=true;
         }
@@ -576,8 +576,8 @@ static bool slotKBProcess(ld_scene_t *ptScene,ldMsg_t msg)
 
             ptWidget->use_as__ldBase_t.tTempRegion.tLocation.iX=0;
             ptWidget->use_as__ldBase_t.tTempRegion.tLocation.iY=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
-            ptWidget->use_as__ldBase_t.tTempRegion.tSize.iWidth=LD_CFG_SCEEN_WIDTH;
-            ptWidget->use_as__ldBase_t.tTempRegion.tSize.iHeight=LD_CFG_SCEEN_HEIGHT>>1;
+            ptWidget->use_as__ldBase_t.tTempRegion.tSize.iWidth=LD_CFG_SCREEN_WIDTH;
+            ptWidget->use_as__ldBase_t.tTempRegion.tSize.iHeight=LD_CFG_SCREEN_HEIGHT>>1;
         }
 
 
@@ -613,9 +613,9 @@ ldKeyboard_t* ldKeyboard_init(ld_scene_t *ptScene, ldKeyboard_t *ptWidget, uint1
     ldBaseNodeAdd((arm_2d_control_node_t *)ptParent, (arm_2d_control_node_t *)ptWidget);
 
     ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iX = 0;
-    ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY = LD_CFG_SCEEN_HEIGHT;
-    ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth = LD_CFG_SCEEN_WIDTH;
-    ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight = LD_CFG_SCEEN_HEIGHT;
+    ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY = LD_CFG_SCREEN_HEIGHT;
+    ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iWidth = LD_CFG_SCREEN_WIDTH;
+    ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight = LD_CFG_SCREEN_HEIGHT;
     ptWidget->use_as__ldBase_t.nameId = nameId;
     ptWidget->use_as__ldBase_t.widgetType = widgetTypeKeyboard;
     ptWidget->use_as__ldBase_t.ptGuiFunc = &ldKeyboardFunc;
@@ -707,11 +707,11 @@ void ldKeyboard_show(ld_scene_t *ptScene, ldKeyboard_t *ptWidget, const arm_2d_t
     arm_2d_region_t kbRegion={
             .tLocation={
                 .iX=0,
-                .iY=0,//(LD_CFG_SCEEN_HEIGHT>>1),//+ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY,
+                .iY=0,//(LD_CFG_SCREEN_HEIGHT>>1),//+ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY,
             },
             .tSize={
-                .iWidth=LD_CFG_SCEEN_WIDTH,
-                .iHeight=LD_CFG_SCEEN_HEIGHT,//>>1,
+                .iWidth=LD_CFG_SCREEN_WIDTH,
+                .iHeight=LD_CFG_SCREEN_HEIGHT,//>>1,
             },
         };
 
@@ -739,19 +739,19 @@ void ldKeyboard_show(ld_scene_t *ptScene, ldKeyboard_t *ptWidget, const arm_2d_t
             {
                 isExit=false;
                 ptWidget->upperState=0;
-                ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY=LD_CFG_SCEEN_HEIGHT;
+                ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY=LD_CFG_SCREEN_HEIGHT;
                 ldKeyboardSetHidden((ldBase_t *)ptWidget,true);
                 emit(ptWidget->editorId,SIGNAL_FINISHED,0);
 
-                ldBaseBgMove(ptScene,LD_CFG_SCEEN_WIDTH,LD_CFG_SCEEN_HEIGHT,0,0);
+                ldBaseBgMove(ptScene,LD_CFG_SCREEN_WIDTH,LD_CFG_SCREEN_HEIGHT,0,0);
                 ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
             }
 
             ldBaseColor(&tTarget,
                         &((arm_2d_region_t){0,
-                                            (LD_CFG_SCEEN_HEIGHT>>1),
-                                            LD_CFG_SCEEN_WIDTH,
-                                            (LD_CFG_SCEEN_HEIGHT>>1)}),
+                                            (LD_CFG_SCREEN_HEIGHT>>1),
+                                            LD_CFG_SCREEN_WIDTH,
+                                            (LD_CFG_SCREEN_HEIGHT>>1)}),
                         __RGB(208,211,220),
                         ptWidget->use_as__ldBase_t.opacity);
 

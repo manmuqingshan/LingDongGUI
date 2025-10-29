@@ -38,7 +38,7 @@ void uiMainInit(ld_scene_t* ptScene)
 {
     void *obj,*win;
 
-    obj=ldWindowInit(0, 0, 0, 0, LD_CFG_SCEEN_WIDTH, LD_CFG_SCEEN_HEIGHT);
+    obj=ldWindowInit(0, 0, 0, 0, LD_CFG_SCREEN_WIDTH, LD_CFG_SCREEN_HEIGHT);
     ldWindowSetColor(obj,GLCD_COLOR_BLACK);
 
     obj=ldButtonInit(ID_BTN_PRINT,ID_BG,27,67,124,158);

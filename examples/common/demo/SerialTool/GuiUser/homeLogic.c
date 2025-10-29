@@ -5,10 +5,14 @@
 #include "xString.h"
 #include <ctype.h>
 
+void home_Timer_0_event(ld_scene_t* ptScene)
+{
+    ldText_t *ptWidget=ldBaseGetWidgetById(ID_TEXT_SHOW);
+}
+
 
 bool home_action_Button_open_port_press(ld_scene_t *ptScene,ldMsg_t msg)
 {
-    LOG_DEBUG("========");
     ldButton_t *btn=msg.ptSender;
     if(btn->isPressed==false)
     {
@@ -128,7 +132,7 @@ ldText_t *textShow;
 
 
 #define RING_SIZE 4096
-static uint8_t textBuf[RING_SIZE] = "12345678\n123";
+static uint8_t textBuf[RING_SIZE] = "12345678\n123\n123\n123\n123\n123\n123\n123\n5555\n123\n123\n123\n123\n123\n123\n9999\n123\n123\n123\n123\n123\n123\n123\n123\n123\n77777\n123\n123\n123\n123\n123\n123\n123\n123\n123";
 static uint16_t len = 12;   /* 当前有效字符数 */
 
 /* 追加 1 字节，并滑动窗口保持最新 len 字符 */

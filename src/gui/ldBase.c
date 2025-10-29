@@ -686,8 +686,8 @@ void ldBaseBgMove(ld_scene_t *ptScene, int16_t bgWidth,int16_t bgHeight,int16_t 
 
     int16_t minX = MIN(0, offsetX);
     int16_t minY = MIN(0, offsetY);
-    int16_t maxX = MAX(LD_CFG_SCEEN_WIDTH, offsetX + bgWidth);
-    int16_t maxY = MAX(LD_CFG_SCEEN_HEIGHT, offsetX + bgHeight);
+    int16_t maxX = MAX(LD_CFG_SCREEN_WIDTH, offsetX + bgWidth);
+    int16_t maxY = MAX(LD_CFG_SCREEN_HEIGHT, offsetX + bgHeight);
 
     ptWidget->use_as__arm_2d_control_node_t.tRegion.tSize.iWidth=maxX-minX;
     ptWidget->use_as__arm_2d_control_node_t.tRegion.tSize.iHeight=maxY-minY;

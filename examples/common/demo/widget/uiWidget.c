@@ -74,7 +74,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
 
     ldBaseFocusNavigateInit();
 
-    ldWindowInit(0, 0, 0, 0, LD_CFG_SCEEN_WIDTH, LD_CFG_SCEEN_HEIGHT);
+    ldWindowInit(0, 0, 0, 0, LD_CFG_SCREEN_WIDTH, LD_CFG_SCREEN_HEIGHT);
 
     obj= ldImageInit(1, 0, 100, 120, 50, 80, NULL, NULL,false);
     ldImageSetImage(obj,IMAGE_LETTER_PAPER_BMP,NULL);

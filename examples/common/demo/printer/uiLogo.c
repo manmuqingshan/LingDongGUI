@@ -20,7 +20,7 @@ void uiLogoInit(ld_scene_t* ptScene)
 {
     void *obj,*win;
 
-    ldWindowInit(0, 0, 0, 0, LD_CFG_SCEEN_WIDTH, LD_CFG_SCEEN_HEIGHT);
+    ldWindowInit(0, 0, 0, 0, LD_CFG_SCREEN_WIDTH, LD_CFG_SCREEN_HEIGHT);
 
     obj=ldLabelInit(ID_LOGO,ID_BG,0,0,270,270,FONT_ALIBABAPUHUITI_3_55_REGULAR_55);
     ldLabelSetTransparent(obj,true);

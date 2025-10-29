@@ -383,8 +383,65 @@ void before_scene_switching_handler(void *pTarget,arm_2d_scene_player_t *ptPlaye
 }
 #endif
 
+#if USE_LCD_TEST == 1
+static void _ldGuiFillRect(uint16_t xs,uint16_t ys,uint16_t w, uint16_t h,ldColor color)
+{
+    extern void Disp0_DrawBitmap (uint32_t x,uint32_t y,uint32_t width,uint32_t height,const uint8_t *bitmap);
+    for(uint16_t y=0;y<h;y++)
+    {
+        for(uint16_t x=0;x<w;x++)
+        {
+            Disp0_DrawBitmap(xs+x, ys+y, 1,1, (uint8_t*)&color);
+        }
+    }
+}
+
+void ldGuiLcdTest(void)
+{
+#define BLOCK_COLUMNS                   3
+#define BLOCK_ROWS                      3
+
+    const uint16_t bw = LD_CFG_SCREEN_WIDTH  / BLOCK_COLUMNS;
+    const uint16_t bh = LD_CFG_SCREEN_HEIGHT / BLOCK_ROWS;
+    const uint16_t blockWidthLast = LD_CFG_SCREEN_WIDTH-bw*BLOCK_COLUMNS;
+    const uint16_t blockHeightLast = LD_CFG_SCREEN_HEIGHT-bh*BLOCK_ROWS;
+    
+    static const uint8_t rgb[36] = {
+        0xFF,0xFF,0xFF,    0xFF,0xFF,0x00,    0xFF,0x00,0xFF,
+        0x00,0xFF,0xFF,    0x00,0xFF,0x00,    0xFF,0x00,0x00,
+        0x00,0x00,0xFF,    0x00,0x00,0x00,    0x80,0x80,0x80,
+    };
+
+    for(uint16_t r=0;r<BLOCK_ROWS;r++)
+    {
+        for(uint16_t c=0;c<BLOCK_COLUMNS;c++)
+        {
+            uint8_t idx = (r*BLOCK_COLUMNS + c) * 3;
+            uint16_t color = __RGB(rgb[idx],rgb[idx+1],rgb[idx+2]);
+            uint16_t w=bw,h=bh;
+            if(c==(BLOCK_COLUMNS-1))
+            {
+                w+=blockWidthLast;
+            }
+            if(r==(BLOCK_ROWS-1))
+            {
+                h+=blockHeightLast;
+            }
+            _ldGuiFillRect(c*bw, r*bh, w, h, color);
+        }
+    }
+}
+#endif
+
 void ldGuiInit(ldPageFuncGroup_t *ptFuncGroup)
 {
+    arm_irq_safe
+    {
+        arm_2d_init();
+    }
+
+    disp_adapter0_init();
+
     LOG_DEBUG("[sys] free memory:%zu",ldGetFreeMemory());
     if(ptFuncGroup==NULL)
     {
@@ -400,5 +457,9 @@ void ldGuiInit(ldPageFuncGroup_t *ptFuncGroup)
 #elif USE_SCENE_SWITCHING == 1 || USE_SCENE_SWITCHING == 0
     __arm_2d_scene0_init(&DISP0_ADAPTER,NULL,ptSysGuiFuncGroup[0]);
 #endif
+}
 
+void ldGuiLoop(void)
+{
+    disp_adapter0_task();
 }
