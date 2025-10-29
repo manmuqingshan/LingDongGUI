@@ -89,7 +89,7 @@ extern "C" {
 //     <0=>    OFF
 //     <1=>    ON
 // <i> DrawBitmap porting sanity check
-#define USE_LCD_TEST                              (1)
+#define USE_LCD_TEST                              (0)
 #endif
 
 #ifndef USE_LOG_LEVEL
