@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -118,7 +118,26 @@ typedef enum{
 #define MEM_MODE_STDLIB                 (2)
 #define MEM_MODE_USER                   (3)
 
-#define ANGLE_2_RADIAN(angle)                   ((float)(angle)*0.0174533f)
+#define ANGLE_2_RADIAN(angle)           ((float)(angle)*0.0174533f)
+
+#ifndef LD_SELECT_COLOR
+#define LD_SELECT_COLOR                 __RGB(255, 0, 0)
+#endif
+
+#ifndef LD_SELECT_OPACITY
+#define LD_SELECT_OPACITY               (ptWidget->use_as__ldBase_t.opacity/4)
+#endif
+
+#define LD_BASE_WIDGET_SELECT \
+do{ \
+    if(ptWidget->use_as__ldBase_t.isSelected&&ptWidget->use_as__ldBase_t.isSelectable){ \
+        if(ptWidget->use_as__ldBase_t.isCorner){ \
+            draw_round_corner_border(&tTarget,&tTarget_canvas,LD_SELECT_COLOR,(arm_2d_border_opacity_t){LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY},(arm_2d_corner_opacity_t){LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY,LD_SELECT_OPACITY}); \
+        }else{ \
+            arm_2d_draw_box(&tTarget,&tTarget_canvas,2,LD_SELECT_COLOR,LD_SELECT_OPACITY); \
+        } \
+    } \
+}while(0)
 
 typedef struct ld_scene_t ld_scene_t;
 typedef void (*ldPageFunc_t)(ld_scene_t*);
@@ -169,9 +188,7 @@ typedef struct {
 
 typedef struct {
     implement(arm_2d_control_node_t);
-//    ARM_PRIVATE(
     arm_2d_region_t tTempRegion;
-//)
     const ldBaseWidgetFunc_t *ptGuiFunc;
     ldAssn_t *ptAssn;
     ldBaseItemRegion_t *ptItemRegionList;
@@ -183,6 +200,9 @@ typedef struct {
     bool isDirtyRegionUpdate:1;
     bool isDirtyRegionAutoReset:1;
     bool isHidden:1;
+    bool isSelected:1;
+    bool isSelectable:1;
+    bool isCorner:1;
 }ldBase_t;
 
 typedef enum{
@@ -217,11 +237,19 @@ void ldBaseColor(arm_2d_tile_t* ptTile, arm_2d_region_t* ptRegion, ldColor color
 void ldBaseImage(arm_2d_tile_t* ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t* ptImgTile, arm_2d_tile_t* ptMaskTile, ldColor color, uint8_t opacity);
 void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile,float scale,arm_2d_op_trans_msk_opa_t *ptOP,uint8_t opacity,bool bIsNewFrame);
 void ldBaseLabel(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, uint8_t *pStr, arm_2d_font_t *ptFont, arm_2d_align_t tAlign, ldColor textColor, uint8_t opacity);
-void arm_lcd_text_puts(arm_2d_region_t* ptRegion,arm_2d_font_t *ptFont,uint8_t *pStr,uint8_t opacity);
-arm_2d_size_t arm_lcd_text_get_box(uint8_t *pStr, arm_2d_font_t *ptFont);
 void ldBaseMove(ldBase_t* ptWidget,int16_t x,int16_t y);
 void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden);
 void ldBaseSetOpacity(ldBase_t *ptWidget, uint8_t opacity);
+void ldBaseSetSelectable(ldBase_t* ptWidget,bool isSelectable);
+void ldBaseSetSelect(ldBase_t* ptWidget,bool isSelect);
+void ldBaseSetCorner(ldBase_t* ptWidget,bool isCorner);
+ldWidgetType_t ldBaseGetWidgetType(ldBase_t *ptWidget);
+uint16_t ldBaseGetNameId(ldBase_t *ptWidget);
+uint16_t ldBaseGetOpacity(ldBase_t *ptWidget);
+bool ldBaseIsHidden(ldBase_t* ptWidget);
+bool ldBaseIsSelected(ldBase_t *ptWidget);
+bool ldBaseIsSelectable(ldBase_t *ptWidget);
+bool ldBaseIsCorner(ldBase_t *ptWidget);
 arm_2d_location_t ldBaseGetRelativeLocation(ldBase_t *ptWidget,arm_2d_location_t tLocation);
 arm_2d_location_t ldBaseGetAbsoluteLocation(ldBase_t *ptWidget,arm_2d_location_t tLocation);
 void ldBaseDrawLine(arm_2d_tile_t *pTile,int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t lineSize, ldColor color,uint8_t opacityMax, uint8_t opacityMin);
@@ -247,6 +275,12 @@ arm_2d_vres_t *ldBaseGetVresImage(uint32_t addr);
 arm_2d_vres_font_t* ldBaseGetVresFont(uint32_t addr);
 
 #endif
+
+typedef enum {
+    NAV_UP, NAV_DOWN, NAV_LEFT, NAV_RIGHT, NAV_ENTER, NAV_BACK
+} ldNavDir_t;
+void ldBaseFocusNavigateInit(void);
+void ldBaseFocusNavigate(ld_scene_t *ptScene, ldNavDir_t tDir);
 
 #ifdef __cplusplus
 }

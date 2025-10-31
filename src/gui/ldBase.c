@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -115,6 +115,16 @@ __WEAK void *ldRealloc(void *ptr, uint32_t newSize)
     return p;
 }
 
+__WEAK size_t ldGetFreeMemory(void)
+{
+#if LD_MEM_MODE == MEM_MODE_FREERTOS_HEAP4
+    extern size_t xPortGetFreeHeapSize( void );
+    return xPortGetFreeHeapSize();
+#else
+    return 0;
+#endif
+}
+
 bool __ldTimeOut(uint16_t ms, bool isReset, ldTimer_t *pTimer)
 {
     int64_t lPeriod;
@@ -221,7 +231,7 @@ void *ldBaseGetWidget(arm_2d_control_node_t *ptNodeRoot,uint16_t nameId)
 
 void ldBaseColor(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, ldColor color, uint8_t opacity)
 {
-    arm_2d_fill_colour_with_opacity(ptTile, ptRegion, (__arm_2d_color_t)color, opacity);
+    arm_2d_fill_colour_with_opacity(ptTile, ptRegion, (__arm_2d_color_t){color}, opacity);
 }
 
 void ldBaseImage(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile, ldColor color, uint8_t opacity)
@@ -328,189 +338,18 @@ void ldBaseImageScale(arm_2d_tile_t *ptTile, arm_2d_region_t *ptRegion, arm_2d_t
 
 void ldBaseLabel(arm_2d_tile_t *ptTile,arm_2d_region_t *ptRegion,uint8_t *pStr,arm_2d_font_t *ptFont,arm_2d_align_t tAlign,ldColor textColor,uint8_t opacity)
 {
+    if((ptTile==NULL)||(ptRegion==NULL)||(pStr==NULL)||(ptFont==NULL))
+    {
+        return;
+    }
     arm_lcd_text_set_target_framebuffer(ptTile);
-    arm_lcd_text_set_font(ptFont);
     arm_lcd_text_set_draw_region(ptRegion);
     arm_lcd_text_set_colour(textColor, GLCD_COLOR_WHITE);
+    arm_lcd_text_set_font(ptFont);
     arm_lcd_text_set_opacity(opacity);
     arm_lcd_text_location(0,0);
 
-    arm_2d_size_t tLabelSize = arm_lcd_text_get_box(pStr,ptFont);
-
-    arm_2d_region_t tLabelRegion = {
-        .tLocation = ptRegion->tLocation,
-        .tSize = tLabelSize,
-    };
-
-    tLabelRegion= ldBaseGetAlignRegion(*ptRegion,tLabelRegion,tAlign);
-
-    tLabelRegion.tSize.iWidth+=1;//强制加宽，防止自动换行
-    arm_lcd_text_set_draw_region(&tLabelRegion);
-    if(pStr!=NULL)
-    {
-        arm_lcd_puts((char*)pStr);
-    }
-    arm_lcd_text_set_draw_region(ptRegion);
-}
-
-void arm_lcd_text_puts(arm_2d_region_t* ptRegion,arm_2d_font_t *ptFont,uint8_t *pStr,uint8_t opacity)
-{
-    arm_2d_size_t tCharSize = ptFont->tCharSize;
-    arm_2d_size_t tDrawRegionSize = ptRegion->tSize;
-
-    arm_2d_location_t   tDrawOffset={0,0};
-
-    while(*pStr) {
-        if (*pStr == '\r') {
-            tDrawOffset.iX = 0;
-        } else if (*pStr == '\n') {
-            tDrawOffset.iX = 0;
-            tDrawOffset.iY += tCharSize.iHeight;
-        } else if (*pStr == '\t') {
-            tDrawOffset.iX += tCharSize.iWidth * 4;
-            tDrawOffset.iX -= tDrawOffset.iX % tCharSize.iWidth;
-
-            if (tDrawOffset.iX >= tDrawRegionSize.iWidth) {
-                tDrawOffset.iX = 0;
-                tDrawOffset.iY += tCharSize.iHeight;
-
-                if (tDrawOffset.iY >= tDrawRegionSize.iHeight) {
-                    tDrawOffset.iY = 0;
-                }
-            }
-
-        }else if (*pStr == '\b') {
-            if (tDrawOffset.iX >= tCharSize.iWidth) {
-                tDrawOffset.iX -= tCharSize.iWidth;
-            } else {
-                tDrawOffset.iX = 0;
-            }
-        } else {
-            int16_t iX = tDrawOffset.iX + ptRegion->tLocation.iX;
-            int16_t iY = tDrawOffset.iY + ptRegion->tLocation.iY;
-
-            tDrawOffset.iX
-                += lcd_draw_char(   iX, iY, &pStr, opacity);
-
-//            if ((tDrawOffset.iX >= tDrawRegionSize.iWidth) && (*pStr != '\n')){ //自动检查是否二次换行
-            if (tDrawOffset.iX >= tDrawRegionSize.iWidth) {
-                tDrawOffset.iX = 0;
-                tDrawOffset.iY += tCharSize.iHeight;
-
-                if (tDrawOffset.iY >= tDrawRegionSize.iHeight) {
-                    tDrawOffset.iY = 0;
-                }
-            }
-
-            continue;
-        }
-        pStr++;
-    }
-}
-
-
-static
-int16_t __arm_lcd_get_char_advance(const arm_2d_font_t *ptFont, arm_2d_char_descriptor_t *ptDescriptor, uint8_t *pchChar)
-{
-    int16_t iAdvance = ptFont->tCharSize.iWidth;
-
-    do {
-        if (NULL != ptDescriptor) {
-            iAdvance = ptDescriptor->iAdvance;
-            break;
-        } if (NULL == pchChar) {
-            break;
-        }
-
-        arm_2d_char_descriptor_t tDescriptor;
-        ptDescriptor = arm_2d_helper_get_char_descriptor(  ptFont,
-                                                        &tDescriptor,
-                                                        pchChar);
-        if (NULL == ptDescriptor){
-            break;
-        }
-        iAdvance = ptDescriptor->iAdvance;
-    } while(0);
-
-    return iAdvance;
-
-}
-
-arm_2d_size_t arm_lcd_text_get_box(uint8_t *pStr, arm_2d_font_t *ptFont)
-{
-    arm_2d_size_t tCharSize = ptFont->tCharSize;
-    arm_2d_region_t tDrawBox = {
-        .tSize.iHeight = tCharSize.iHeight,
-    };
-
-    if(pStr!=NULL)
-    {
-        while(*pStr) {
-            if (*pStr == '\r') {
-                tDrawBox.tLocation.iX = 0;
-            } else if (*pStr == '\n') {
-                tDrawBox.tLocation.iX = 0;
-                tDrawBox.tLocation.iY += tCharSize.iHeight;
-
-                tDrawBox.tSize.iHeight += MAX(tDrawBox.tSize.iHeight, tDrawBox.tLocation.iY);
-            } else if (*pStr == '\t') {
-                tDrawBox.tLocation.iX += tCharSize.iWidth * 4;
-                tDrawBox.tLocation.iX -= tDrawBox.tLocation.iX
-                        % tCharSize.iWidth;
-
-                tDrawBox.tSize.iWidth = MAX(tDrawBox.tSize.iWidth, tDrawBox.tLocation.iX);
-
-            }else if (*pStr == '\b') {
-                if (tDrawBox.tLocation.iX >= tCharSize.iWidth) {
-                    tDrawBox.tLocation.iX -= tCharSize.iWidth;
-                } else {
-                    tDrawBox.tLocation.iX = 0;
-                }
-            } else {
-
-                int8_t chCodeLength = arm_2d_helper_get_utf8_byte_valid_length(pStr);
-                if (chCodeLength <= 0) {
-                    chCodeLength = 1;
-                }
-
-                arm_2d_char_descriptor_t tCharDescriptor, *ptDescriptor;
-                ptDescriptor = arm_2d_helper_get_char_descriptor(ptFont,
-                                                                 &tCharDescriptor,
-                                                                 pStr);
-
-                if (NULL != ptDescriptor) {
-                    int16_t tCharNewHeight = (tCharSize.iHeight - tCharDescriptor.iBearingY) + tCharSize.iHeight;
-
-                    tDrawBox.tSize.iHeight = MAX(tDrawBox.tSize.iHeight, tCharNewHeight);
-                }
-                tDrawBox.tLocation.iX += __arm_lcd_get_char_advance(ptFont, ptDescriptor, pStr);
-                tDrawBox.tSize.iWidth = MAX(tDrawBox.tSize.iWidth, tDrawBox.tLocation.iX);
-
-                pStr += chCodeLength;
-                continue;
-            }
-
-            pStr++;
-        }
-    }
-    return tDrawBox.tSize;
-}
-
-ARM_NONNULL(1,2)
-bool __arm_2d_helper_control_user_whether_ignore_node(  arm_2d_control_node_t *ptRoot,
-                                                        arm_2d_control_node_t *ptNode,
-                                                        arm_2d_location_t tLocation)
-{
-    ARM_2D_UNUSED(ptRoot);
-    ARM_2D_UNUSED(tLocation);
-
-    ldBase_t* ptWidget=(ldBase_t*)ptNode;
-    if(ptWidget->isHidden)
-    {
-        return true;
-    }
-
-    return false;
+    arm_lcd_puts_label((char*)pStr,tAlign);
 }
 
 void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
@@ -520,7 +359,7 @@ void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
     {
         return;
     }
-#if 1
+#if 0
     ptWidget->isDirtyRegionUpdate = true;
     ptWidget->isHidden=isHidden;
 #else
@@ -537,8 +376,27 @@ void ldBaseSetHidden(ldBase_t* ptWidget,bool isHidden)
         x=ptNode->tRegion.tLocation.iX+ptNodeRoot->tRegion.tSize.iWidth;
         y=ptNode->tRegion.tLocation.iY+ptNodeRoot->tRegion.tSize.iHeight;
     }
+    ptWidget->isHidden=isHidden;
     ldBaseMove(ptWidget,x,y);
 #endif
+}
+
+bool ldBaseIsHidden(ldBase_t* ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return false;
+    }
+
+    for(ldBase_t *ptNode=ptWidget;ptNode!=NULL;ptNode=(ldBase_t*)ptNode->use_as__arm_2d_control_node_t.ptParent)
+    {
+        if(ptNode->isHidden)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 void ldBaseMove(ldBase_t* ptWidget,int16_t x,int16_t y)
@@ -561,6 +419,7 @@ void ldBaseMove(ldBase_t* ptWidget,int16_t x,int16_t y)
 
 void ldBaseSetOpacity(ldBase_t *ptWidget, uint8_t opacity)
 {
+    assert(NULL != ptWidget);
     if (ptWidget == NULL)
     {
         return;
@@ -569,6 +428,67 @@ void ldBaseSetOpacity(ldBase_t *ptWidget, uint8_t opacity)
     ptWidget->isDirtyRegionUpdate = true;
     ptWidget->opacity=opacity;
 }
+
+ldWidgetType_t ldBaseGetWidgetType(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->widgetType;
+}
+
+uint16_t ldBaseGetNameId(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->nameId;
+}
+
+uint16_t ldBaseGetOpacity(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->opacity;
+}
+
+bool ldBaseIsSelected(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->isSelected;
+}
+
+bool ldBaseIsSelectable(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->isSelectable;
+}
+
+bool ldBaseIsCorner(ldBase_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if (ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->isCorner;
+}
+
 
 arm_2d_location_t ldBaseGetRelativeLocation(ldBase_t *ptWidget,arm_2d_location_t tLocation)
 {
@@ -766,8 +686,8 @@ void ldBaseBgMove(ld_scene_t *ptScene, int16_t bgWidth,int16_t bgHeight,int16_t 
 
     int16_t minX = MIN(0, offsetX);
     int16_t minY = MIN(0, offsetY);
-    int16_t maxX = MAX(LD_CFG_SCEEN_WIDTH, offsetX + bgWidth);
-    int16_t maxY = MAX(LD_CFG_SCEEN_HEIGHT, offsetX + bgHeight);
+    int16_t maxX = MAX(LD_CFG_SCREEN_WIDTH, offsetX + bgWidth);
+    int16_t maxY = MAX(LD_CFG_SCREEN_HEIGHT, offsetX + bgHeight);
 
     ptWidget->use_as__arm_2d_control_node_t.tRegion.tSize.iWidth=maxX-minX;
     ptWidget->use_as__arm_2d_control_node_t.tRegion.tSize.iHeight=maxY-minY;
@@ -801,118 +721,6 @@ arm_2d_region_t ldBaseGetAlignRegion(arm_2d_region_t parentRegion,arm_2d_region_
             break;
     }
 
-//    switch (tAlign)
-//    {
-//    case ARM_2D_ALIGN_LEFT:
-//    {
-//        childRegion.tLocation.iX=0;
-//        if(childRegion.tSize.iWidth>parentRegion.tSize.iWidth)
-//        {
-//            childRegion.tSize.iWidth=parentRegion.tSize.iWidth;
-//        }
-
-//        if(childRegion.tSize.iHeight<parentRegion.tSize.iHeight)
-//        {
-//            childRegion.tLocation.iY=(parentRegion.tSize.iHeight-childRegion.tSize.iHeight)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iY=0;
-//            childRegion.tSize.iHeight=parentRegion.tSize.iHeight;
-//        }
-//        break;
-//    }
-//    case ARM_2D_ALIGN_RIGHT:
-//    {
-//        if(childRegion.tSize.iWidth<parentRegion.tSize.iWidth)
-//        {
-//            childRegion.tLocation.iX=parentRegion.tSize.iWidth-childRegion.tSize.iWidth;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iX=0;
-//            childRegion.tSize.iWidth=parentRegion.tSize.iWidth;
-//        }
-
-//        if(childRegion.tSize.iHeight<parentRegion.tSize.iHeight)
-//        {
-//            childRegion.tLocation.iY=(parentRegion.tSize.iHeight-childRegion.tSize.iHeight)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iY=0;
-//            childRegion.tSize.iHeight=parentRegion.tSize.iHeight;
-//        }
-//        break;
-//    }
-//    case ARM_2D_ALIGN_TOP:
-//    {
-//        if(childRegion.tSize.iWidth<parentRegion.tSize.iWidth)
-//        {
-//            childRegion.tLocation.iX=(parentRegion.tSize.iWidth-childRegion.tSize.iWidth)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iX=0;
-//            childRegion.tSize.iWidth=parentRegion.tSize.iWidth;
-//        }
-
-//        childRegion.tLocation.iY=0;
-//        if(childRegion.tSize.iHeight>parentRegion.tSize.iHeight)
-//        {
-//            childRegion.tSize.iHeight=parentRegion.tSize.iHeight;
-//        }
-//        break;
-//    }
-//    case ARM_2D_ALIGN_BOTTOM:
-//    {
-//        if(childRegion.tSize.iWidth<parentRegion.tSize.iWidth)
-//        {
-//            childRegion.tLocation.iX=(parentRegion.tSize.iWidth-childRegion.tSize.iWidth)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iX=0;
-//            childRegion.tSize.iWidth=parentRegion.tSize.iWidth;
-//        }
-
-//        if(childRegion.tSize.iHeight<parentRegion.tSize.iHeight)
-//        {
-//            childRegion.tLocation.iY=parentRegion.tSize.iHeight-childRegion.tSize.iHeight;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iY=0;
-//            childRegion.tSize.iHeight=parentRegion.tSize.iHeight;
-//        }
-//        break;
-//    }
-//    case ARM_2D_ALIGN_CENTRE:
-//    {
-//        if(childRegion.tSize.iWidth<parentRegion.tSize.iWidth)
-//        {
-//            childRegion.tLocation.iX=(parentRegion.tSize.iWidth-childRegion.tSize.iWidth)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iX=0;
-//            childRegion.tSize.iWidth=parentRegion.tSize.iWidth;
-//        }
-
-//        if(childRegion.tSize.iHeight<parentRegion.tSize.iHeight)
-//        {
-//            childRegion.tLocation.iY=(parentRegion.tSize.iHeight-childRegion.tSize.iHeight)>>1;
-//        }
-//        else
-//        {
-//            childRegion.tLocation.iY=0;
-//            childRegion.tSize.iHeight=parentRegion.tSize.iHeight;
-//        }
-//        break;
-//    }
-//    default:
-//        break;
-//    }
     return childRegion;
 }
 
@@ -1114,3 +922,150 @@ arm_2d_vres_font_t* ldBaseGetVresFont(uint32_t addr)
 }
 
 #endif
+
+static int32_t manhattanDistance(ldBase_t *ptCurrent, ldBase_t *ptNext, ldNavDir_t tDir)
+{
+    int16_t dx = ptNext->use_as__arm_2d_control_node_t.tRegion.tLocation.iX -
+            ptCurrent->use_as__arm_2d_control_node_t.tRegion.tLocation.iX;
+    int16_t dy = ptNext->use_as__arm_2d_control_node_t.tRegion.tLocation.iY -
+            ptCurrent->use_as__arm_2d_control_node_t.tRegion.tLocation.iY;
+
+    switch (tDir)
+    {
+    case NAV_UP:    if (dy >= 0) return INT32_MAX; break;
+    case NAV_DOWN:  if (dy <= 0) return INT32_MAX; break;
+    case NAV_LEFT:  if (dx >= 0) return INT32_MAX; break;
+    case NAV_RIGHT: if (dx <= 0) return INT32_MAX; break;
+    default:        return INT32_MAX;
+    }
+    return abs(dx) + abs(dy);
+}
+
+static ldBase_t* navigatePeer(ldBase_t *ptFirst, ldBase_t *ptCurrent, ldNavDir_t tDir)
+{
+    if (!ptFirst || !ptCurrent) return ptCurrent;
+
+        ldBase_t *best     = NULL;
+        int32_t   bestDist = INT32_MAX;
+
+        /* 关键修正：从链表头开始，而不是从 ptCurrent 开始 */
+        for (ldBase_t *node = ptFirst; node; node = (ldBase_t *)node->use_as__arm_2d_control_node_t.ptNext)
+        {
+            if (node != ptCurrent && node->isSelectable)
+            {
+                int32_t d = manhattanDistance(ptCurrent, node, tDir);
+                if (d < bestDist)
+                {
+                    bestDist = d;
+                    best     = node;
+                }
+            }
+        }
+
+        return best ? best : ptCurrent;
+}
+
+static ldBase_t *ptFocusParent;
+static ldBase_t *ptCurrentFocus = NULL;
+
+void ldBaseFocusNavigateInit(void)
+{
+    ptCurrentFocus=NULL;
+}
+
+void ldBaseFocusNavigate(ld_scene_t *ptScene, ldNavDir_t tDir)
+{
+    if (!ptCurrentFocus)
+    {
+        ldBase_t* root=ldBaseGetWidgetById(0);
+        if (root->use_as__arm_2d_control_node_t.ptChildList)
+        {
+            ptCurrentFocus = (ldBase_t*)root->use_as__arm_2d_control_node_t.ptChildList;
+        }
+        else
+        {
+            return ;
+        }
+    }
+
+    ptFocusParent=ldBaseGetParent(ptCurrentFocus);
+
+    switch (tDir)
+    {
+    case NAV_ENTER:
+    {
+        if (ptCurrentFocus->use_as__arm_2d_control_node_t.ptChildList)
+        {
+            ptFocusParent = ptCurrentFocus;
+            ldBase_t *new=(ldBase_t*)ptCurrentFocus->use_as__arm_2d_control_node_t.ptChildList;
+            ldBaseSetSelect(ptCurrentFocus,false);
+            ldBaseSetSelect(new,true);
+            ptCurrentFocus=new;
+        }
+        break;
+    }
+    case NAV_UP:
+    case NAV_DOWN:
+    case NAV_LEFT:
+    case NAV_RIGHT:
+    {
+        ldBase_t *new=(ldBase_t*)navigatePeer((ldBase_t*)ptFocusParent->use_as__arm_2d_control_node_t.ptChildList, ptCurrentFocus, tDir);
+        if(ptCurrentFocus!=new)
+        {
+            ldBaseSetSelect(ptCurrentFocus,false);
+            ldBaseSetSelect(new,true);
+            ptCurrentFocus=new;
+            break;
+        }
+    }
+    case NAV_BACK:
+    {
+        ldBase_t *ptGrandParent = (ldBase_t *)ptFocusParent->use_as__arm_2d_control_node_t.ptParent;
+        if (ptGrandParent)
+        {
+            ptFocusParent = ptGrandParent;
+            ldBase_t *new= (ldBase_t*)ptCurrentFocus->use_as__arm_2d_control_node_t.ptParent;
+            ldBaseSetSelect(ptCurrentFocus,false);
+            ldBaseSetSelect(new,true);
+            ptCurrentFocus=new;
+        }
+        break;
+    }
+    }
+}
+
+void ldBaseSetSelectable(ldBase_t* ptWidget,bool isSelectable)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->isSelectable=isSelectable;
+}
+
+void ldBaseSetSelect(ldBase_t* ptWidget,bool isSelect)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+
+    if(ptWidget->isSelectable)
+    {
+        ptWidget->isDirtyRegionUpdate = true;
+        ptWidget->isSelected=isSelect;
+    }
+}
+
+void ldBaseSetCorner(ldBase_t* ptWidget,bool isCorner)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return;
+    }
+    ptWidget->isDirtyRegionUpdate = true;
+    ptWidget->isCorner=isCorner;
+}

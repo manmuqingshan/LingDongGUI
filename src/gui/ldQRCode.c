@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -94,7 +94,7 @@ ldQRCode_t* ldQRCode_init(ld_scene_t *ptScene, ldQRCode_t *ptWidget, uint16_t na
     ptWidget->qrColor=qrColor;
     ptWidget->bgColor=bgColor;
 
-    LOG_INFO("[init][QRCode] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][QRCode] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -114,7 +114,7 @@ void ldQRCode_depose(ld_scene_t *ptScene, ldQRCode_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+    ldFree(ptWidget->pStr);
     ldFree(ptWidget);
 }
 
@@ -156,7 +156,7 @@ void ldQRCode_show(ld_scene_t *ptScene, ldQRCode_t *ptWidget, const arm_2d_tile_
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -207,11 +207,15 @@ void ldQRCode_show(ld_scene_t *ptScene, ldQRCode_t *ptWidget, const arm_2d_tile_
                     }
                 }
             }
+            arm_2d_op_wait_async(NULL);
             ldFree(qr0);
             ldFree(tempBuffer);
+
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-    arm_2d_op_wait_async(NULL);
+
 }
 
 void ldQRCodeSetText(ldQRCode_t *ptWidget, uint8_t *pStr)

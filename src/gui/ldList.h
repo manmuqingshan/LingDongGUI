@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -66,7 +66,6 @@ struct ldList_t
     ldBody_t margin;// 边框以外的区域
     bool isMoveReset:1;
     bool isHoldMove:1;
-    bool isCorner:1;
     bool isTransparent:1;
 };
 
@@ -82,7 +81,7 @@ void ldListSetText(ldList_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySi
 
 void ldListSetTextColor(ldList_t* ptWidget,ldColor textColor);
 void ldListSetAlign(ldList_t *ptWidget,arm_2d_align_t tAlign);
-void ldListSetBgColor(ldList_t *ptWidget, ldColor bgColor);
+void ldListSetBackgroundColor(ldList_t *ptWidget, ldColor bgColor);
 void ldListSetSelectColor(ldList_t* ptWidget,ldColor selectColor);
 void ldListSetItemWidget(ldList_t* ptWidget,uint8_t itemNum,ldBase_t* childWidget);
 int8_t ldListGetSelectItem(ldList_t* ptWidget);
@@ -96,6 +95,9 @@ void ldListSetMargin(ldList_t* ptWidget,uint8_t top,uint8_t bottom,uint8_t left,
 #define ldListSetHidden                ldBaseSetHidden
 #define ldListMove                     ldBaseMove
 #define ldListSetOpacity               ldBaseSetOpacity
+#define ldListSetSelectable            ldBaseSetSelectable
+#define ldListSetSelect                ldBaseSetSelect
+#define ldListSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

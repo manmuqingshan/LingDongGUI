@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -99,7 +99,7 @@ ldGauge_t* ldGauge_init( ld_scene_t *ptScene,ldGauge_t *ptWidget, uint16_t nameI
     ptWidget->centreOffsetX=centreOffsetX;
     ptWidget->centreOffsetY=centreOffsetY;
 
-    LOG_INFO("[init][gauge] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][gauge] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -119,6 +119,12 @@ void ldGauge_depose(ld_scene_t *pScene, ldGauge_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptBgImgTile);
+    ldFree(ptWidget->ptBgMaskTile);
+    ldFree(ptWidget->ptPointerImgTile);
+    ldFree(ptWidget->ptPointerMaskTile);
+#endif
     ldFree(ptWidget->use_as__ldBase_t.ptItemRegionList);
     ldFree(ptWidget);
 }
@@ -167,7 +173,7 @@ void ldGauge_show(ld_scene_t *ptScene, ldGauge_t *ptWidget, const arm_2d_tile_t 
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -243,14 +249,12 @@ void ldGauge_show(ld_scene_t *ptScene, ldGauge_t *ptWidget, const arm_2d_tile_t 
                                                              &bgRotationCentre);
                     break;
                 }
-
-
-
-
-
                 arm_2d_op_wait_async(NULL);
 
             } while(0);
+
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
 

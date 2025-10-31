@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -51,8 +51,6 @@ const ldBaseWidgetFunc_t ldDateTimeFunc = {
     .show = (ldShowFunc_t)ldDateTime_show,
 };
 
-static uint8_t defaultFormat[]="yyyy-mm-dd hh:nn:ss";
-
 ldDateTime_t* ldDateTime_init(ld_scene_t *ptScene, ldDateTime_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont)
 {
     assert(NULL != ptScene);
@@ -92,10 +90,10 @@ ldDateTime_t* ldDateTime_init(ld_scene_t *ptScene, ldDateTime_t *ptWidget, uint1
     ptWidget->hour=12;
     ptWidget->minute=0;
     ptWidget->second=0;
-    ptWidget->pFormatStr=defaultFormat;
-    ptWidget->formatStrTemp[0]=0;
+    strcpy((char*)ptWidget->formatStr,"yyyy-mm-dd hh:nn:ss");
+    memset(ptWidget->formatStrTemp,0,DATE_TIME_BUFFER_SIZE);
 
-    LOG_INFO("[init][dateTime] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][dateTime] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -115,7 +113,9 @@ void ldDateTime_depose(ld_scene_t *ptScene, ldDateTime_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptFont);
+#endif
     ldFree(ptWidget);
 }
 
@@ -152,7 +152,7 @@ void ldDateTime_show(ld_scene_t *ptScene, ldDateTime_t *ptWidget, const arm_2d_t
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -163,7 +163,7 @@ void ldDateTime_show(ld_scene_t *ptScene, ldDateTime_t *ptWidget, const arm_2d_t
                 int ret;
                 char strTemp[5];
 
-                strcpy((char *)ptWidget->formatStrTemp,(char *)ptWidget->pFormatStr);
+                strcpy((char *)ptWidget->formatStrTemp,(char *)ptWidget->formatStr);
 
                 addr=strstr((char *)ptWidget->formatStrTemp,"yyyy");
                 if(addr)
@@ -227,6 +227,7 @@ void ldDateTime_show(ld_scene_t *ptScene, ldDateTime_t *ptWidget, const arm_2d_t
                 arm_2d_op_wait_async(NULL);
             }
             ldBaseLabel(&tTarget,&tTarget_canvas,ptWidget->formatStrTemp,ptWidget->ptFont,ptWidget->tAlign,ptWidget->textColor,ptWidget->use_as__ldBase_t.opacity);
+            LD_BASE_WIDGET_SELECT;
             arm_2d_op_wait_async(NULL);
         }
     }
@@ -250,7 +251,7 @@ void ldDateTimeSetFormat(ldDateTime_t* ptWidget,const uint8_t *pStr)
         return;
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
-    ptWidget->pFormatStr=pStr;
+    strcpy((char*)ptWidget->formatStr,(char*)pStr);
 }
 
 void ldDateTimeSetTextColor(ldDateTime_t* ptWidget,ldColor textColor)
@@ -273,7 +274,7 @@ void ldDateTimeSetAlign(ldDateTime_t *ptWidget,arm_2d_align_t tAlign)
     ptWidget->tAlign=tAlign;
 }
 
-void ldDateTimeSetBgColor(ldDateTime_t *ptWidget, ldColor bgColor)
+void ldDateTimeSetBackgroundColor(ldDateTime_t *ptWidget, ldColor bgColor)
 {
     if(ptWidget==NULL)
     {

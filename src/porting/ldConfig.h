@@ -21,16 +21,16 @@ extern "C" {
 #define LD_CFG_COLOR_DEPTH                        (16)
 #endif
 
-#ifndef LD_CFG_SCEEN_WIDTH
+#ifndef LD_CFG_SCREEN_WIDTH
 // <o>Width of the screen <8-32767>
 // <i> The width of your screen
-#define LD_CFG_SCEEN_WIDTH                        (320)
+#define LD_CFG_SCREEN_WIDTH                       (320)
 #endif
 
-#ifndef LD_CFG_SCEEN_HEIGHT
+#ifndef LD_CFG_SCREEN_HEIGHT
 // <o>Height of the screen <8-32767>
 // <i> The height of your screen
-#define LD_CFG_SCEEN_HEIGHT                       (240)
+#define LD_CFG_SCREEN_HEIGHT                      (240)
 #endif
 
 #ifndef LD_CFG_PFB_WIDTH
@@ -84,6 +84,13 @@ extern "C" {
 #endif
 
 // debug config
+#ifndef USE_LCD_TEST
+// <o> LCD test function
+//     <0=>    OFF
+//     <1=>    ON
+// <i> DrawBitmap porting sanity check
+#define USE_LCD_TEST                              (0)
+#endif
 
 #ifndef USE_LOG_LEVEL
 // <o> Log output level
@@ -127,11 +134,11 @@ extern "C" {
 #define __DISP0_CFG_PFB_BLOCK_WIDTH__             LD_CFG_PFB_WIDTH
 #define __DISP0_CFG_PFB_BLOCK_HEIGHT__            LD_CFG_PFB_HEIGHT
 #define __DISP0_CFG_COLOUR_DEPTH__                LD_CFG_COLOR_DEPTH
-#define __DISP0_CFG_SCEEN_WIDTH__                 LD_CFG_SCEEN_WIDTH
-#define __DISP0_CFG_SCEEN_HEIGHT__                LD_CFG_SCEEN_HEIGHT
+#define __DISP0_CFG_SCEEN_WIDTH__                 LD_CFG_SCREEN_WIDTH
+#define __DISP0_CFG_SCEEN_HEIGHT__                LD_CFG_SCREEN_HEIGHT
 #define __DISP0_CFG_FPS_CACULATION_MODE__         (1)
-#define __GLCD_CFG_SCEEN_WIDTH__                  LD_CFG_SCEEN_WIDTH
-#define __GLCD_CFG_SCEEN_HEIGHT__                 LD_CFG_SCEEN_HEIGHT
+#define __GLCD_CFG_SCEEN_WIDTH__                  LD_CFG_SCREEN_WIDTH
+#define __GLCD_CFG_SCEEN_HEIGHT__                 LD_CFG_SCREEN_HEIGHT
 #if USE_VIRTUAL_RESOURCE == 0
 #define __DISP0_CFG_VIRTUAL_RESOURCE_HELPER__     (0)
 #else

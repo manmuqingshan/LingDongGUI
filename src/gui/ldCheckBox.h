@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -59,8 +59,8 @@ struct ldCheckBox_t
     uint16_t boxWidth;
     uint8_t radioButtonGroup;
     bool isChecked:1;
-    bool isCorner:1;
     bool isRadioButton:1;
+//    bool isRadioReady:1;
 };
 
 ldCheckBox_t* ldCheckBox_init(ld_scene_t *ptScene, ldCheckBox_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height);
@@ -74,10 +74,12 @@ void ldCheckBoxSetColor(ldCheckBox_t* ptWidget,ldColor bgColor,ldColor fgColor);
 void ldCheckBoxSetImage(ldCheckBox_t* ptWidget,arm_2d_tile_t* ptUncheckedImgTile,arm_2d_tile_t* ptUncheckedMaskTile,arm_2d_tile_t* ptCheckedImgTile,arm_2d_tile_t* ptCheckedMaskTile);
 void ldCheckBoxSetText(ldCheckBox_t* ptWidget,arm_2d_font_t *ptFont,uint8_t *pStr);
 void ldCheckBoxSetRadioButtonGroup(ldCheckBox_t* ptWidget,uint8_t num);
-void ldCheckBoxSetCorner(ldCheckBox_t* ptWidget,bool isCorner);
+ldCheckBox_t* ldCheckBoxGetRadioSelected(ld_scene_t *ptScene, uint8_t groupNum);
 void ldCheckBoxSetTextColor(ldCheckBox_t* ptWidget,ldColor textColor);
 void ldCheckBoxSetChecked(ldCheckBox_t* ptWidget,bool isChecked);
 void ldCheckBoxSetStringLeftSpace(ldCheckBox_t* ptWidget,uint16_t space);//only for image mode
+uint8_t* ldCheckBoxGetText(ldCheckBox_t* ptWidget);
+bool ldCheckBoxIsChecked(ldCheckBox_t* ptWidget);
 
 #define ldCheckBoxInit(nameId,parentNameId,x,y,width,height) \
         ldCheckBox_init(ptScene,NULL,nameId,parentNameId,x,y,width,height)
@@ -85,6 +87,9 @@ void ldCheckBoxSetStringLeftSpace(ldCheckBox_t* ptWidget,uint16_t space);//only 
 #define ldCheckBoxSetHidden                ldBaseSetHidden
 #define ldCheckBoxMove                     ldBaseMove
 #define ldCheckBoxSetOpacity               ldBaseSetOpacity
+#define ldCheckBoxSetSelectable            ldBaseSetSelectable
+#define ldCheckBoxSetSelect                ldBaseSetSelect
+#define ldCheckBoxSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

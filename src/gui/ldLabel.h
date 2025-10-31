@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -69,8 +69,8 @@ void ldLabelSetTransparent(ldLabel_t* ptWidget,bool isTransparent);
 void ldLabelSetText(ldLabel_t* ptWidget,uint8_t *pStr);
 void ldLabelSetTextColor(ldLabel_t* ptWidget,ldColor textColor);
 void ldLabelSetAlign(ldLabel_t *ptWidget,arm_2d_align_t tAlign);
-void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
-void ldLabelSetBgColor(ldLabel_t *ptWidget, ldColor bgColor);
+void ldLabelSetBackgroundImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
+void ldLabelSetBackgroundColor(ldLabel_t *ptWidget, ldColor bgColor);
 
 #define ldLabelInit(nameId,parentNameId,x,y,width,height,ptFont) \
         ldLabel_init(ptScene,NULL,nameId,parentNameId,x,y,width,height,ptFont)
@@ -78,6 +78,9 @@ void ldLabelSetBgColor(ldLabel_t *ptWidget, ldColor bgColor);
 #define ldLabelSetHidden                ldBaseSetHidden
 #define ldLabelMove                     ldBaseMove
 #define ldLabelSetOpacity               ldBaseSetOpacity
+#define ldLabelSetSelectable            ldBaseSetSelectable
+#define ldLabelSetSelect                ldBaseSetSelect
+#define ldLabelSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -57,13 +57,13 @@ struct ldComboBox_t
     uint8_t itemPreSelect;
     int16_t itemHeight;
     arm_2d_font_t *ptFont;
-    const uint8_t **ppItemStrGroup;
+    uint8_t **ppItemStrGroup;
     ldColor textColor;
     ldColor bgColor;
     ldColor frameColor;
     ldColor selectColor;
     bool isExpand:1;
-    bool isCorner:1;
+    bool isStatic:1;
 };
 
 ldComboBox_t* ldComboBox_init(ld_scene_t *ptScene, ldComboBox_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont);
@@ -81,13 +81,19 @@ void ldComboBoxSetBackgroundColor(ldComboBox_t* ptWidget, ldColor backgroundColo
 void ldComboBoxSetFrameColor(ldComboBox_t* ptWidget, ldColor frameColor);
 void ldComboBoxSetSelectColor(ldComboBox_t* ptWidget, ldColor selectColor);
 void ldComboBoxSetSelectItem(ldComboBox_t* ptWidget, uint8_t itemIndex);
-void ldComboBoxSetCorner(ldComboBox_t* ptWidget,bool isCorner);
-void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize);
+void ldComboBoxSetStaticItems(ldComboBox_t* ptWidget, uint8_t *pStrArray[], uint8_t arraySize);
+void ldComboBoxSetItemMax(ldComboBox_t *ptWidget, uint8_t itemMax);
+void ldComboBoxAddItem(ldComboBox_t* ptWidget,uint8_t *pStr);
 void ldComboBoxSetDropdownImage(ldComboBox_t* ptWidget,arm_2d_tile_t* ptDropdownImgTile,arm_2d_tile_t* ptDropdownMaskTile);
+uint8_t* ldComboBoxGetText(ldComboBox_t* ptWidget, uint8_t num);
+uint8_t ldComboBoxGetSelectItem(ldComboBox_t* ptWidget);
 
 #define ldComboBoxSetHidden                ldBaseSetHidden
 #define ldComboBoxMove                     ldBaseMove
 #define ldComboBoxSetOpacity               ldBaseSetOpacity
+#define ldComboBoxSetSelectable            ldBaseSetSelectable
+#define ldComboBoxSetSelect                ldBaseSetSelect
+#define ldComboBoxSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

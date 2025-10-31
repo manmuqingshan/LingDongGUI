@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -89,7 +89,7 @@ ldLabel_t* ldLabel_init( ld_scene_t *ptScene,ldLabel_t *ptWidget,uint16_t nameId
     ptWidget->textColor = GLCD_COLOR_BLACK;
     ptWidget->ptFont = ptFont;
 
-    LOG_INFO("[init][label] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][label] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -109,6 +109,11 @@ void ldLabel_depose(ld_scene_t *ptScene, ldLabel_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptFont);
+    ldFree(ptWidget->ptImgTile);
+    ldFree(ptWidget->ptMaskTile);
+#endif
     ldFree(ptWidget->pStr);
     ldFree(ptWidget);
 }
@@ -152,7 +157,7 @@ void ldLabel_show(ld_scene_t *ptScene, ldLabel_t *ptWidget, const arm_2d_tile_t 
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -161,11 +166,41 @@ void ldLabel_show(ld_scene_t *ptScene, ldLabel_t *ptWidget, const arm_2d_tile_t 
             {
                 if (ptWidget->ptImgTile==NULL)//color
                 {
-                    ldBaseColor(&tTarget,NULL,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
+                    if(ptWidget->use_as__ldBase_t.isCorner)
+                    {
+                        draw_round_corner_box(&tTarget,
+                                              NULL,
+                                              ptWidget->bgColor,
+                                              ptWidget->use_as__ldBase_t.opacity,
+                                              bIsNewFrame);
+                    }
+                    else
+                    {
+                        ldBaseColor(&tTarget,
+                                    NULL,
+                                    ptWidget->bgColor,
+                                    ptWidget->use_as__ldBase_t.opacity);
+                    }
                 }
                 else
                 {
-                    ldBaseImage(&tTarget,NULL,ptWidget->ptImgTile,ptWidget->ptMaskTile,0,ptWidget->use_as__ldBase_t.opacity);
+                    if(ptWidget->use_as__ldBase_t.isCorner)
+                    {
+                        draw_round_corner_image(ptWidget->ptImgTile,
+                                                &tTarget,
+                                                NULL,
+                                                bIsNewFrame,
+                                                ptWidget->use_as__ldBase_t.opacity);
+                    }
+                    else
+                    {
+                        ldBaseImage(&tTarget,
+                                    NULL,
+                                    ptWidget->ptImgTile,
+                                    ptWidget->ptMaskTile,
+                                    ptWidget->bgColor,
+                                    ptWidget->use_as__ldBase_t.opacity);
+                    }
                 }
                 arm_2d_op_wait_async(NULL);
             }
@@ -181,10 +216,11 @@ void ldLabel_show(ld_scene_t *ptScene, ldLabel_t *ptWidget, const arm_2d_tile_t 
                             ptWidget->use_as__ldBase_t.opacity);
                 arm_2d_op_wait_async(NULL);
             }
+
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldLabelSetTransparent(ldLabel_t* ptWidget,bool isTransparent)
@@ -232,7 +268,7 @@ void ldLabelSetAlign(ldLabel_t *ptWidget,arm_2d_align_t tAlign)
     ptWidget->tAlign=tAlign;
 }
 
-void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
+void ldLabelSetBackgroundImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
 {
     if(ptWidget==NULL)
     {
@@ -244,7 +280,7 @@ void ldLabelSetBgImage(ldLabel_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_til
     ptWidget->isTransparent=false;
 }
 
-void ldLabelSetBgColor(ldLabel_t *ptWidget, ldColor bgColor)
+void ldLabelSetBackgroundColor(ldLabel_t *ptWidget, ldColor bgColor)
 {
     if(ptWidget==NULL)
     {

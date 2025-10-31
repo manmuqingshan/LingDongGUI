@@ -36,13 +36,13 @@ void uiNozzleInit(ld_scene_t* ptScene)
 {
     void *obj,*win;
 
-    obj=ldWindowInit(ID_BG, ID_BG, 0, 0, LD_CFG_SCEEN_WIDTH, LD_CFG_SCEEN_HEIGHT);
+    obj=ldWindowInit(ID_BG, ID_BG, 0, 0, LD_CFG_SCREEN_WIDTH, LD_CFG_SCREEN_HEIGHT);
     ldWindowSetColor(obj,GLCD_COLOR_BLACK);
 
     obj=ldButtonInit(ID_BTN_RET,ID_BG,20,5,80,40);
     ldButtonSetFont(obj,FONT_ALIBABAPUHUITI_3_55_REGULAR_18);
     ldButtonSetColor(obj,__RGB(0x64,0x95,0xED),__RGB(0x41,0x69,0xE1));
-    ldButtonSetRoundCorner(obj,true);
+    ldButtonSetCorner(obj,true);
     ldButtonSetText(obj,"返回");
     connect(ID_BTN_RET,SIGNAL_RELEASE,slotJumpReady);
 

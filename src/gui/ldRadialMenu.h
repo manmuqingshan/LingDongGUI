@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -98,6 +98,9 @@ void ldRadialMenuOffsetItem(ldRadialMenu_t *ptWidget,int8_t offset);
 #define ldRadialMenuSetHidden                ldBaseSetHidden
 #define ldRadialMenuMove                     ldBaseMove
 #define ldRadialMenuSetOpacity               ldBaseSetOpacity
+#define ldRadialMenuSetSelectable            ldBaseSetSelectable
+#define ldRadialMenuSetSelect                ldBaseSetSelect
+#define ldRadialMenuSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

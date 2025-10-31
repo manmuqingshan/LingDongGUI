@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -193,7 +193,7 @@ ldScrollSelecter_t* ldScrollSelecter_init( ld_scene_t *ptScene,ldScrollSelecter_
     ldMsgConnect(ptWidget,SIGNAL_HOLD_DOWN,slotScrollSelecterScroll);
     ldMsgConnect(ptWidget,SIGNAL_RELEASE,slotScrollSelecterScroll);
 
-    LOG_INFO("[init][scrollSelecter] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][scrollSelecter] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -213,7 +213,12 @@ void ldScrollSelecter_depose(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptImgTile);
+    ldFree(ptWidget->ptMaskTile);
+    ldFree(ptWidget->ptIndicatorTile);
+    ldFree(ptWidget->ptFont);
+#endif
     ldFree(ptWidget);
 }
 
@@ -279,7 +284,7 @@ void ldScrollSelecter_show(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget, co
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -288,11 +293,41 @@ void ldScrollSelecter_show(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget, co
             {
                 if(ptWidget->ptImgTile==NULL)
                 {
-                    ldBaseColor(&tTarget,NULL,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
+                    if(ptWidget->use_as__ldBase_t.isCorner)
+                    {
+                        draw_round_corner_box(&tTarget,
+                                              NULL,
+                                              ptWidget->bgColor,
+                                              ptWidget->use_as__ldBase_t.opacity,
+                                              bIsNewFrame);
+                    }
+                    else
+                    {
+                        ldBaseColor(&tTarget,
+                                    NULL,
+                                    ptWidget->bgColor,
+                                    ptWidget->use_as__ldBase_t.opacity);
+                    }
                 }
                 else
                 {
-                    ldBaseImage(&tTarget,NULL,ptWidget->ptImgTile,ptWidget->ptMaskTile,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity);
+                    if(ptWidget->use_as__ldBase_t.isCorner)
+                    {
+                        draw_round_corner_image(ptWidget->ptImgTile,
+                                                &tTarget,
+                                                NULL,
+                                                bIsNewFrame,
+                                                ptWidget->use_as__ldBase_t.opacity);
+                    }
+                    else
+                    {
+                        ldBaseImage(&tTarget,
+                                    NULL,
+                                    ptWidget->ptImgTile,
+                                    ptWidget->ptMaskTile,
+                                    ptWidget->bgColor,
+                                    ptWidget->use_as__ldBase_t.opacity);
+                    }
                 }
                 arm_2d_op_wait_async(NULL);
             }
@@ -323,6 +358,7 @@ void ldScrollSelecter_show(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget, co
                             ARM_2D_ALIGN_BOTTOM,
                             ptWidget->charColor,
                             ptWidget->use_as__ldBase_t.opacity);
+                arm_2d_op_wait_async(NULL);
             }
 
             if(ptWidget->is3Row)
@@ -343,10 +379,11 @@ void ldScrollSelecter_show(ld_scene_t *ptScene, ldScrollSelecter_t *ptWidget, co
                 }
             }
             arm_2d_op_wait_async(NULL);
+
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldScrollSelecterSetItems(ldScrollSelecter_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize)
@@ -372,7 +409,7 @@ void ldScrollSelecterSetTextColor(ldScrollSelecter_t* ptWidget,ldColor charColor
     ptWidget->charColor=charColor;
 }
 
-void ldScrollSelecterSetBgColor(ldScrollSelecter_t* ptWidget,ldColor bgColor)
+void ldScrollSelecterSetBackgroundColor(ldScrollSelecter_t* ptWidget,ldColor bgColor)
 {
     assert(NULL != ptWidget);
     if(ptWidget==NULL)
@@ -385,7 +422,7 @@ void ldScrollSelecterSetBgColor(ldScrollSelecter_t* ptWidget,ldColor bgColor)
     ptWidget->isTransparent=false;
 }
 
-void ldScrollSelecterSetBgImage(ldScrollSelecter_t* ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
+void ldScrollSelecterSetBackgroundImage(ldScrollSelecter_t* ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)
 {
     assert(NULL != ptWidget);
     if(ptWidget==NULL)

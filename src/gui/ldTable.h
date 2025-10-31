@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -104,7 +104,7 @@ void ldTableSetItemHeight(ldTable_t *ptWidget,uint8_t row,int16_t height);
 void ldTableSetItemText(ldTable_t *ptWidget,uint8_t row,uint8_t column,uint8_t *pText,arm_2d_font_t* ptFont);
 void ldTableSetItemStaticText(ldTable_t *ptWidget,uint8_t row,uint8_t column,uint8_t *pText,arm_2d_font_t* ptFont);
 void ldTableSetItemColor(ldTable_t *ptWidget,uint8_t row,uint8_t column,ldColor textColor,ldColor bgColor);
-void ldTableSetBgColor(ldTable_t *ptWidget,ldColor bgColor);
+void ldTableSetBackgroundColor(ldTable_t *ptWidget,ldColor bgColor);
 void ldTableSetItemAlign(ldTable_t *ptWidget,uint8_t row,uint8_t column,arm_2d_align_t tAlign);
 void ldTableSetItemImage(ldTable_t *ptWidget,uint8_t row,uint8_t column,int16_t x,int16_t y,arm_2d_tile_t* ptImgTile,arm_2d_tile_t *ptMaskTile,ldColor maskColor);
 void ldTableSetItemButton(ldTable_t *ptWidget,uint8_t row,uint8_t column,int16_t x,int16_t y,arm_2d_tile_t *ptReleaseImgTile,arm_2d_tile_t *ptReleaseMaskTile,ldColor releaseImgMaskColor,arm_2d_tile_t *ptPressImgTile,arm_2d_tile_t *ptPressMaskTile,ldColor pressImgMaskColor,bool isCheckable);
@@ -119,6 +119,9 @@ void ldTableSetAlignGrid(ldTable_t *ptWidget,bool isAlignGrid);
 #define ldTableSetHidden                ldBaseSetHidden
 #define ldTableMove                     ldBaseMove
 #define ldTableSetOpacity               ldBaseSetOpacity
+#define ldTableSetSelectable            ldBaseSetSelectable
+#define ldTableSetSelect                ldBaseSetSelect
+#define ldTableSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

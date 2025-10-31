@@ -359,6 +359,7 @@ bool VT_sdl_refresh_task(void)
                 keyRight=true;
                 break;
             }
+            case SDLK_RETURN:
             case SDLK_KP_ENTER:
             {
                 keyEnter=true;
@@ -398,6 +399,7 @@ bool VT_sdl_refresh_task(void)
                 keyRight=false;
                 break;
             }
+            case SDLK_RETURN:
             case SDLK_KP_ENTER:
             {
                 keyEnter=false;

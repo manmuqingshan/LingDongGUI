@@ -1,0 +1,12 @@
+- font:
+    family: Arial
+    size: 10
+    bold: false
+    italic: false
+    underline: false
+    strikeOut: false
+    path: C:/Windows/Fonts/arial.ttf
+    codeName: Arial
+    bitWidth: 8
+    index: 0
+    text: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~±"

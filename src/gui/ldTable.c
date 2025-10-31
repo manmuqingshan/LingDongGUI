@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -302,10 +302,10 @@ static bool slotTableProcess(ld_scene_t *ptScene,ldMsg_t msg)
 
                         arm_2d_region_t itemRegion= _ldTableGetItemRegion(ptWidget,ptWidget->currentRow,ptWidget->currentColumn);
 
-                        if((itemRegion.tLocation.iY+itemRegion.tSize.iHeight+ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY)>(LD_CFG_SCEEN_HEIGHT>>1))
+                        if((itemRegion.tLocation.iY+itemRegion.tSize.iHeight+ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY)>(LD_CFG_SCREEN_HEIGHT>>1))
                         {
-                            ldKeyboardMove((ldBase_t *)kb,0,LD_CFG_SCEEN_HEIGHT>>1);
-                            ldBaseBgMove(ptScene,LD_CFG_SCEEN_WIDTH,LD_CFG_SCEEN_HEIGHT,0,-(LD_CFG_SCEEN_HEIGHT>>1));
+                            ldKeyboardMove((ldBase_t *)kb,0,LD_CFG_SCREEN_HEIGHT>>1);
+                            ldBaseBgMove(ptScene,LD_CFG_SCREEN_WIDTH,LD_CFG_SCREEN_HEIGHT,0,-(LD_CFG_SCREEN_HEIGHT>>1));
                         }
                         else
                         {
@@ -529,7 +529,7 @@ ldTable_t* ldTable_init( ld_scene_t *ptScene,ldTable_t *ptWidget, uint16_t nameI
     ldMsgConnect(ptWidget,SIGNAL_HOLD_DOWN,slotTableProcess);
     ldMsgConnect(ptWidget,SIGNAL_FINISHED,slotEditEnd);
 
-    LOG_INFO("[init][table] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][table] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -552,6 +552,13 @@ void ldTable_depose(ld_scene_t *ptScene, ldTable_t *ptWidget)
         if(!ptWidget->ptItemInfo[i].isStaticText)
         {
             ldFree(ptWidget->ptItemInfo[i].pText);
+#if USE_VIRTUAL_RESOURCE == 1
+            ldFree(ptWidget->ptItemInfo[i].ptReleaseImgTile);
+            ldFree(ptWidget->ptItemInfo[i].ptReleaseMaskTile);
+            ldFree(ptWidget->ptItemInfo[i].ptPressImgTile);
+            ldFree(ptWidget->ptItemInfo[i].ptPressMaskTile);
+            ldFree(ptWidget->ptItemInfo[i].ptFont);
+#endif
         }
     }
 
@@ -604,7 +611,7 @@ void ldTable_show(ld_scene_t *ptScene, ldTable_t *ptWidget, const arm_2d_tile_t 
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -668,20 +675,20 @@ void ldTable_show(ld_scene_t *ptScene, ldTable_t *ptWidget, const arm_2d_tile_t 
 
                         if(cursorBlinkFlag&&item->isEditing)
                         {
-                            arm_2d_size_t strSize=arm_lcd_text_get_box(item->pText, item->ptFont);
+                            arm_2d_size_t strSize=arm_lcd_printf_to_buffer(item->ptFont,"%s",item->pText);
                             arm_2d_region_t srtRegion={
                                 .tLocation={0,0},
                                 .tSize=strSize,
                             };
-                               srtRegion=ldBaseGetAlignRegion(tItemTile.tRegion,srtRegion,item->tAlign);
-                                arm_2d_draw_box(&tItemTile,
-                                                &((arm_2d_region_t){srtRegion.tLocation.iX+srtRegion.tSize.iWidth,
-                                                                    srtRegion.tLocation.iY,
-                                                                    CURSOR_WIDTH,
-                                                                    item->ptFont->tCharSize.iHeight}),
-                                                1,
-                                                0,
-                                                ptWidget->use_as__ldBase_t.opacity);
+                            srtRegion=ldBaseGetAlignRegion(tItemTile.tRegion,srtRegion,item->tAlign);
+                            arm_2d_draw_box(&tItemTile,
+                                            &((arm_2d_region_t){srtRegion.tLocation.iX+srtRegion.tSize.iWidth,
+                                                                srtRegion.tLocation.iY,
+                                                                CURSOR_WIDTH,
+                                                                item->ptFont->tCharSize.iHeight}),
+                                            1,
+                                            0,
+                                            ptWidget->use_as__ldBase_t.opacity);
                         }
 
                         tItemTile.tRegion.tSize.iWidth+=CURSOR_WIDTH;
@@ -735,10 +742,10 @@ void ldTable_show(ld_scene_t *ptScene, ldTable_t *ptWidget, const arm_2d_tile_t 
                     arm_2d_op_wait_async(NULL);
                 }
             }
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldTableSetItemWidth(ldTable_t *ptWidget,uint8_t column,int16_t width)
@@ -828,7 +835,7 @@ void ldTableSetItemColor(ldTable_t *ptWidget,uint8_t row,uint8_t column,ldColor 
     }
 }
 
-void ldTableSetBgColor(ldTable_t *ptWidget,ldColor bgColor)
+void ldTableSetBackgroundColor(ldTable_t *ptWidget,ldColor bgColor)
 {
     if (ptWidget == NULL)
     {
@@ -934,7 +941,7 @@ void ldTableSetExcelType(ldTable_t *ptWidget,arm_2d_font_t* ptFont)
 
     ldTableSetEditable(ptWidget,0,0,false,0);
 
-    ldTableSetBgColor(ptWidget,__RGB(219,219,219));
+    ldTableSetBackgroundColor(ptWidget,__RGB(219,219,219));
     strBuf[0]='1';
     for(uint8_t i=0;i<ptWidget->rowCount;i++)
     {

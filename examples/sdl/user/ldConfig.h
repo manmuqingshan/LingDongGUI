@@ -21,28 +21,28 @@ extern "C" {
 #define LD_CFG_COLOR_DEPTH                        (16)
 #endif
 
-#ifndef LD_CFG_SCEEN_WIDTH
+#ifndef LD_CFG_SCREEN_WIDTH
 // <o>Width of the screen <8-32767>
 // <i> The width of your screen
-#define LD_CFG_SCEEN_WIDTH                        (320)
+#define LD_CFG_SCREEN_WIDTH                       (320)
 #endif
 
-#ifndef LD_CFG_SCEEN_HEIGHT
+#ifndef LD_CFG_SCREEN_HEIGHT
 // <o>Height of the screen <8-32767>
 // <i> The height of your screen
-#define LD_CFG_SCEEN_HEIGHT                       (240)
+#define LD_CFG_SCREEN_HEIGHT                      (240)
 #endif
 
 #ifndef LD_CFG_PFB_WIDTH
 // <o>Width of the PFB block
 // <i> The width of your PFB block size
-#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH)
+#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCREEN_WIDTH)
 #endif
 
 #ifndef LD_CFG_PFB_HEIGHT
 // <o>Height of the PFB block
 // <i> The height of your PFB block size
-#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
+#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCREEN_HEIGHT/10)
 #endif
 
 #ifndef LD_MEM_MODE
@@ -84,6 +84,13 @@ extern "C" {
 #endif
 
 // debug config
+#ifndef USE_LCD_TEST
+// <o> LCD test function
+//     <0=>    OFF
+//     <1=>    ON
+// <i> DrawBitmap porting sanity check
+#define USE_LCD_TEST                              (0)
+#endif
 
 #ifndef USE_LOG_LEVEL
 // <o> Log output level
@@ -124,6 +131,7 @@ extern "C" {
 //     <1=> Startup
 //     <2=> Show all widget
 //     <3=> Printer
+//     <4=> Serial Tool
 #define USE_DEMO                                  (0)
 #endif
 
@@ -131,17 +139,17 @@ extern "C" {
 #ifndef LD_CFG_COLOR_DEPTH
 #define LD_CFG_COLOR_DEPTH                        (16)
 #endif
-#ifndef LD_CFG_SCEEN_WIDTH
-#define LD_CFG_SCEEN_WIDTH                        (320)
+#ifndef LD_CFG_SCREEN_WIDTH
+#define LD_CFG_SCREEN_WIDTH                        (320)
 #endif
-#ifndef LD_CFG_SCEEN_HEIGHT
-#define LD_CFG_SCEEN_HEIGHT                       (240)
+#ifndef LD_CFG_SCREEN_HEIGHT
+#define LD_CFG_SCREEN_HEIGHT                       (240)
 #endif
 #ifndef LD_CFG_PFB_WIDTH
-#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH/4)
+#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCREEN_WIDTH/4)
 #endif
 #ifndef LD_CFG_PFB_HEIGHT
-#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
+#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCREEN_HEIGHT/10)
 #endif
 #ifndef LD_DEMO_GUI_INCLUDE
 #define LD_DEMO_GUI_INCLUDE                       "stdint.h"
@@ -154,14 +162,14 @@ extern "C" {
 #if USE_DEMO == 1
 #undef LD_CFG_COLOR_DEPTH
 #define LD_CFG_COLOR_DEPTH                        (16)
-#undef LD_CFG_SCEEN_WIDTH
-#define LD_CFG_SCEEN_WIDTH                        (320)
-#undef LD_CFG_SCEEN_HEIGHT
-#define LD_CFG_SCEEN_HEIGHT                       (240)
+#undef LD_CFG_SCREEN_WIDTH
+#define LD_CFG_SCREEN_WIDTH                        (320)
+#undef LD_CFG_SCREEN_HEIGHT
+#define LD_CFG_SCREEN_HEIGHT                       (240)
 #undef LD_CFG_PFB_WIDTH
-#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH/4)
+#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCREEN_WIDTH/4)
 #undef LD_CFG_PFB_HEIGHT
-#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
+#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCREEN_HEIGHT/10)
 #define LD_DEMO_GUI_INCLUDE                       "uiStartup.h"
 #define LD_DEMO_GUI_FUNC                          uiStartupFunc
 #endif
@@ -169,14 +177,14 @@ extern "C" {
 #if USE_DEMO == 2
 #undef LD_CFG_COLOR_DEPTH
 #define LD_CFG_COLOR_DEPTH                        (16)
-#undef LD_CFG_SCEEN_WIDTH
-#define LD_CFG_SCEEN_WIDTH                        (1024)
-#undef LD_CFG_SCEEN_HEIGHT
-#define LD_CFG_SCEEN_HEIGHT                       (600)
+#undef LD_CFG_SCREEN_WIDTH
+#define LD_CFG_SCREEN_WIDTH                        (1024)
+#undef LD_CFG_SCREEN_HEIGHT
+#define LD_CFG_SCREEN_HEIGHT                       (600)
 #undef LD_CFG_PFB_WIDTH
-#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH)
+#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCREEN_WIDTH)
 #undef LD_CFG_PFB_HEIGHT
-#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
+#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCREEN_HEIGHT/10)
 #define LD_DEMO_GUI_INCLUDE                       "uiWidget.h"
 #define LD_DEMO_GUI_FUNC                          uiWidgetFunc
 #endif
@@ -184,16 +192,31 @@ extern "C" {
 #if USE_DEMO == 3
 #undef LD_CFG_COLOR_DEPTH
 #define LD_CFG_COLOR_DEPTH                        (16)
-#undef LD_CFG_SCEEN_WIDTH
-#define LD_CFG_SCEEN_WIDTH                        (480)
-#undef LD_CFG_SCEEN_HEIGHT
-#define LD_CFG_SCEEN_HEIGHT                       (272)
+#undef LD_CFG_SCREEN_WIDTH
+#define LD_CFG_SCREEN_WIDTH                        (480)
+#undef LD_CFG_SCREEN_HEIGHT
+#define LD_CFG_SCREEN_HEIGHT                       (272)
 #undef LD_CFG_PFB_WIDTH
-#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCEEN_WIDTH)
+#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCREEN_WIDTH)
 #undef LD_CFG_PFB_HEIGHT
-#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCEEN_HEIGHT/10)
+#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCREEN_HEIGHT/10)
 #define LD_DEMO_GUI_INCLUDE                       "uiLogo.h"
 #define LD_DEMO_GUI_FUNC                          uiLogoFunc
+#endif
+
+#if USE_DEMO == 4
+#undef LD_CFG_COLOR_DEPTH
+#define LD_CFG_COLOR_DEPTH                        (16)
+#undef LD_CFG_SCREEN_WIDTH
+#define LD_CFG_SCREEN_WIDTH                        (480)
+#undef LD_CFG_SCREEN_HEIGHT
+#define LD_CFG_SCREEN_HEIGHT                       (320)
+#undef LD_CFG_PFB_WIDTH
+#define LD_CFG_PFB_WIDTH                          (LD_CFG_SCREEN_WIDTH)
+#undef LD_CFG_PFB_HEIGHT
+#define LD_CFG_PFB_HEIGHT                         (LD_CFG_SCREEN_HEIGHT/10)
+#define LD_DEMO_GUI_INCLUDE                       "home.h"
+#define LD_DEMO_GUI_FUNC                          homeFunc
 #endif
 
 // <<< end of configuration section >>>
@@ -205,11 +228,11 @@ extern "C" {
 #define __DISP0_CFG_PFB_BLOCK_WIDTH__             LD_CFG_PFB_WIDTH
 #define __DISP0_CFG_PFB_BLOCK_HEIGHT__            LD_CFG_PFB_HEIGHT
 #define __DISP0_CFG_COLOUR_DEPTH__                LD_CFG_COLOR_DEPTH
-#define __DISP0_CFG_SCEEN_WIDTH__                 LD_CFG_SCEEN_WIDTH
-#define __DISP0_CFG_SCEEN_HEIGHT__                LD_CFG_SCEEN_HEIGHT
+#define __DISP0_CFG_SCEEN_WIDTH__                 LD_CFG_SCREEN_WIDTH
+#define __DISP0_CFG_SCEEN_HEIGHT__                LD_CFG_SCREEN_HEIGHT
 #define __DISP0_CFG_FPS_CACULATION_MODE__         (1)
-#define __GLCD_CFG_SCEEN_WIDTH__                  LD_CFG_SCEEN_WIDTH
-#define __GLCD_CFG_SCEEN_HEIGHT__                 LD_CFG_SCEEN_HEIGHT
+#define __GLCD_CFG_SCEEN_WIDTH__                  LD_CFG_SCREEN_WIDTH
+#define __GLCD_CFG_SCEEN_HEIGHT__                 LD_CFG_SCREEN_HEIGHT
 #if USE_VIRTUAL_RESOURCE == 0
 #define __DISP0_CFG_VIRTUAL_RESOURCE_HELPER__     (0)
 #else

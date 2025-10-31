@@ -7,7 +7,8 @@ CONFIG -= qt
 #//     <1=> Startup
 #//     <2=> Show all widget
 #//     <3=> Printer
-USE_DEMO=2
+#//     <4=> Serial Tool
+USE_DEMO=4
 
 SOURCES += \
     virtualNor/virtualNor.c \
@@ -64,6 +65,14 @@ DEFINES += USE_DEMO=3
 HEADERS += $$files(../common/demo/printer/*.h, true)
 SOURCES += $$files(../common/demo/printer/*.c, true)
 INCLUDEPATH += $$PWD/../common/demo/printer
+}
+
+contains(USE_DEMO, 4){
+message(demo: Serial Tool)
+DEFINES += USE_DEMO=4
+HEADERS += $$files(../common/demo/SerialTool/GuiUser/*.h, true)
+SOURCES += $$files(../common/demo/SerialTool/GuiUser/*.c, true)
+INCLUDEPATH += $$PWD/../common/demo/SerialTool/GuiUser
 }
 
 

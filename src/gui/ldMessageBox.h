@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -69,10 +69,8 @@ struct ldMessageBox_t
     uint8_t btnCount;
     uint8_t titleHeight;
     uint8_t msgHeight;
-    bool isCorner:1;
     uint8_t isBtnPressed:3;
     int8_t clickNum:2;
-//    bool isWaitEnd:1;
 };
 
 ldMessageBox_t* ldMessageBox_init(ld_scene_t *ptScene, ldMessageBox_t *ptWidget, uint16_t nameId, uint16_t parentNameId, int16_t x, int16_t y, int16_t width, int16_t height, arm_2d_font_t *ptFont);
@@ -86,13 +84,16 @@ void ldMessageBoxSetTitle(ldMessageBox_t* ptWidget,const uint8_t *pStr);
 void ldMessageBoxSetMsg(ldMessageBox_t* ptWidget,const uint8_t *pStr);
 void ldMessageBoxSetBtn(ldMessageBox_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize);
 void ldMessageBoxSetCallback(ldMessageBox_t* ptWidget,ldMsgBoxFunc_t ptFunc);
-
+void ldMessageBoxSetStringColor(ldMessageBox_t* ptWidget, ldColor titleStrColor, ldColor msgStrColor, ldColor btnStrColor);
+void ldMessageBoxSetButtonColor(ldMessageBox_t* ptWidget, ldColor releaseColor, ldColor pressColor);
+void ldMessageBoxSetBackgroundColor(ldMessageBox_t* ptWidget, ldColor bgColor);
 #define ldMessageBoxInit(nameId,parentNameId,width,height,ptFont) \
         ldMessageBox_init(ptScene,NULL,nameId,parentNameId,-1,-1,width,height,ptFont)
 
 #define ldMessageBoxSetHidden                ldBaseSetHidden
 #define ldMessageBoxMove                     ldBaseMove
 #define ldMessageBoxSetOpacity               ldBaseSetOpacity
+#define ldMessageBoxSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

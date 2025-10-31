@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -97,7 +97,7 @@ ldArc_t* ldArc_init(ld_scene_t *ptScene,ldArc_t *ptWidget, uint16_t nameId, uint
     ptWidget->endAngle_x10[1]=1800;
     ptWidget->rotationAngle_x10=0;
 
-    LOG_INFO("[init][arc] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][arc] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -118,7 +118,10 @@ void ldArc_depose(ld_scene_t *ptScene, ldArc_t *ptWidget)
     ldMsgDelConnect(ptWidget);
 
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptImgTile);
+    ldFree(ptWidget->ptMaskTile);
+#endif
     ldFree(ptWidget);
 }
 
@@ -218,25 +221,25 @@ static void _ldArcDrawQuarter(arm_2d_tile_t *pTarget,arm_2d_region_t canvas,arm_
             case 0:
             {
                 maskRegion.tLocation.iX+=canvas.tSize.iWidth>>1;
-                arm_2d_fill_colour_with_mask_x_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t)color,opacity);
+                arm_2d_fill_colour_with_mask_x_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t){color},opacity);
                 break;
             }
             case 1:
             {
                 maskRegion.tLocation.iX+=canvas.tSize.iWidth>>1;
                 maskRegion.tLocation.iY+=canvas.tSize.iHeight>>1;
-                arm_2d_fill_colour_with_mask_xy_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t)color,opacity);
+                arm_2d_fill_colour_with_mask_xy_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t){color},opacity);
                 break;
             }
             case 2:
             {
                 maskRegion.tLocation.iY+=canvas.tSize.iHeight>>1;
-                arm_2d_fill_colour_with_mask_y_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t)color,opacity);
+                arm_2d_fill_colour_with_mask_y_mirror_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t){color},opacity);
                 break;
             }
             case 3:
             {
-                arm_2d_fill_colour_with_mask_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t)color,opacity);
+                arm_2d_fill_colour_with_mask_and_opacity(pTarget,&maskRegion,pMaskRes,(__arm_2d_color_t){color},opacity);
                 break;
             }
             }
@@ -279,7 +282,7 @@ void ldArc_show(ld_scene_t *ptScene, ldArc_t *ptWidget, const arm_2d_tile_t *ptT
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -459,13 +462,13 @@ void ldArc_show(ld_scene_t *ptScene, ldArc_t *ptWidget, const arm_2d_tile_t *ptT
 
             _ldArcDrawQuarter(&tTarget,tTarget_canvas,ptWidget->ptImgTile,quarterDrawFlag[1],ptWidget->color[1],ptWidget->use_as__ldBase_t.opacity);
 
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
-void ldArcSetBgAngle(ldArc_t *ptWidget,float bgStart,float bgEnd)
+void ldArcSetBackgroundAngle(ldArc_t *ptWidget,float bgStart,float bgEnd)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)
@@ -479,7 +482,7 @@ void ldArcSetBgAngle(ldArc_t *ptWidget,float bgStart,float bgEnd)
     ptWidget->startAngle_x10[1]=ptWidget->startAngle_x10[0];
 }
 
-void ldArcSetFgAngle(ldArc_t *ptWidget,float fgEnd)
+void ldArcSetForegroundAngle(ldArc_t *ptWidget,float fgEnd)
 {
     assert(NULL != ptWidget);
     if(ptWidget == NULL)

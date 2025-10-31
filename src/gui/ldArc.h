@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -49,9 +49,6 @@ typedef struct ldArc_t ldArc_t;
 struct ldArc_t
 {
     implement(ldBase_t);
-//    ARM_PRIVATE(
-//            ld_scene_t *ptScene;
-//    )
     arm_2d_tile_t *ptImgTile;
     arm_2d_tile_t *ptMaskTile;
     ldColor color[2];
@@ -69,8 +66,8 @@ void ldArc_on_frame_start(ld_scene_t *ptScene, ldArc_t *ptWidget);
 void ldArc_on_frame_complete(ld_scene_t *ptScene, ldArc_t *ptWidget);
 void ldArc_show(ld_scene_t *pScene, ldArc_t *ptWidget, const arm_2d_tile_t *ptTile, bool bIsNewFrame);
 
-void ldArcSetBgAngle(ldArc_t *pWidget,float bgStart,float bgEnd);
-void ldArcSetFgAngle(ldArc_t *pWidget,float fgEnd);
+void ldArcSetBackgroundAngle(ldArc_t *pWidget,float bgStart,float bgEnd);
+void ldArcSetForegroundAngle(ldArc_t *pWidget,float fgEnd);
 void ldArcSetRotationAngle(ldArc_t *pWidget,float rotationAngle);
 void ldArcSetColor(ldArc_t *pWidget,ldColor bgColor,ldColor fgColor);
 
@@ -80,6 +77,9 @@ void ldArcSetColor(ldArc_t *pWidget,ldColor bgColor,ldColor fgColor);
 #define ldArcSetHidden                ldBaseSetHidden
 #define ldArcMove                     ldBaseMove
 #define ldArcSetOpacity               ldBaseSetOpacity
+#define ldArcSetSelectable            ldBaseSetSelectable
+#define ldArcSetSelect                ldBaseSetSelect
+#define ldArcSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

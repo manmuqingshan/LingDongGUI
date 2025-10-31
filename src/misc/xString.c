@@ -157,31 +157,48 @@ void xStringPopBack(uint8_t *pStr,uint16_t strLen)
 
 void xStringInsert(uint8_t *pStr,uint16_t strLen,uint16_t pos,uint8_t *insertStr)
 {
-    uint16_t insertLen;
-    if(strLen==0)
+    if (!pStr || !insertStr)
     {
-        strLen=strlen((char*)pStr);
+        return;
     }
-    insertLen=strlen((char*)insertStr);
-    for (uint16_t i = strLen-1; i >= pos; i--)
+
+    uint16_t insertLen = strlen((char*)insertStr);
+    if (strLen == 0)
     {
-        pStr[i+insertLen] = pStr[i];
+        strLen = strlen((char*)pStr);
     }
-    memcpy(pStr+pos,insertStr,insertLen);
-    pStr[strLen+insertLen] = 0;
+
+    if (pos > strLen)
+    {
+        pos = strLen;
+    }
+
+    memmove(pStr + pos + insertLen, pStr + pos, strLen - pos + 1);
+    memcpy(pStr + pos, insertStr, insertLen);
 }
 
 void xStringRemove(uint8_t *pStr,uint16_t strLen,uint16_t pos,uint16_t rmLen)
 {
-    uint16_t newLen;
-    if(strLen==0)
+    if (!pStr)
     {
-        strLen=strlen((char*)pStr);
+        return;
     }
-    newLen=strLen-rmLen;
-    for (uint16_t i = pos; i <newLen; i++)
+
+    if (strLen == 0)
     {
-        pStr[i] = pStr[rmLen+i];
+        strLen = (uint16_t)strlen((char *)pStr);
     }
-    pStr[newLen]=0;
+
+    if (pos >= strLen || rmLen == 0)
+    {
+        return;
+    }
+
+    if (pos + rmLen > strLen)
+    {
+        rmLen = strLen - pos;
+    }
+
+    uint16_t tail = strLen - pos - rmLen;
+    memmove(pStr + pos, pStr + pos + rmLen, tail + 1);
 }

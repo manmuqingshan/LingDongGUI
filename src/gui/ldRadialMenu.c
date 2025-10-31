@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -215,7 +215,7 @@ ldRadialMenu_t* ldRadialMenu_init( ld_scene_t *ptScene,ldRadialMenu_t *ptWidget,
     ldMsgConnect(ptWidget,SIGNAL_RELEASE,slotMenuSelect);
     ldMsgConnect(ptWidget,SIGNAL_HOLD_DOWN,slotMenuSelect);
 
-    LOG_INFO("[init][radialMenu] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][radialMenu] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -235,9 +235,17 @@ void ldRadialMenu_depose(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
+#if USE_VIRTUAL_RESOURCE == 1
+    for(uint8_t i=0;i<ptWidget->use_as__ldBase_t.itemCount;i++)
+    {
+        ldFree(ptWidget->ptItemInfoList[i].ptImgTile);
+        ldFree(ptWidget->ptItemInfoList[i].ptMaskTile);
+    }
+#endif
     ldFree(ptWidget->ptItemInfoList);
     ldFree(ptWidget->use_as__ldBase_t.ptItemRegionList);
     ldFree(ptWidget->pShowList);
+
     ldFree(ptWidget);
 }
 
@@ -417,7 +425,7 @@ void ldRadialMenu_show(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget, const arm_
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -441,17 +449,33 @@ void ldRadialMenu_show(ld_scene_t *ptScene, ldRadialMenu_t *ptWidget, const arm_
                             ldBaseImageScale(&tChildTile,NULL,(ptWidget->ptItemInfoList[ptWidget->pShowList[i]]).ptImgTile,(ptWidget->ptItemInfoList[ptWidget->pShowList[i]]).ptMaskTile,(ptWidget->ptItemInfoList[i]).scalePercent/100.0,&(ptWidget->ptItemInfoList[i]).op,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
                         }
 #else
-                        ldBaseImage(&tChildTile,NULL,ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptImgTile,ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptMaskTile,0,ptWidget->use_as__ldBase_t.opacity);
+                        if(ptWidget->use_as__ldBase_t.isCorner)
+                        {
+                            draw_round_corner_image(ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptImgTile,
+                                                    &tChildTile,
+                                                    NULL,
+                                                    bIsNewFrame,
+                                                    ptWidget->use_as__ldBase_t.opacity);
+                        }
+                        else
+                        {
+                            ldBaseImage(&tChildTile,
+                                        NULL,
+                                        ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptImgTile,
+                                        ptWidget->ptItemInfoList[ptWidget->pShowList[i]].ptMaskTile,
+                                        0,
+                                        ptWidget->use_as__ldBase_t.opacity);
+                        }
+
 #endif
                         arm_2d_op_wait_async(NULL);
                     } while (0);
                 }
             }
-
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldRadialMenuAddItem(ldRadialMenu_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile)

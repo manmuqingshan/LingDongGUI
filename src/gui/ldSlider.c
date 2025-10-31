@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -140,7 +140,7 @@ ldSlider_t* ldSlider_init( ld_scene_t *ptScene,ldSlider_t *ptWidget, uint16_t na
     ldMsgConnect(ptWidget, SIGNAL_PRESS, slotSliderMove);
     ldMsgConnect(ptWidget, SIGNAL_HOLD_DOWN, slotSliderMove);
 
-    LOG_INFO("[init][slider] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][slider] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -160,7 +160,12 @@ void ldSlider_depose(ld_scene_t *ptScene, ldSlider_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptBgImgTile);
+    ldFree(ptWidget->ptBgMaskTile);
+    ldFree(ptWidget->ptIndicImgTile);
+    ldFree(ptWidget->ptIndicMaskTile);
+#endif
     ldFree(ptWidget);
 }
 
@@ -202,11 +207,10 @@ void ldSlider_show(ld_scene_t *ptScene, ldSlider_t *ptWidget, const arm_2d_tile_
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
-
 
             arm_2d_region_t tIndicatorRegion;
             if((ptWidget->ptBgImgTile==NULL)&&(ptWidget->ptIndicImgTile==NULL))//color
@@ -265,10 +269,10 @@ void ldSlider_show(ld_scene_t *ptScene, ldSlider_t *ptWidget, const arm_2d_tile_
                 }
                 ldBaseImage(&tTarget,&tIndicatorRegion,ptWidget->ptIndicImgTile,ptWidget->ptIndicMaskTile,0,ptWidget->use_as__ldBase_t.opacity);
             }
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldSliderSetPercent(ldSlider_t *ptWidget,float percent)

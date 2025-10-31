@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -77,8 +77,8 @@ void ldScrollSelecter_show(ld_scene_t *pScene, ldScrollSelecter_t *ptWidget, con
 
 void ldScrollSelecterSetItems(ldScrollSelecter_t* ptWidget, const uint8_t *pStrArray[], uint8_t arraySize);
 void ldScrollSelecterSetTextColor(ldScrollSelecter_t* ptWidget,ldColor charColor);
-void ldScrollSelecterSetBgColor(ldScrollSelecter_t* pWidget,ldColor bgColor);
-void ldScrollSelecterSetBgImage(ldScrollSelecter_t* pWidget,arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
+void ldScrollSelecterSetBackgroundColor(ldScrollSelecter_t* pWidget,ldColor bgColor);
+void ldScrollSelecterSetBackgroundImage(ldScrollSelecter_t* pWidget,arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
 void ldScrollSelecterSetTransparent(ldScrollSelecter_t* pWidget,bool isTransparent);
 void ldScrollSelecterSetSpeed(ldScrollSelecter_t *pWidget, uint8_t speed);
 void ldScrollSelecterSelectItem(ldScrollSelecter_t *pWidget, uint8_t itemNum);
@@ -90,6 +90,9 @@ void lldScrollSelecterSetOneRowMode(ldScrollSelecter_t *ptWidget, bool isOneRow)
 #define ldScrollSelecterSetHidden                ldBaseSetHidden
 #define ldScrollSelecterMove                     ldBaseMove
 #define ldScrollSelecterSetOpacity               ldBaseSetOpacity
+#define ldScrollSelecterSetSelectable            ldBaseSetSelectable
+#define ldScrollSelecterSetSelect                ldBaseSetSelect
+#define ldScrollSelecterSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

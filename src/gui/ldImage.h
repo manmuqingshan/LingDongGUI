@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -59,7 +59,7 @@ void ldImage_on_frame_start(ld_scene_t *ptScene, ldImage_t *ptWidget);
 void ldImage_on_frame_complete(ld_scene_t *ptScene, ldImage_t *ptWidget);
 void ldImage_show(ld_scene_t *ptScene,ldImage_t *ptWidget,const arm_2d_tile_t *ptTile,bool bIsNewFrame);
 
-void ldImageSetBgColor(ldImage_t *ptWidget,ldColor bgColor);
+void ldImageSetBackgroundColor(ldImage_t *ptWidget,ldColor bgColor);
 void ldImageSetImage(ldImage_t *ptWidget, arm_2d_tile_t* ptImgTile, arm_2d_tile_t* ptMaskTile);
 
 #define ldImageInit(nameId,parentNameId,x,y,width,height,ptImgTile,ptMaskTile,isWindow) \
@@ -68,6 +68,9 @@ void ldImageSetImage(ldImage_t *ptWidget, arm_2d_tile_t* ptImgTile, arm_2d_tile_
 #define ldImageSetHidden                ldBaseSetHidden
 #define ldImageMove                     ldBaseMove
 #define ldImageSetOpacity               ldBaseSetOpacity
+#define ldImageSetSelectable            ldBaseSetSelectable
+#define ldImageSetSelect                ldBaseSetSelect
+#define ldImageSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #   pragma clang diagnostic pop

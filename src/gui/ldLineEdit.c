@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -82,10 +82,10 @@ static bool slotLineEditProcess(ld_scene_t *ptScene,ldMsg_t msg)
                 cursorBlinkCount=0;
                 ldKeyboardSetHidden((ldBase_t *)kb,false);
 
-                if((ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY+ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight)>(LD_CFG_SCEEN_HEIGHT>>1))
+                if((ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tLocation.iY+ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight)>(LD_CFG_SCREEN_HEIGHT>>1))
                 {
-                    ldKeyboardMove((ldBase_t *)kb,0,LD_CFG_SCEEN_HEIGHT>>1);
-                    ldBaseBgMove(ptScene,LD_CFG_SCEEN_WIDTH,LD_CFG_SCEEN_HEIGHT,0,-(LD_CFG_SCEEN_HEIGHT>>1));
+                    ldKeyboardMove((ldBase_t *)kb,0,LD_CFG_SCREEN_HEIGHT>>1);
+                    ldBaseBgMove(ptScene,LD_CFG_SCREEN_WIDTH,LD_CFG_SCREEN_HEIGHT,0,-(LD_CFG_SCREEN_HEIGHT>>1));
 
                 }
                 else
@@ -146,7 +146,7 @@ ldLineEdit_t* ldLineEdit_init( ld_scene_t *ptScene,ldLineEdit_t *ptWidget, uint1
     ldMsgConnect(ptWidget,SIGNAL_PRESS,slotLineEditProcess);
     ldMsgConnect(ptWidget,SIGNAL_FINISHED,slotEditEnd);
 
-    LOG_INFO("[init][lineEdit] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][lineEdit] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -166,6 +166,9 @@ void ldLineEdit_depose(ld_scene_t *ptScene, ldLineEdit_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptFont);
+#endif
     ldFree(ptWidget->pText);
     ldFree(ptWidget);
 }
@@ -214,11 +217,11 @@ void ldLineEdit_show(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, const arm_2d_t
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
-            if(ptWidget->isCorner)
+            if(ptWidget->use_as__ldBase_t.isCorner)
             {
                 draw_round_corner_box(&tTarget,&tTarget_canvas,ptWidget->backgroundColor,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
                 draw_round_corner_border(&tTarget,
@@ -251,7 +254,7 @@ void ldLineEdit_show(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, const arm_2d_t
                 tempRegion.tSize.iWidth-=CURSOR_WIDTH;
             }
 
-            arm_2d_size_t strSize=arm_lcd_text_get_box(ptWidget->pText, ptWidget->ptFont);
+            arm_2d_size_t strSize=arm_lcd_printf_to_buffer(ptWidget->ptFont,"%s",ptWidget->pText);
             if(ptWidget->pText!=NULL)
             {
                 arm_2d_align_t tAlign=ptWidget->tAlign;
@@ -287,10 +290,13 @@ void ldLineEdit_show(ld_scene_t *ptScene, ldLineEdit_t *ptWidget, const arm_2d_t
                                 ptWidget->textColor,
                                 ptWidget->use_as__ldBase_t.opacity);
             }
+
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
 
-    arm_2d_op_wait_async(NULL);
+
 }
 
 void ldLineEditSetText(ldLineEdit_t* ptWidget,uint8_t *pText)
@@ -338,6 +344,7 @@ void ldLineEditSetType(ldLineEdit_t* ptWidget,ldEditType_t editType)
 
 void ldLineEditSetAlign(ldLineEdit_t *ptWidget,arm_2d_align_t tAlign)
 {
+    assert(NULL != ptWidget);
     if(ptWidget==NULL)
     {
         return;
@@ -346,18 +353,9 @@ void ldLineEditSetAlign(ldLineEdit_t *ptWidget,arm_2d_align_t tAlign)
     ptWidget->tAlign=tAlign;
 }
 
-void ldLineEditSetCorner(ldLineEdit_t *ptWidget, bool isCorner)
-{
-    if(ptWidget==NULL)
-    {
-        return;
-    }
-    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
-    ptWidget->isCorner=isCorner;
-}
-
 void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backgroundColor, ldColor frameColor)
 {
+    assert(NULL != ptWidget);
     if(ptWidget==NULL)
     {
         return;
@@ -366,6 +364,16 @@ void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backg
     ptWidget->textColor=textColor;
     ptWidget->backgroundColor=backgroundColor;
     ptWidget->frameColor=frameColor;
+}
+
+uint8_t *ldLineEditGetText(ldLineEdit_t *ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return NULL;
+    }
+    return ptWidget->pText;
 }
 
 #if defined(__clang__)

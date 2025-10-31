@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -44,12 +44,15 @@ extern "C" {
 #define ldWindow_on_load                ldImage_on_load
 #define ldWindow_on_frame_start         ldImage_on_frame_start
 #define ldWindow_show                   ldImage_show
-#define ldWindowSetColor                ldImageSetBgColor
+#define ldWindowSetColor                ldImageSetBackgroundColor
 #define ldWindowSetImage                ldImageSetImage
 
 #define ldWindowSetHidden               ldBaseSetHidden
 #define ldWindowMove                    ldBaseMove
 #define ldWindowSetOpacity              ldBaseSetOpacity
+#define ldWindowSetSelectable           ldBaseSetSelectable
+#define ldWindowSetSelect               ldBaseSetSelect
+#define ldWindowSetCorner               ldBaseSetCorner
 
 #if defined(__clang__)
 #   pragma clang diagnostic pop

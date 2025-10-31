@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -60,8 +60,8 @@ struct ldText_t
     ldColor textColor;
     int16_t scrollOffset;
     int16_t _scrollOffset;
-    uint16_t strHeight;
-    uint16_t lastLineNum;
+    int16_t strHeight;
+    int16_t sliderPos;
     bool isTransparent:1;
     bool isMoveReset:1;
     bool _isTopScroll:1;
@@ -81,8 +81,8 @@ void ldTextSetTransparent(ldText_t* ptWidget,bool isTransparent);
 void ldTextSetText(ldText_t* ptWidget,uint8_t *pStr);
 void ldTextSetStaticText(ldText_t* ptWidget,const uint8_t *pStr);
 void ldTextSetTextColor(ldText_t* ptWidget,ldColor charColor);
-void ldTextSetBgImage(ldText_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
-void ldTextSetBgColor(ldText_t *ptWidget, ldColor bgColor);
+void ldTextSetBackgroundImage(ldText_t *ptWidget, arm_2d_tile_t *ptImgTile, arm_2d_tile_t *ptMaskTile);
+void ldTextSetBackgroundColor(ldText_t *ptWidget, ldColor bgColor);
 void ldTextScrollSeek(ldText_t *ptWidget,int16_t offset);
 void ldTextScrollMove(ldText_t *ptWidget, int8_t moveValue);
 
@@ -92,6 +92,9 @@ void ldTextScrollMove(ldText_t *ptWidget, int8_t moveValue);
 #define ldTextSetHidden                ldBaseSetHidden
 #define ldTextMove                     ldBaseMove
 #define ldTextSetOpacity               ldBaseSetOpacity
+#define ldTextSetSelectable            ldBaseSetSelectable
+#define ldTextSetSelect                ldBaseSetSelect
+#define ldTextSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

@@ -66,73 +66,93 @@ void listItemProcess(ldList_t *ptWidget,uint8_t itemNum,arm_2d_tile_t *ptTile,ar
     }
 }
 const uint8_t titleStr[]="title";
-const uint8_t msgStr[]="12345678abcdefg\n\r99556";
+const uint8_t msgStr[]="12345678abcdefg\n99556";
 const uint8_t *pBtnStr[]={"11","22","33"};
 void uiWidgetInit(ld_scene_t* ptScene)
 {
-    void *obj,*win,*list;
+    void *obj,*list;
 
-    ldWindowInit(0, 0, 0, 0, LD_CFG_SCEEN_WIDTH, LD_CFG_SCEEN_HEIGHT);
+    ldBaseFocusNavigateInit();
 
-    obj= ldImageInit(1, 0, 100, 100, 50, 50, NULL, NULL,false);
-    ldImageSetBgColor(obj,__RGB(0xFF,0xFF,0xFF));
+    ldWindowInit(0, 0, 0, 0, LD_CFG_SCREEN_WIDTH, LD_CFG_SCREEN_HEIGHT);
+
+    obj= ldImageInit(1, 0, 100, 120, 50, 80, NULL, NULL,false);
+    ldImageSetImage(obj,IMAGE_LETTER_PAPER_BMP,NULL);
+    ldImageSetCorner(obj,true);
+    ldImageSetSelectable(obj,true);
 
     obj=ldButtonInit(2, 0, 10,10,79,53);
     ldButtonSetFont(obj,FONT_ARIAL_16_A8);
     ldButtonSetText(obj,(uint8_t*)"123");
     ldButtonSetTextColor(obj,GLCD_COLOR_WHITE);
     ldButtonSetImage(obj,IMAGE_KEYRELEASE_PNG,IMAGE_KEYRELEASE_PNG_Mask,IMAGE_KEYPRESS_PNG,IMAGE_KEYPRESS_PNG_Mask);
+    ldButtonSetSelectable(obj,true);
 
-    win=ldWindowInit(3, 0, 200, 95, 20, 20);
-    ldWindowSetColor(win,GLCD_COLOR_GREEN);
+    obj=ldWindowInit(3, 0, 200, 95, 20, 20);
+    ldWindowSetColor(obj,GLCD_COLOR_GREEN);
+    ldWindowSetCorner(obj,true);
+    ldWindowSetSelectable(obj,true);
 
-//    connect(2,SIGNAL_RELEASE,slotPageJump);
 
     connect(2,SIGNAL_RELEASE,slotTest);
 //    connect(2,SIGNAL_RELEASE,slotTest2);
 
     obj=ldLabelInit(4,0,100,50, 100,50,FONT_ARIAL_12);
     ldLabelSetText(obj,(uint8_t*)"123");
-    ldLabelSetBgColor(obj,GLCD_COLOR_LIGHT_GREY);
+    ldLabelSetBackgroundColor(obj,GLCD_COLOR_LIGHT_GREY);
     ldLabelSetAlign(obj,ARM_2D_ALIGN_BOTTOM_LEFT);
+    ldLabelSetSelectable(obj,true);
+    ldLabelSetCorner(obj,true);
 
     obj=ldCheckBoxInit(5, 0, 220, 10, 50, 20);
 
     ldCheckBoxSetRadioButtonGroup(obj,0);
     ldCheckBoxSetText(obj,FONT_ARIAL_12,(uint8_t*)"999");
+    ldCheckBoxSetSelectable(obj,true);
 
 
     obj=ldCheckBoxInit(6, 0, 220, 40, 50, 20);
     ldCheckBoxSetRadioButtonGroup(obj,0);
+    ldCheckBoxSetSelectable(obj,true);
 
     obj=ldCheckBoxInit(7, 0, 220, 70, 50, 20);
     ldCheckBoxSetCorner(obj,true);
+    ldCheckBoxSetSelectable(obj,true);
 
     obj=ldProgressBarInit(8,0,10,500,300,30);
     ldProgressBarSetPercent(obj,45);
 //    ldProgressBarSetHorizontal(obj,false);
     ldProgressBarSetImage(obj,IMAGE_PROGRESSBARBG_BMP,NULL,IMAGE_PROGRESSBARFG_BMP,NULL);
+    ldProgressBarSetSelectable(obj,true);
 
     obj=ldTextInit(9,0,300,10,150,200,FONT_ARIAL_12,TEXT_BOX_LINE_ALIGN_LEFT,true);
-    ldTextSetBgImage(obj,IMAGE_LETTER_PAPER_BMP,NULL);
+    ldTextSetBackgroundImage(obj,IMAGE_LETTER_PAPER_BMP,NULL);
     ldTextSetText(obj,"123\n12333");
+    ldTextSetSelectable(obj,true);
+    ldTextSetCorner(obj,true);
 
     obj=ldSliderInit(10,0,50,300,317,(IMAGE_INDICATOR_PNG)->tRegion.tSize.iHeight);
     ldSliderSetPercent(obj,42);
     ldSliderSetImage(obj,IMAGE_SLIDER_PNG,IMAGE_SLIDER_PNG_Mask,IMAGE_INDICATOR_PNG,IMAGE_INDICATOR_PNG_Mask);
     ldSliderSetIndicatorWidth(obj,(IMAGE_INDICATOR_PNG)->tRegion.tSize.iWidth);
 
+
     obj=ldSliderInit(11,0,400,300,30,100);
     ldSliderSetHorizontal(obj,false);
     ldSliderSetPercent(obj,42);
+    ldSliderSetSelectable(obj,true);
+    ldSliderSetCorner(obj,true);
 
     obj=ldRadialMenuInit(12,0,500,200,150,100,100,80,5);
     ldRadialMenuAddItem(obj,IMAGE_WEATHER_PNG,IMAGE_WEATHER_PNG_Mask);
     ldRadialMenuAddItem(obj,IMAGE_NOTE_PNG,IMAGE_NOTE_PNG_Mask);
     ldRadialMenuAddItem(obj,IMAGE_WEATHER_PNG,IMAGE_WEATHER_PNG_Mask);
     ldRadialMenuAddItem(obj,IMAGE_NOTE_PNG,IMAGE_NOTE_PNG_Mask);
+    ldRadialMenuSetSelectable(obj,true);
+    ldRadialMenuSetCorner(obj,true);
 
     obj=ldDateTimeInit(13,0,600,100,200,50,FONT_ARIAL_12);
+    ldDateTimeSetSelectable(obj,true);
 
 
     obj=ldIconSliderInit(14,0,500,350,150,65,48,2,5,1,1,FONT_ARIAL_12);
@@ -141,23 +161,29 @@ void uiWidgetInit(ld_scene_t* ptScene)
     ldIconSliderAddIcon(obj,IMAGE_WEATHER_PNG,IMAGE_WEATHER_PNG_Mask,iconName[2]);
     ldIconSliderAddIcon(obj,IMAGE_CHART_PNG,IMAGE_CHART_PNG_Mask,iconName[3]);
     ldIconSliderAddIcon(obj,IMAGE_NOTE_PNG,IMAGE_NOTE_PNG_Mask,iconName[4]);
+    ldIconSliderhSetSelectable(obj,true);
+    ldIconSliderhSetCorner(obj,true);
 
     obj=ldQRCodeInit(15,0,500,10,200,200,"ldgui",GLCD_COLOR_BLUE,GLCD_COLOR_WHITE,QR_ECC_7,2,5);
     ldQRCodeSetOpacity(obj,100);
-
+    ldQRCodeSetSelectable(obj,true);
 
     obj=ldScrollSelecterInit(16,0,700,200,30,50,FONT_ARIAL_12);
     ldScrollSelecterSetItems(obj,pStrGroup,5);
-    ldScrollSelecterSetBgColor(obj,GLCD_COLOR_WHITE);
+    ldScrollSelecterSetBackgroundColor(obj,GLCD_COLOR_WHITE);
+    ldScrollSelecterSetSelectable(obj,true);
+    ldScrollSelecterSetCorner(obj,true);
 
     obj=ldGaugeInit(17,0,700,300,120,98,IMAGE_GAUGE_PNG,IMAGE_GAUGE_PNG_Mask,0,10);
     ldGaugeSetPointerImage(obj,NULL,IMAGE_GAUGEPOINTER_PNG_Mask,5,45);
     ldGaugeSetPointerColor(obj,GLCD_COLOR_BLUE);
     ldGaugeSetAngle(obj,120);
+    ldGaugeSetSelectable(obj,true);
 
     obj=ldComboBoxInit(18,0,700,420,100,30,FONT_ARIAL_12);
 
-    ldComboBoxSetItems(obj,pComboBoxStrGroup,3);
+    ldComboBoxSetStaticItems(obj,pComboBoxStrGroup,3);
+    ldComboBoxSetSelectable(obj,true);
 
     obj=ldGraphInit(19,0,830,10,100,100,2);
     ldGraphSetAxis(obj,80,80,5);
@@ -173,6 +199,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
     {
         ldGraphSetValue(obj,1,i,rand() % 81);
     }
+    ldGraphSetSelectable(obj,true);
 
     obj=ldTableInit(20,0,780,150,200,100,10,6,1,FONT_ARIAL_12);
     ldTableSetExcelType(obj,FONT_ARIAL_12);
@@ -189,15 +216,17 @@ void uiWidgetInit(ld_scene_t* ptScene)
     ldTableSetItemText(obj,3,1,(uint8_t*)"2",FONT_ARIAL_12);
     ldTableSetItemText(obj,3,2,(uint8_t*)"image",FONT_ARIAL_12);
     ldTableSetItemText(obj,3,3,(uint8_t*)"100*100",FONT_ARIAL_12);
+    ldTableSetSelectable(obj,true);
 
     obj=ldLineEditInit(21,0,850,400,100,50,FONT_ARIAL_12,16);
     ldLineEditSetText(obj,"123");
     ldLineEditSetKeyboard(obj,ID_KB);
+    ldLineEditSetSelectable(obj,true);
+    ldLineEditSetCorner(obj,true);
 
 
-
-    win=ldWindowInit(23, 0, 850, 450, 100, 100);
-    ldWindowSetColor(win,GLCD_COLOR_GREEN);
+    obj=ldWindowInit(23, 0, 850, 450, 100, 100);
+    ldWindowSetColor(obj,GLCD_COLOR_GREEN);
 
     obj=ldButtonInit(24, 23, 8,3,30,30);
     ldBase_t* pr=ldBaseGetParent(obj);
@@ -209,8 +238,8 @@ void uiWidgetInit(ld_scene_t* ptScene)
     ldKeyboardInit(ID_KB,0,FONT_ARIAL_12);
 
     obj=ldArcInit(25,0,450,450,101,101,IMAGE_ARC_QUARTER_PNG_Mask,IMAGE_ARC_QUARTER_MASK_PNG_Mask,__RGB(240,240,240));
-    ldArcSetBgAngle(obj,0,350);
-    ldArcSetFgAngle(obj,30);
+    ldArcSetBackgroundAngle(obj,0,350);
+    ldArcSetForegroundAngle(obj,30);
     ldArcSetColor(obj,__RGB(173, 216, 230),__RGB(144, 238, 144));
 
     list=ldListInit(26,0,850,280,100,100);
@@ -219,6 +248,7 @@ void uiWidgetInit(ld_scene_t* ptScene)
     ldListSetText(list,pStrGroup,5, FONT_ARIAL_12);
     ldListSetAlign(list,ARM_2D_ALIGN_LEFT);
 //    ldListSetItemContainer(list,5);
+    ldListSetSelectable(list,true);
 
     obj=ldButtonInit(27, 26, 10,3,20,20);
      ldListSetItemWidget(list,1,obj);
@@ -240,7 +270,7 @@ void uiWidgetLoop(ld_scene_t* ptScene)
     ldGauge_t *ptGauge=ldBaseGetWidgetById(17);
     if(ldTimeOut(100,true))
     {
-//        ldArcSetRotationAngle(ldBaseGetWidgetById(25),angle);
+        ldArcSetRotationAngle(ldBaseGetWidgetById(25),angle);
 
         ldGaugeSetAngle(ptGauge,angle);
         angle+=1;
@@ -250,6 +280,22 @@ void uiWidgetLoop(ld_scene_t* ptScene)
         }
     }
 
+    if(xBtnGetState(KEY_NUM_UP,BTN_RELEASE))
+    {
+        ldBaseFocusNavigate(ptScene,NAV_UP);
+    }
+    if(xBtnGetState(KEY_NUM_DOWN,BTN_RELEASE))
+    {
+        ldBaseFocusNavigate(ptScene,NAV_DOWN);
+    }
+    if(xBtnGetState(KEY_NUM_LEFT,BTN_RELEASE))
+    {
+        ldBaseFocusNavigate(ptScene,NAV_LEFT);
+    }
+    if(xBtnGetState(KEY_NUM_RIGHT,BTN_RELEASE))
+    {
+        ldBaseFocusNavigate(ptScene,NAV_RIGHT);
+    }
 
 
 }

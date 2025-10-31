@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -77,6 +77,9 @@ void ldQRCodeSetText(ldQRCode_t *ptWidget, uint8_t *pStr);
 #define ldQRCodeSetHidden                ldBaseSetHidden
 #define ldQRCodeMove                     ldBaseMove
 #define ldQRCodeSetOpacity               ldBaseSetOpacity
+#define ldQRCodeSetSelectable            ldBaseSetSelectable
+#define ldQRCodeSetSelect                ldBaseSetSelect
+#define ldQRCodeSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

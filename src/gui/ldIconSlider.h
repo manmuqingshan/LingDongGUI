@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -68,7 +68,6 @@ struct ldIconSlider_t
     uint8_t selectIconOrPage;
     uint8_t moveOffset;
     ldColor charColor;
-    bool isCorner:1;
     bool isHorizontalScroll:1;
     bool hasHorizontalBorder:1;
     bool hasVerticalBorder:1;
@@ -95,6 +94,9 @@ void ldIconSliderSetSpeed(ldIconSlider_t *ptWidget, uint8_t speed);
 #define ldIconSliderSetHidden                ldBaseSetHidden
 #define ldIconSliderMove                     ldBaseMove
 #define ldIconSliderSetOpacity               ldBaseSetOpacity
+#define ldIconSliderhSetSelectable           ldBaseSetSelectable
+#define ldIconSliderhSetSelect               ldBaseSetSelect
+#define ldIconSliderhSetCorner               ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

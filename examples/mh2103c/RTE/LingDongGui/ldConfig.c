@@ -40,13 +40,13 @@ bool ldCfgTouchGetPoint(int16_t *x,int16_t *y)
         {
             ry=0;
         }
-        if(rx>LD_CFG_SCEEN_WIDTH)
+        if(rx>LD_CFG_SCREEN_WIDTH)
         {
-            rx=LD_CFG_SCEEN_WIDTH;
+            rx=LD_CFG_SCREEN_WIDTH;
         }
-        if(ry>LD_CFG_SCEEN_HEIGHT)
+        if(ry>LD_CFG_SCREEN_HEIGHT)
         {
-            ry=LD_CFG_SCEEN_HEIGHT;
+            ry=LD_CFG_SCREEN_HEIGHT;
         }
         *x=rx;
         *y=ry;

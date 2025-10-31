@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -63,12 +63,16 @@ void ldGuiDespose(ld_scene_t *ptScene);
 void ldGuiFrameStart(ld_scene_t *ptScene);
 void ldGuiFrameComplete(ld_scene_t *ptScene);
 void ldGuiDraw(ld_scene_t *ptScene,arm_2d_tile_t *ptTile,bool bIsNewFrame);
+
 void ldGuiInit(ldPageFuncGroup_t *ptFuncGroup);
+void ldGuiLoop(void);
 
 void ldGuiTouchProcess(ld_scene_t *ptScene);
-
 void ldGuiSceneInit(ld_scene_t *ptScene);
-
+void ldGuiUpdateScene(void);
+#if USE_LCD_TEST == 1
+void ldGuiLcdTest(void);
+#endif
 
 void __ldGuiJumpPage(ldPageFuncGroup_t *ptFuncGroup,arm_2d_scene_switch_mode_t *ptMode,uint16_t switchTimeMs);
 
@@ -80,8 +84,6 @@ void __ldGuiJumpPage(ldPageFuncGroup_t *ptFuncGroup,arm_2d_scene_switch_mode_t *
 #if USE_SCENE_SWITCHING == 0
 #define ldGuiJumpPageReload()                              __ldGuiJumpPage((ldPageFuncGroup_t *)NULL,&ARM_2D_SCENE_SWITCH_MODE_NONE,0)
 #endif
-
-void ldGuiUpdateScene(void);
 
 #ifdef __cplusplus
 }

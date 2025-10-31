@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -92,7 +92,7 @@ ldImage_t* ldImage_init( ld_scene_t *ptScene,ldImage_t *ptWidget,uint16_t nameId
             ptScene->ptNodeRoot=(arm_2d_control_node_t*)ptWidget;
             ptWidget->use_as__ldBase_t.widgetType=widgetTypeBackground;
             ptWidget->bgColor=__RGB(240,240,240);
-            LOG_INFO("[init][background] id:%d, size:%d", nameId,sizeof (*ptWidget));
+            LOG_INFO("[init][background] id:%d, size:%llu", nameId,sizeof (*ptWidget));
         }
         else
         {
@@ -100,7 +100,7 @@ ldImage_t* ldImage_init( ld_scene_t *ptScene,ldImage_t *ptWidget,uint16_t nameId
             ldBaseNodeAdd((arm_2d_control_node_t*)ptParent,(arm_2d_control_node_t*)ptWidget);
             ptWidget->isTransparent=true;
             ptWidget->use_as__ldBase_t.widgetType=widgetTypeWindow;
-            LOG_INFO("[init][window] id:%d, size:%d", nameId,sizeof (*ptWidget));
+            LOG_INFO("[init][window] id:%d, size:%llu", nameId,sizeof (*ptWidget));
         }
     }
     else
@@ -108,7 +108,7 @@ ldImage_t* ldImage_init( ld_scene_t *ptScene,ldImage_t *ptWidget,uint16_t nameId
         ptParent=ldBaseGetWidget(ptScene->ptNodeRoot,parentNameId);
         ldBaseNodeAdd((arm_2d_control_node_t*)ptParent,(arm_2d_control_node_t*)ptWidget);
         ptWidget->use_as__ldBase_t.widgetType=widgetTypeImage;
-        LOG_INFO("[init][image] id:%d, size:%d", nameId,sizeof (*ptWidget));
+        LOG_INFO("[init][image] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     }
     return ptWidget;
 }
@@ -163,6 +163,10 @@ void ldImage_depose(ld_scene_t *ptScene, ldImage_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptImgTile);
+    ldFree(ptWidget->ptMaskTile);
+#endif
     ldFree(ptWidget);
 }
 
@@ -212,26 +216,50 @@ void ldImage_show( ld_scene_t *ptScene,ldImage_t *ptWidget,const arm_2d_tile_t *
 
             if((ptWidget->ptImgTile==NULL)&&(ptWidget->ptMaskTile==NULL))
             {
-                ldBaseColor(&tTarget,
-                            NULL,
-                            ptWidget->bgColor,
-                            ptWidget->use_as__ldBase_t.opacity);
+                if(ptWidget->use_as__ldBase_t.isCorner)
+                {
+                    draw_round_corner_box(&tTarget,
+                                          NULL,
+                                          ptWidget->bgColor,
+                                          ptWidget->use_as__ldBase_t.opacity,
+                                          bIsNewFrame);
+                }
+                else
+                {
+                    ldBaseColor(&tTarget,
+                                NULL,
+                                ptWidget->bgColor,
+                                ptWidget->use_as__ldBase_t.opacity);
+                }
+
             }
             else
             {
-                ldBaseImage(&tTarget,
-                            NULL,
-                            ptWidget->ptImgTile,
-                            ptWidget->ptMaskTile,
-                            ptWidget->bgColor,
-                            ptWidget->use_as__ldBase_t.opacity);
+                if(ptWidget->use_as__ldBase_t.isCorner)
+                {
+                    draw_round_corner_image(ptWidget->ptImgTile,
+                                            &tTarget,
+                                            NULL,
+                                            bIsNewFrame,
+                                            ptWidget->use_as__ldBase_t.opacity);
+                }
+                else
+                {
+                    ldBaseImage(&tTarget,
+                                NULL,
+                                ptWidget->ptImgTile,
+                                ptWidget->ptMaskTile,
+                                ptWidget->bgColor,
+                                ptWidget->use_as__ldBase_t.opacity);
+                }
             }
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
-    arm_2d_op_wait_async(NULL);
 }
 
-void ldImageSetBgColor(ldImage_t *ptWidget,ldColor bgColor)
+void ldImageSetBackgroundColor(ldImage_t *ptWidget,ldColor bgColor)
 {
     assert(NULL!= ptWidget);
     if(ptWidget == NULL)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -110,7 +110,8 @@ static bool slotComboBoxProcess(ld_scene_t *ptScene,ldMsg_t msg)
     }
 
 
-    switch (msg.signal) {
+    switch (msg.signal)
+    {
     case SIGNAL_PRESS:
     {
         if(clickItemNum==SHOW_ITEM_NUM)
@@ -144,6 +145,7 @@ static bool slotComboBoxProcess(ld_scene_t *ptScene,ldMsg_t msg)
                 ldMsgEmit(ptScene->ptMsgQueue,ptWidget,SIGNAL_CLICKED_ITEM,ptWidget->itemSelect);
             }
             ptWidget->isExpand=false;
+            ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize.iHeight = ptWidget->itemHeight;
         }
         ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
         break;
@@ -192,21 +194,22 @@ ldComboBox_t* ldComboBox_init(ld_scene_t *ptScene,ldComboBox_t *ptWidget, uint16
     ptWidget->use_as__ldBase_t.isDirtyRegionAutoReset = true;
     ptWidget->use_as__ldBase_t.opacity=255;
     ptWidget->use_as__ldBase_t.tTempRegion=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion;
+    ptWidget->use_as__ldBase_t.isCorner=true;
 
     ptWidget->itemHeight=height;
     ptWidget->isExpand=false;
-    ptWidget->isCorner=true;
     ptWidget->ptFont=ptFont;
     ptWidget->textColor=GLCD_COLOR_BLACK;
     ptWidget->bgColor=GLCD_COLOR_WHITE;
     ptWidget->frameColor=GLCD_COLOR_LIGHT_GREY;
     ptWidget->selectColor=__RGB( 0x7F, 0xB0, 0xEF );
+    ptWidget->isStatic=true;
 
     ldMsgConnect(ptWidget,SIGNAL_PRESS,slotComboBoxProcess);
     ldMsgConnect(ptWidget,SIGNAL_RELEASE,slotComboBoxProcess);
     ldMsgConnect(ptWidget,SIGNAL_HOLD_DOWN,slotComboBoxProcess);
 
-    LOG_INFO("[init][comboBox] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][comboBox] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -224,9 +227,21 @@ void ldComboBox_depose(ld_scene_t *ptScene, ldComboBox_t *ptWidget)
 
     LOG_INFO("[depose][comboBox] id:%d", ptWidget->use_as__ldBase_t.nameId);
 
+    if(ptWidget->isStatic==false)
+    {
+        for (uint8_t i = 0; i < ptWidget->itemCount; ++i)
+        {
+            ldFree(ptWidget->ppItemStrGroup[i]);
+        }
+        ldFree(ptWidget->ppItemStrGroup);
+    }
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptDropdownImgTile);
+    ldFree(ptWidget->ptDropdownMaskTile);
+    ldFree(ptWidget->ptFont);
+#endif
     ldFree(ptWidget);
 }
 
@@ -269,7 +284,7 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -281,7 +296,7 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
                 }
             };
 
-            if(ptWidget->isCorner)
+            if(ptWidget->use_as__ldBase_t.isCorner)
             {
                 draw_round_corner_box(&tTarget,&displayRegion,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
                 draw_round_corner_border(&tTarget,
@@ -347,7 +362,7 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
                                                false);
 
                     displayRegion.tSize.iHeight=tempTile.tRegion.tSize.iHeight;
-                    if(ptWidget->isCorner)
+                    if(ptWidget->use_as__ldBase_t.isCorner)
                     {
                         draw_round_corner_box(&tempTile,&displayRegion,ptWidget->bgColor,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
                         draw_round_corner_border(&tempTile,
@@ -392,7 +407,7 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
                         {
                             selectColor=ptWidget->selectColor;
 
-                            if(ptWidget->isCorner)
+                            if(ptWidget->use_as__ldBase_t.isCorner)
                             {
                                 draw_round_corner_box(&selectTile,NULL,selectColor,ptWidget->use_as__ldBase_t.opacity,bIsNewFrame);
                             }
@@ -409,20 +424,61 @@ void ldComboBox_show(ld_scene_t *ptScene, ldComboBox_t *ptWidget, const arm_2d_t
                 }
             }
 
+            LD_BASE_WIDGET_SELECT;
         }
     }
     arm_2d_op_wait_async(NULL);
 }
 
-void ldComboBoxSetItems(ldComboBox_t* ptWidget,const uint8_t *pStrArray[],uint8_t arraySize)
+void ldComboBoxSetStaticItems(ldComboBox_t* ptWidget,uint8_t *pStrArray[],uint8_t arraySize)
 {
+    assert(NULL != ptWidget);
     if(ptWidget==NULL)
+    {
+        return;
+    }
+    if(ptWidget->isStatic==false)//只要使用了动态就不能再使用静态
     {
         return;
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ppItemStrGroup=pStrArray;
     ptWidget->itemCount=arraySize;
+}
+
+void ldComboBoxSetItemMax(ldComboBox_t *ptWidget, uint8_t itemMax)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    if (ptWidget->isStatic == false)
+    {
+        return;
+    }
+    ptWidget->ppItemStrGroup = malloc(sizeof(uint8_t*) * itemMax);
+    ptWidget->itemMax         = itemMax;
+    ptWidget->itemCount      = 0;
+}
+
+void ldComboBoxAddItem(ldComboBox_t* ptWidget,uint8_t *pStr)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget==NULL)
+    {
+        return;
+    }
+    if(ptWidget->itemMax==ptWidget->itemCount)
+    {
+        return;
+    }
+    ptWidget->isStatic=false;
+    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
+
+    uint8_t *dup = ldMalloc(strlen((char*)pStr) + 1);
+    strcpy((char*)dup, (char*)pStr);
+    ptWidget->ppItemStrGroup[ptWidget->itemCount++] = dup;
 }
 
 void ldComboBoxSetTextColor(ldComboBox_t* ptWidget, ldColor textColor)
@@ -485,17 +541,6 @@ void ldComboBoxSetSelectItem(ldComboBox_t* ptWidget, uint8_t itemIndex)
     ptWidget->itemPreSelect=itemIndex;
 }
 
-void ldComboBoxSetCorner(ldComboBox_t* ptWidget,bool isCorner)
-{
-    assert(NULL != ptWidget);
-    if(ptWidget==NULL)
-    {
-        return;
-    }
-    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
-    ptWidget->isCorner=isCorner;
-}
-
 void ldComboBoxSetDropdownImage(ldComboBox_t* ptWidget,arm_2d_tile_t* ptDropdownImgTile,arm_2d_tile_t* ptDropdownMaskTile)
 {
     assert(NULL != ptWidget);
@@ -506,6 +551,30 @@ void ldComboBoxSetDropdownImage(ldComboBox_t* ptWidget,arm_2d_tile_t* ptDropdown
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->ptDropdownImgTile=ptDropdownImgTile;
     ptWidget->ptDropdownMaskTile=ptDropdownMaskTile;
+}
+
+uint8_t ldComboBoxGetSelectItem(ldComboBox_t* ptWidget)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return 0;
+    }
+    return ptWidget->itemSelect;
+}
+
+uint8_t* ldComboBoxGetText(ldComboBox_t* ptWidget, uint8_t num)
+{
+    assert(NULL != ptWidget);
+    if(ptWidget == NULL)
+    {
+        return 0;
+    }
+    if(num<ptWidget->itemCount)
+    {
+        return ptWidget->ppItemStrGroup[num];
+    }
+    return NULL;
 }
 
 #if defined(__clang__)

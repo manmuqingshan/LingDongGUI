@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -51,9 +51,6 @@ typedef struct ldDateTime_t ldDateTime_t;
 struct ldDateTime_t
 {
     implement(ldBase_t);
-//ARM_PRIVATE(
-//    ld_scene_t *ptScene;
-//)
     arm_2d_align_t tAlign;
     uint8_t month;
     uint8_t day;
@@ -61,7 +58,7 @@ struct ldDateTime_t
     uint8_t minute;
     uint8_t second;
     uint16_t year;
-    const uint8_t *pFormatStr;
+    uint8_t formatStr[DATE_TIME_BUFFER_SIZE];
     uint8_t formatStrTemp[DATE_TIME_BUFFER_SIZE];
     ldColor bgColor;
     ldColor textColor;
@@ -80,7 +77,7 @@ void ldDateTimeSetTransparent(ldDateTime_t* ptWidget,bool isTransparent);
 void ldDateTimeSetFormat(ldDateTime_t* ptWidget,const uint8_t *pStr);
 void ldDateTimeSetTextColor(ldDateTime_t* ptWidget,ldColor textColor);
 void ldDateTimeSetAlign(ldDateTime_t *ptWidget,arm_2d_align_t tAlign);
-void ldDateTimeSetBgColor(ldDateTime_t *ptWidget, ldColor bgColor);
+void ldDateTimeSetBackgroundColor(ldDateTime_t *ptWidget, ldColor bgColor);
 void ldDateTimeSetDate(ldDateTime_t *ptWidget, uint16_t year, uint8_t month, uint8_t day);
 void ldDateTimeSetTime(ldDateTime_t *ptWidget, uint8_t hour, uint8_t minute, uint8_t second);
 
@@ -90,6 +87,9 @@ void ldDateTimeSetTime(ldDateTime_t *ptWidget, uint8_t hour, uint8_t minute, uin
 #define ldDateTimeSetHidden                ldBaseSetHidden
 #define ldDateTimeMove                     ldBaseMove
 #define ldDateTimeSetOpacity               ldBaseSetOpacity
+#define ldDateTimeSetSelectable            ldBaseSetSelectable
+#define ldDateTimeSetSelect                ldBaseSetSelect
+#define ldDateTimeSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

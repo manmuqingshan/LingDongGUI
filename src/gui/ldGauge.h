@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -81,6 +81,9 @@ void ldGaugeSetAngle(ldGauge_t *ptWidget, float angle);
 #define ldGaugeSetHidden                ldBaseSetHidden
 #define ldGaugeMove                     ldBaseMove
 #define ldGaugeSetOpacity               ldBaseSetOpacity
+#define ldGaugeSetSelectable            ldBaseSetSelectable
+#define ldGaugeSetSelect                ldBaseSetSelect
+#define ldGaugeSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

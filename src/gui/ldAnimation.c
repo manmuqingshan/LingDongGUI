@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -89,7 +89,7 @@ ldAnimation_t* ldAnimation_init( ld_scene_t *ptScene,ldAnimation_t *ptWidget, ui
     ptWidget->showRegion.tSize=ptWidget->use_as__ldBase_t.use_as__arm_2d_control_node_t.tRegion.tSize;
     ptWidget->periodMs=periodMs;
 
-    LOG_INFO("[init][animation] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][animation] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -109,7 +109,9 @@ void ldAnimation_depose(ld_scene_t *ptScene, ldAnimation_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
-
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptImgTile);
+#endif
     ldFree(ptWidget);
 }
 
@@ -171,7 +173,7 @@ void ldAnimation_show(ld_scene_t *ptScene, ldAnimation_t *ptWidget, const arm_2d
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -183,10 +185,12 @@ void ldAnimation_show(ld_scene_t *ptScene, ldAnimation_t *ptWidget, const arm_2d
                                           &tTarget_canvas,
                                           ptWidget->use_as__ldBase_t.opacity);
 
+            LD_BASE_WIDGET_SELECT;
+            arm_2d_op_wait_async(NULL);
         }
     }
 
-    arm_2d_op_wait_async(NULL);
+
 }
 
 #if defined(__clang__)

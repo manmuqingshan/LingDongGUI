@@ -20,9 +20,9 @@ void uiStartupInit(ld_scene_t* ptScene)
 {
     void *obj,*win;
 
-    obj=ldWindowInit(ID_BG, ID_BG, 0, 0, LD_CFG_SCEEN_WIDTH, LD_CFG_SCEEN_HEIGHT);
+    obj=ldWindowInit(ID_BG, ID_BG, 0, 0, LD_CFG_SCREEN_WIDTH, LD_CFG_SCREEN_HEIGHT);
 
-    obj=ldWindowInit(ID_WIN, ID_BG, LD_CFG_SCEEN_WIDTH/3,LD_CFG_SCEEN_HEIGHT/3,LD_CFG_SCEEN_WIDTH/3,LD_CFG_SCEEN_HEIGHT/3);
+    obj=ldWindowInit(ID_WIN, ID_BG, LD_CFG_SCREEN_WIDTH/3,LD_CFG_SCREEN_HEIGHT/3,LD_CFG_SCREEN_WIDTH/3,LD_CFG_SCREEN_HEIGHT/3);
     ldWindowSetColor(obj,GLCD_COLOR_LIGHT_GREY);
 
 }

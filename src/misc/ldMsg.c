@@ -68,35 +68,22 @@ void ldMsgProcess(void *ptScene)
     ldMsg_t tMsg;
     ldBase_t *ptWidget;
     ldAssn_t *ptNext = NULL;
-//    bool isOk=0;
+
     while(xQueueDequeue(((ld_scene_t*)ptScene)->ptMsgQueue,&tMsg,sizeof (ldMsg_t)))
     {
         ptWidget=(ldBase_t*)tMsg.ptSender;
         ptNext=ptWidget->ptAssn;
 
-//        do{
-            while(ptNext!=NULL)
+        while(ptNext!=NULL)
+        {
+            if(ptNext->signal==tMsg.signal)
             {
-                if(ptNext->signal==tMsg.signal)
+                if(ptNext->pFunc(ptScene,tMsg))
                 {
-                    if(ptNext->pFunc(ptScene,tMsg))
-                    {
-//                        isOk=true;
-                        break;
-                    }
+                    break;
                 }
-                ptNext=ptNext->ptNext;
             }
-//            if(isOk)
-//            {
-//                break;
-//            }
-//            else
-//            {
-//                ptWidget=ptWidget->
-//            }
-//        }
-//        while(true);
-
+            ptNext=ptNext->ptNext;
+        }
     }
 }

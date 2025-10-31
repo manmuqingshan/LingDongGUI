@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -58,7 +58,6 @@ struct ldLineEdit_t
     uint8_t *pText;
     uint8_t textMax;
     bool isEditing:1;
-    bool isCorner:1;
     ldEditType_t editType:2;
     bool hasFloatPoint:1;
 };
@@ -74,8 +73,8 @@ void ldLineEditSetText(ldLineEdit_t* ptWidget,uint8_t *pText);
 void ldLineEditSetKeyboard(ldLineEdit_t* ptWidget,uint16_t kbNameId);
 void ldLineEditSetType(ldLineEdit_t* ptWidget,ldEditType_t editType);
 void ldLineEditSetAlign(ldLineEdit_t *ptWidget,arm_2d_align_t tAlign);
-void ldLineEditSetCorner(ldLineEdit_t *ptWidget, bool isCorner);
 void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backgroundColor, ldColor frameColor);
+uint8_t *ldLineEditGetText(ldLineEdit_t *ptWidget);
 
 #define ldLineEditInit(nameId,parentNameId,x,y,width,height,ptFont,textMax) \
         ldLineEdit_init(ptScene,NULL,nameId,parentNameId,x,y,width,height,ptFont,textMax)
@@ -83,6 +82,9 @@ void ldLineEditSetColor(ldLineEdit_t *ptWidget, ldColor textColor, ldColor backg
 #define ldLineEditSetHidden                ldBaseSetHidden
 #define ldLineEditMove                     ldBaseMove
 #define ldLineEditSetOpacity               ldBaseSetOpacity
+#define ldLineEditSetSelectable            ldBaseSetSelectable
+#define ldLineEditSetSelect                ldBaseSetSelect
+#define ldLineEditSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

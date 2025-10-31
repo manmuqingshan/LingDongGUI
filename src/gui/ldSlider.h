@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -82,6 +82,9 @@ void ldSliderSetSlimSize(ldSlider_t *ptWidget,uint8_t slimSize);
 #define ldSliderSetHidden                ldBaseSetHidden
 #define ldSliderMove                     ldBaseMove
 #define ldSliderSetOpacity               ldBaseSetOpacity
+#define ldSliderSetSelectable            ldBaseSetSelectable
+#define ldSliderSetSelect                ldBaseSetSelect
+#define ldSliderSetCorner                ldBaseSetCorner
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

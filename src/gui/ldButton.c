@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Ou Jianbo (59935554@qq.com). All rights reserved.
+ * Copyright (c) 2023-2025 Ou Jianbo (59935554@qq.com). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -124,12 +124,12 @@ ldButton_t *ldButton_init(ld_scene_t *ptScene, ldButton_t *ptWidget, uint16_t na
 
     ptWidget->releaseColor = __RGB(217, 225, 244);
     ptWidget->pressColor = __RGB(255, 243, 202);
-    ptWidget->selectColor = __RGB(255, 0, 0);
+
 
     ldMsgConnect(ptWidget, SIGNAL_PRESS, slotButtonToggle);
     ldMsgConnect(ptWidget, SIGNAL_RELEASE, slotButtonToggle);
 
-    LOG_INFO("[init][button] id:%d, size:%d", nameId,sizeof (*ptWidget));
+    LOG_INFO("[init][button] id:%d, size:%llu", nameId,sizeof (*ptWidget));
     return ptWidget;
 }
 
@@ -149,6 +149,13 @@ void ldButton_depose(ld_scene_t *ptScene, ldButton_t *ptWidget)
 
     ldMsgDelConnect(ptWidget);
     ldBaseNodeRemove((arm_2d_control_node_t*)ptWidget);
+#if USE_VIRTUAL_RESOURCE == 1
+    ldFree(ptWidget->ptReleaseImgTile);
+    ldFree(ptWidget->ptReleaseMaskTile);
+    ldFree(ptWidget->ptPressImgTile);
+    ldFree(ptWidget->ptPressMaskTile);
+    ldFree(ptWidget->ptFont);
+#endif
     ldFree(ptWidget->pStr);
     ldFree(ptWidget);
 }
@@ -201,7 +208,7 @@ void ldButton_show(ld_scene_t *ptScene, ldButton_t *ptWidget, const arm_2d_tile_
     {
         arm_2d_container(ptTile, tTarget, &globalRegion)
         {
-            if(ptWidget->use_as__ldBase_t.isHidden)
+            if(ldBaseIsHidden((ldBase_t*)ptWidget))
             {
                 break;
             }
@@ -214,7 +221,7 @@ void ldButton_show(ld_scene_t *ptScene, ldButton_t *ptWidget, const arm_2d_tile_
                         (ptWidget->ptPressMaskTile == NULL)) // color
                 {
 
-                    if (ptWidget->isCorner)
+                    if (ptWidget->use_as__ldBase_t.isCorner)
                     {
                         if (ptWidget->isPressed)
                         {
@@ -253,21 +260,23 @@ void ldButton_show(ld_scene_t *ptScene, ldButton_t *ptWidget, const arm_2d_tile_
                 }
                 else
                 {
-                    if (ptWidget->isCorner)
+                    if (ptWidget->use_as__ldBase_t.isCorner)
                     {
                         if (ptWidget->isPressed)
                         {
                             draw_round_corner_image(ptWidget->ptPressImgTile,
                                                     &tTarget,
                                                     NULL,
-                                                    bIsNewFrame);
+                                                    bIsNewFrame,
+                                                    ptWidget->use_as__ldBase_t.opacity);
                         }
                         else
                         {
                             draw_round_corner_image(ptWidget->ptReleaseImgTile,
                                                     &tTarget,
                                                     NULL,
-                                                    bIsNewFrame);
+                                                    bIsNewFrame,
+                                                    ptWidget->use_as__ldBase_t.opacity);
                         }
                     }
                     else
@@ -292,6 +301,8 @@ void ldButton_show(ld_scene_t *ptScene, ldButton_t *ptWidget, const arm_2d_tile_
                         }
                     }
                 }
+
+                LD_BASE_WIDGET_SELECT;
             }
 
             arm_2d_op_wait_async(NULL);
@@ -307,19 +318,8 @@ void ldButton_show(ld_scene_t *ptScene, ldButton_t *ptWidget, const arm_2d_tile_
                             ptWidget->use_as__ldBase_t.opacity);
                 arm_2d_op_wait_async(NULL);
             }
-
-            if(ptWidget->ptSelectMaskTile!=NULL)
-            {
-                ldBaseImage(&tTarget,
-                            NULL,
-                            NULL,
-                            ptWidget->ptSelectMaskTile,
-                            ptWidget->selectColor,
-                            ptWidget->use_as__ldBase_t.opacity);
-            }
         }
     }
-    arm_2d_op_wait_async(NULL);
 }
 
 void ldButtonSetColor(ldButton_t* ptWidget, ldColor releaseColor, ldColor pressColor)
@@ -348,18 +348,6 @@ void ldButtonSetImage(ldButton_t* ptWidget,arm_2d_tile_t* ptReleaseImgTile,arm_2
     ptWidget->ptPressMaskTile=ptPressMaskTile;
 }
 
-void ldButtonSetSelectImage(ldButton_t* ptWidget,arm_2d_tile_t* ptSelectMaskTile,ldColor selectColor)
-{
-    assert(NULL != ptWidget);
-    if(ptWidget == NULL)
-    {
-        return;
-    }
-    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
-    ptWidget->ptSelectMaskTile=ptSelectMaskTile;
-    ptWidget->selectColor=selectColor;
-}
-
 void ldButtonSetTransparent(ldButton_t* ptWidget,bool isTransparent)
 {
     assert(NULL != ptWidget);
@@ -369,28 +357,6 @@ void ldButtonSetTransparent(ldButton_t* ptWidget,bool isTransparent)
     }
     ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
     ptWidget->isTransparent=isTransparent;
-}
-
-void ldButtonSetRoundCorner(ldButton_t* ptWidget,bool isCorner)
-{
-    assert(NULL != ptWidget);
-    if(ptWidget == NULL)
-    {
-        return;
-    }
-    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
-    ptWidget->isCorner=isCorner;
-}
-
-void ldButtonSetSelect(ldButton_t* ptWidget,bool isSelected)
-{
-    assert(NULL != ptWidget);
-    if(ptWidget == NULL)
-    {
-        return;
-    }
-    ptWidget->use_as__ldBase_t.isDirtyRegionUpdate = true;
-    ptWidget->isSelected=isSelected;
 }
 
 void ldButtonSetFont(ldButton_t *ptWidget, arm_2d_font_t *ptFont)

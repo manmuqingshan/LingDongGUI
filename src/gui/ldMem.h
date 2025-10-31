@@ -12,6 +12,7 @@ extern void *ldMalloc(uint32_t size);
 extern void *ldCalloc(uint32_t num,uint32_t size);
 extern void ldFree(void *p);
 extern void *ldRealloc(void *ptr,uint32_t newSize);
+extern size_t ldGetFreeMemory(void);
 
 #ifdef __cplusplus
 }
